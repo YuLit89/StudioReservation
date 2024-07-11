@@ -18,6 +18,7 @@ namespace StudioMember.Service.Contract
         [OperationContract]
         Member Find(string Id);
 
+        [OperationContract]
         List<Member> GetAll();
 
         [OperationContract]
