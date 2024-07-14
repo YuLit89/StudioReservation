@@ -1,4 +1,6 @@
-﻿using NLog;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using NLog;
 using StudioMember.Service.Contract;
 using StudioMember.Service.Contract.Models;
 using System;
@@ -35,6 +37,11 @@ namespace StudioMember.Service
             }
 
             Console.WriteLine($"{DateTime.Now} || Pump data into local storage done...");
+        }
+
+        public Tuple<int, IdentityResult> ConfirmEmail(string userId, string code)
+        {
+            throw new NotImplementedException();
         }
 
         public void Dispose()
@@ -87,5 +94,27 @@ namespace StudioMember.Service
                 return -10;
             }
         }
+
+        public Tuple<int, SignInStatus> Login(string Email, string Password, bool RememberMe)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int ForgotPassword(string Email)
+        {
+            throw new NotImplementedException();
+        }
+      
+
+        public Tuple<int, IdentityResult> Register(string Email, string Password, string ConfirmPassword, string ContactNumber, string FullName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Tuple<int, IdentityResult> ResetPassword(string Email, string Password, string ConfirmPassword, string Code)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
