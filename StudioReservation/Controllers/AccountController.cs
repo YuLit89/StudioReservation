@@ -40,11 +40,11 @@ namespace StudioReservation.Controllers
             }
         }
 
-        public ApplicationUserManager UserManager
+        public string UserManager
         {
             get
             {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<string>();
             }
             private set
             {

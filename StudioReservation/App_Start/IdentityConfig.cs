@@ -14,7 +14,10 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using StudioMember.Service.Contract;
+using StudioMember.Service.Proxy;
 using StudioReservation.Models;
+
 
 
 namespace StudioReservation
@@ -70,13 +73,54 @@ namespace StudioReservation
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
+         IMemberService memberService = new MemberServiceProxy(int.Parse(ConfigurationManager.AppSettings["member-port"]));
+
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
         }
 
+        public override Task<IdentityResult> CreateAsync(ApplicationUser user)
+        {
+            var error = base.CreateAsync(user);
+
+            if(error.Result == IdentityResult.Success)
+            {
+                var result = memberService.Register(
+                    MemberId:user.Id,
+                    Email : user.Email,
+                    EmailConfirmed : user.EmailConfirmed,
+                    Password : user.PasswordHash,
+                    PhoneNumber : user.PhoneNumber,
+                    UserName : user.UserName);
+
+                if (result != 0) NLog.LogManager.GetCurrentClassLogger().Error($"Sync Register Member Fail -> {user.Email} -> {result}");
+            }
+
+            return error;
+
+        }
+
+        public override Task<IdentityResult> UpdateAsync(ApplicationUser user)
+        {
+            var error = base.UpdateAsync(user);
+
+            if(error.Result == IdentityResult.Success)
+            {
+                var result = memberService.UpdateUser(
+                    MemberId : user.Id,
+                    Password : user.PasswordHash,
+                    EmailConfirmed : user.EmailConfirmed);
+
+                if (result != 0) NLog.LogManager.GetCurrentClassLogger().Error($"Sync Update Member Fail -> {user.Email} -> {result}");
+            }
+
+            return error;
+        }
+
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
+
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)

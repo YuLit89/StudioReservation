@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
+﻿
 using NLog;
 using StudioMember.Service.Contract;
 using StudioMember.Service.Contract.Models;
@@ -7,7 +6,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,11 +37,6 @@ namespace StudioMember.Service
             Console.WriteLine($"{DateTime.Now} || Pump data into local storage done...");
         }
 
-        public Tuple<int, IdentityResult> ConfirmEmail(string userId, string code)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Dispose()
         {
         }
@@ -72,6 +65,8 @@ namespace StudioMember.Service
             return _members.Values.ToList();
         }
 
+      
+
         public int Update(string Id,string Email, string PhoneNumber)
         {
             var member = _sync.GetOrAdd(Id, new object());
@@ -95,26 +90,38 @@ namespace StudioMember.Service
             }
         }
 
-        public Tuple<int, SignInStatus> Login(string Email, string Password, bool RememberMe)
+        public int Register(string MemberId, string Email, bool EmailConfirmed, string Password, string PhoneNumber, string UserName)
         {
-            throw new NotImplementedException();
+            var member = new Member
+            {
+                Id = MemberId,
+                Email = Email,
+                EmailConfirmed = EmailConfirmed,
+                Password = Password,
+                PhoneNumber = PhoneNumber,
+                UserName = UserName
+            };
+
+            _members.Add(MemberId, member);
+
+            return 0;
         }
 
-        public int ForgotPassword(string Email)
-        {
-            throw new NotImplementedException();
-        }
-      
 
-        public Tuple<int, IdentityResult> Register(string Email, string Password, string ConfirmPassword, string ContactNumber, string FullName)
+        public int UpdateUser(string MemberId, string Password, bool EmailConfirmed)
         {
-            throw new NotImplementedException();
-        }
+            Member member = null;
+            if(_members.TryGetValue(MemberId,out member))
+            {
+                member.Password = Password;
+                member.EmailConfirmed = EmailConfirmed;
 
-        public Tuple<int, IdentityResult> ResetPassword(string Email, string Password, string ConfirmPassword, string Code)
-        {
-            throw new NotImplementedException();
-        }
+                _members[MemberId] = member;
 
+                return 0;
+            }
+
+            return -10;
+        }
     }
 }

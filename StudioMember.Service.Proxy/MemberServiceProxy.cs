@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿
+using NLog;
 using StudioMember.Service.Contract;
 using StudioMember.Service.Contract.Models;
 using System;
@@ -261,5 +262,86 @@ namespace StudioMember.Service.Proxy
             }
         }
 
+        public int Register(string MemberId, string Email, bool EmailConfirmed, string Password, string PhoneNumber, string UserName)
+        {
+            IMemberService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.Register(MemberId,Email,EmailConfirmed,Password,PhoneNumber,UserName);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {MemberId}");
+                return -1;
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {MemberId}");
+                return -2;
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {MemberId}");
+                return -3;
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {MemberId}");
+                return -4;
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {MemberId}");
+                return -5;
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
+
+        public int UpdateUser(string MemberId, string Password, bool EmailConfirmed)
+        {
+            IMemberService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.UpdateUser(MemberId,Password,EmailConfirmed);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {MemberId}");
+                return -1;
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {MemberId}");
+                return -2;
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {MemberId}");
+                return -3;
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {MemberId}");
+                return -4;
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {MemberId}");
+                return -5;
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
     }
 }

@@ -1,8 +1,6 @@
 ﻿
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
+
 using StudioMember.Service.Contract.Models;
-using StudioReservation.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,21 +26,11 @@ namespace StudioMember.Service.Contract
         int Update(string Id,string Email, string PhoneNumber);
 
         [OperationContract]
-        Tuple<int, SignInStatus> Login(string Email , string Password,bool RememberMe);
+        int Register(string MemberId,string Email,bool EmailConfirmed,string Password,string PhoneNumber,string UserName);
 
         [OperationContract]
-        Tuple<int, IdentityResult> Register(string Email,string Password,string ConfirmPassword,string ContactNumber,string FullName);
-
-        [OperationContract]
-        Tuple<int, IdentityResult> ConfirmEmail(string UserId, string Code);
-
-        [OperationContract]
-        int ForgotPassword(string Email);
-
-        [OperationContract]
-        Tuple<int,IdentityResult> ResetPassword(string Email,string Password,string ConfirmPassword,string Code);
-
-        //[OperationContract]
+        int UpdateUser(string MemberId , string Password,bool EmailConfirmed);
+  
 
     }
 }
