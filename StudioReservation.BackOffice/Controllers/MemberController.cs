@@ -21,7 +21,7 @@ namespace StudioReservation.BackOffice.Controllers
 
             var members = _memberService.GetAll();
 
-            return View();
+            return View(members);
         }
     }
 }
