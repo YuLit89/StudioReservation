@@ -199,6 +199,7 @@ namespace StudioReservation.Service
 
         public int TimeSlotReservation(TimeSlotReservationRequest Request)
         {
+            
 
             var times = Request.ReservationTime.Split(',');
 
@@ -208,6 +209,8 @@ namespace StudioReservation.Service
 
             lock (thread)
             {
+                var uuid = Guid.NewGuid().ToString();
+
                 foreach (var t in times)
                 {
                     var d = Convert.ToDateTime(t);
@@ -224,12 +227,12 @@ namespace StudioReservation.Service
                     var r = new ReservationHistory
                     {
                         RoomId = Request.RoomId,
-                        Date = d.Date,
-                        Time = d.TimeOfDay.ToString(),
+                        DateTime = d,
                         Status = (int)ReservationStatus.Booked,
                         ReservationBy = Request.MemberId,
                         CreateTime = DateTime.Now,
                         UpdateTime = DateTime.Now,
+                        BookingId = uuid,
                         Remark = string.Empty,
                         Price = 0
                     };
@@ -239,6 +242,8 @@ namespace StudioReservation.Service
 
                 using (var process = new TransactionScope())
                 {
+                    // insert to new table - member history
+
                     foreach(var r in reservations)
                     {
                         var id = _insertReservation(r);
@@ -254,11 +259,10 @@ namespace StudioReservation.Service
                     process.Complete();
                 }
 
-                //todo
                 foreach(var r in reservations)
                 {
                     _reservation.Add(r.Id, r);
-                    //_dateBooked.Add(r.da)
+                    _dateBooked.Add(r.DateTime, (int)ReservationStatus.Lock);
                 }
 
 

@@ -190,12 +190,12 @@ namespace StudioReservation.ADO
             {
                 Id = long.Parse(reader["Id"].ToString()),
                 RoomId = int.Parse(reader["RoomId"].ToString()),
-                Date = Convert.ToDateTime(reader["Date"].ToString()),
-                Time = reader["Time"].ToString(),
+                DateTime = Convert.ToDateTime(reader["Date"].ToString()),
                 Status = int.Parse(reader["Status"].ToString()),
                 ReservationBy = reader["ReservationBy"].ToString(),
                 CreateTime = Convert.ToDateTime(reader["CreateTime"].ToString()),
                 UpdateTime = Convert.ToDateTime(reader["UpdatedTime"].ToString()),
+                BookingId = reader["BookingId"].ToString(),
                 Remark = reader["Remark"].ToString(),
                 Price = decimal.Parse(reader["Price"].ToString())
             };
@@ -212,12 +212,12 @@ namespace StudioReservation.ADO
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = "RoomReservationHistory_Insert";
                     cmd.Parameters.AddWithValue("@RoomId", Reservation.RoomId);
-                    cmd.Parameters.AddWithValue("@Date", Reservation.Date);
-                    cmd.Parameters.AddWithValue("@Times", Reservation.Time);
+                    cmd.Parameters.AddWithValue("@Date", Reservation.DateTime);
                     cmd.Parameters.AddWithValue("@Status", Reservation.Status);
                     cmd.Parameters.AddWithValue("@ReservationBy", Reservation.ReservationBy);
                     cmd.Parameters.AddWithValue("@CreateTime", Reservation.CreateTime);
                     cmd.Parameters.AddWithValue("@UpdatedTime", Reservation.UpdateTime);
+                    cmd.Parameters.AddWithValue("@BookingId", Reservation.BookingId);
                     cmd.Parameters.AddWithValue("@Remark", Reservation.Remark);
                     cmd.Parameters.AddWithValue("@Price", Reservation.Price);
 

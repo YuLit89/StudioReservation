@@ -11,12 +11,12 @@ GO
 CREATE TABLE [dbo].[RoomReservationHistory](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[RoomId] [int] NOT NULL,
-	[Date] [date] NOT NULL,
-	[Time] [nvarchar](50) NOT NULL,
+	[Date] [datetime] NOT NULL,
 	[Status] [int] NOT NULL,
 	[ReservationBy] [nvarchar](128) NOT NULL,
 	[CreateTime] [datetime] NOT NULL,
 	[UpdatedTime] [datetime] NOT NULL,
+	[BookingId] [nvarchar](50) NOT NULL,
 	[Remark] [nvarchar](128) NULL,
 	[Price] [decimal](18, 0) NOT NULL,
  CONSTRAINT [PK_RoomReservationHistory] PRIMARY KEY CLUSTERED 

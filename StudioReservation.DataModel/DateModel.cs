@@ -64,12 +64,12 @@ namespace StudioReservation.DataModel
     {
         public long Id { get; set; }
         public int RoomId { get; set; }
-        public DateTime Date { get; set; }
-        public string Time { get; set; }
+        public DateTime DateTime { get; set; }
         public int Status { get; set; }
         public string ReservationBy { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime UpdateTime { get; set; }
+        public string BookingId { get; set; }
         public string Remark { get; set; }  
         public decimal Price {  get; set; }
     }
