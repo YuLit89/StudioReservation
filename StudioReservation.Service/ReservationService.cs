@@ -121,9 +121,11 @@ namespace StudioReservation.Service
 
             var all = new List<ViewTimeSlot>();
 
+            var sizeTaken = (LastId == 0) ? 0 : Size * (Page - 1);
+
             var timeSlot = (LastId == 0)
-                           ? _roomTimeSlot.Values.Where(x => x.Date >= now.Date).OrderBy(x => x.Id).Take(Size)
-                           : _roomTimeSlot.Values.Where(x => x.Id > LastId).OrderBy(x => x.Id).Take(Size);
+                           ? _roomTimeSlot.Values.Where(x => x.Date >= now.Date).OrderBy(x => x.Id).Take(sizeTaken)
+                           : _roomTimeSlot.Values.Where(x => x.Id > LastId).OrderBy(x => x.Id).Take(sizeTaken).Skip(sizeTaken-Size);
 
             foreach(var t in timeSlot)
             {
