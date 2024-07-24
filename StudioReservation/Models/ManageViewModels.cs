@@ -62,6 +62,7 @@ namespace StudioReservation.Models
     {
         [Required]
         [Phone]
+        [RegularExpression("^[+][(]\\d+[)][-]\\d+", ErrorMessage = "Incorrect Phone Number format.")]
         [Display(Name = "Phone Number")]
         public string Number { get; set; }
     }

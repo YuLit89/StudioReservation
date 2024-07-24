@@ -1,0 +1,276 @@
+﻿@model StudioReservation.Models.ScheduleViewModel
+@{
+    ViewBag.Title = "Schedule";
+    //int i = 0;
+    int init_row = 0;
+    int max_row = Model.scheduleDates[0].roomStatuses.Count;
+}
+
+@Styles.Render("~/bundles/datepicker_CSS")
+<style>
+    .clicked {
+        background: green !important;
+    }
+
+    .available {
+        background: white !important;
+    }
+
+    .booked {
+        background: lightgrey !important;
+    }
+
+    .lock {
+        background: blue !important;
+    }
+</style>
+
+<main aria-labelledby="title">
+    <input type="hidden" id="OriSelectedDate">
+    <h2 id="title" style="text-align:center">@ViewBag.Title</h2>
+
+    <div class="row">
+        <label for="date" class="col-md-1">Date</label>
+        <div class="col-md-3">
+            <div class="input-group date">
+                <input type="text" class="form-control" id="datepicker" value="@Model.DisplayDate">
+                <span class="input-group-append">
+                    <span class="input-group-text bg-white d-block">
+                        <i class="fa-regular fa-calendar-days"></i>
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    <div class="row table-responsive">
+        <table class="table table-sm table-bordered">
+            <caption>
+                <br />
+                <ul style="list-style-type: none;">
+                    <li style="display:inline">
+                        <input type="text" disabled style="width: 25px;background-color:white;" />
+                        Available
+                    </li>
+                    <li style="display:inline">
+                        <input type="text" disabled style="width: 25px;background-color:green;" />
+                        Your selection
+                    </li>
+                    <li style="display:inline">
+                        <input type="text" disabled style="width: 25px;background-color:blue;" />
+                        Locked
+                    </li>
+                    <li style="display:inline">
+                        <input type="text" disabled style="width: 25px; background-color: lightgrey;" />
+                        Unavailable
+                    </li>
+                </ul>
+            </caption>
+            <thead class="table-secondary">
+                <tr>
+                    <th scope="col">Timeslot</th>
+                    @foreach (var item in Model.scheduleDates)
+                    {
+                        <th scope="col">@item.Date</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @while (init_row < max_row)
+                {
+                    <tr>
+                        @switch (@Model.scheduleDates[0].roomStatuses[init_row].timeslot)
+                        {
+                            case "0000":
+                                <th scope="row" class="table-secondary">00:00-01:00</th>
+ break;
+                            case "0100":
+                                <th scope="row" class="table-secondary">01:00-02:00</th>
+ break;
+                            case "0200":
+                                <th scope="row" class="table-secondary">02:00-03:00</th>
+ break;
+                            case "0300":
+                                <th scope="row" class="table-secondary">03:00-04:00</th>
+ break;
+                            case "0400":
+                                <th scope="row" class="table-secondary">04:00-05:00</th>
+ break;
+                            case "0500":
+                                <th scope="row" class="table-secondary">05:00-06:00</th>
+ break;
+                            case "0600":
+                                <th scope="row" class="table-secondary">06:00-07:00</th>
+ break;
+                            case "0700":
+                                <th scope="row" class="table-secondary">07:00-08:00</th>
+ break;
+                            case "0800":
+                                <th scope="row" class="table-secondary">08:00-09:00</th>
+ break;
+                            case "0900":
+                                <th scope="row" class="table-secondary">09:00-10:00</th>
+ break;
+                            case "1000":
+                                <th scope="row" class="table-secondary">10:00-11:00</th>
+ break;
+                            case "1100":
+                                <th scope="row" class="table-secondary">11:00-12:00</th>
+ break;
+                            case "1200":
+                                <th scope="row" class="table-secondary">12:00-13:00</th>
+ break;
+                            case "1300":
+                                <th scope="row" class="table-secondary">13:00-14:00</th>
+ break;
+                            case "1400":
+                                <th scope="row" class="table-secondary">14:00-15:00</th>
+ break;
+                            case "1500":
+                                <th scope="row" class="table-secondary">15:00-16:00</th>
+ break;
+                            case "1600":
+                                <th scope="row" class="table-secondary">16:00-17:00</th>
+ break;
+                            case "1700":
+                                <th scope="row" class="table-secondary">17:00-18:00</th>
+ break;
+                            case "1800":
+                                <th scope="row" class="table-secondary">18:00-19:00</th>
+ break;
+                            case "1900":
+                                <th scope="row" class="table-secondary">19:00-20:00</th>
+ break;
+                            case "2000":
+                                <th scope="row" class="table-secondary">20:00-21:00</th>
+ break;
+                            case "2100":
+                                <th scope="row" class="table-secondary">21:00-22:00</th>
+ break;
+                            case "2200":
+                                <th scope="row" class="table-secondary">22:00-23:00</th>
+ break;
+                            case "2300":
+                                <th scope="row" class="table-secondary">23:00-00:00</th>
+ break;
+                            default:
+                                <th scope="row" class="table-secondary">error</th>
+break;
+                        }
+
+                        @*<th scope="row" class="table-secondary">@Model.scheduleDates[0].studioStatuses[init_row].timeslot</th>*@
+                        @foreach (var inner in Model.scheduleDates)
+                        {
+                            if (inner.Enable == true && @inner.roomStatuses[init_row].status == "1")
+                            {
+                                <td class="slot available" id="@inner.Date@inner.roomStatuses[init_row].timeslot"></td>
+                            }
+                            else if (inner.Enable == true && inner.roomStatuses[init_row].status == "3")
+                            {
+                                <td class="lock"></td>
+                            }
+                            else
+                            {
+                                <td class="booked"></td>
+                            }
+                        }
+                    </tr>
+                    init_row++;
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Button trigger modal -->
+    @*<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Launch static backdrop modal
+        </button>*@
+
+    <!-- Modal -->
+    <div class="modal fade modal-sm" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Alert <i class="fa-solid fa-exclamation"></i></h5>
+                </div>
+                <div class="modal-body">
+                    Your selected input will be cleared.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="RestoreDate()">Remain existing</button>
+                    <button type="button" class="btn btn-primary" onclick="Reload()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("ReservationConfirm", "Reservation", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="d-grid justify-content-md-end">
+            <input type="hidden" id="roomId" value="@ViewBag.RoomId" name="roomId" />
+            <input type="hidden" id="selectedSlots" value="" name="selectedSlots" />
+            <input type="submit" value="Book" class="btn btn-primary " />
+        </div>
+    }
+</main>
+@section scripts
+{
+    @Scripts.Render("~/bundles/datepicker")
+    <script type="text/javascript">
+    var selected = [];
+    function AddRemoveSelected(id) {
+        var toinsert = 1;
+        for (var i = 0; i <= selected.length - 1; i++) {
+            if (selected[i] === id) {
+                selected.splice(i, 1);
+                toinsert = 0;
+            }
+        }
+        if (toinsert === 1) {
+            selected.push(id)
+        }
+
+        document.getElementById("selectedSlots").value = selected.join();
+    }
+    function RestoreDate() {
+        $('#datepicker').val($('#OriSelectedDate').val());
+    }
+
+    function Reload() {
+        var newSelectedDate = $('#datepicker').val();
+        window.location.href = '@Html.Raw(@Url.Action("Schedule", "Reservation", new { id= @ViewBag.RoomId}))' + '?selectedDate=' + newSelectedDate;
+    }
+
+    $(function () {
+        $('.input-group').datepicker({
+            format: "dd/mm/yyyy",
+            weekStart: 1,
+            todayBtn: "linked"
+        });
+
+        $('#OriSelectedDate').val($('#datepicker').val());
+
+        $('#datepicker').change(function () {
+            console.log(this.value);
+            //$('#datepicker').val('111');
+            //console.log($('#datepicker').val());
+            //$('#datepicker').val($('#OriSelectedDate').val());
+            $('#staticBackdrop').modal('show');
+        });
+
+        $('.slot').click(function () {
+            if ($(this).hasClass('available')) {
+                $(this).removeClass('available');
+                $(this).addClass('clicked');
+                AddRemoveSelected(this.id);
+                //alert(this.id);
+            } else {
+                $(this).removeClass('clicked').addClass('available');
+                AddRemoveSelected(this.id);
+                //alert(this.id);
+            }
+        });
+    });
+    </script>
+}

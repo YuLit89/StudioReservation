@@ -1,0 +1,135 @@
+﻿@model StudioReservation.Models.ReservationConfirmViewModel
+@{
+    ViewBag.Title = "Confirm Reservation";
+}
+@Styles.Render("~/bundles/datepicker_CSS")
+
+<main aria-labelledby="title">
+    <input type="hidden" id="Timer" value="@ViewBag.Timer" />
+    <div>TIME REMAINING : <span id="TimerDisplay">@ViewBag.TimerDisplay</span> minutes</div>
+    <br />
+    <div class="row justify-content-center">
+        <div class="col-md-8" style="border: 1px solid black; border-radius: 20px; background-color: floralwhite">
+            <h2 id="title" style="text-align:center;margin-top:15px">@ViewBag.Title</h2>
+            <hr />
+            <div class="row" style="font-size:small;">
+                @Html.LabelFor(m => m.roomName, new { @class = "col-md-2" })
+                @Model.roomName
+            </div>
+            <br />
+            @foreach (var item in Model.orders)
+            {
+                <div class="row" style="font-size:small;margin-top:10px;">
+                    @Html.LabelFor(m => m.orders[0].date, new { @class = "col-md-2" })
+                    @item.date
+                </div>
+                <div class="row" style="font-size:small;">
+                    <div class="col-md-10">
+                        @Html.LabelFor(m => m.orders[0].slots, new { @class = "col-md-2" })
+
+                        @foreach (var i in item.slots)
+                        {
+                            @i <span>;</span>
+                        }
+                    </div>
+                    <div class="col-md-2 justify-content-end">
+                        RM @item.fee
+                    </div>
+                </div>
+            }
+            <hr />
+            <div class="row" style="font-size:small;">
+                <div class="col-md-10">
+                    @Html.LabelFor(m => m.rentalCost, new { @class = "col-md-4" })
+                </div>
+                <div class="col-md-2 justify-content-end">
+                    RM @Model.rentalCost
+                </div>
+            </div>
+            <div class="row" style="font-size:small;">
+                <div class="col-md-10">
+                    @Html.LabelFor(m => m.platformCharge, new { @class = "col-md-4" })
+                </div>
+                <div class="col-md-2 justify-content-end">
+                    RM @Model.platformCharge
+                </div>
+            </div>
+            <hr />
+            <div class="row" style="font-weight:bold;">
+                <div class="col-md-10">
+                    @Html.LabelFor(m => m.totalAmount, new { @class = "col-md-4" })
+                </div>
+                <div class="col-md-2 justify-content-end">
+                    RM @Model.totalAmount
+                </div>
+            </div>
+            <br />
+            @if (Model.termCondition.Count > 0)
+            {
+                <div class="row">
+                    <h2>@Html.LabelFor(m => m.termCondition)</h2>
+                    <ol style="margin-left:10px;">
+                        @foreach (var j in Model.termCondition)
+                        {
+                            <li>@j</li>
+                        }
+                    </ol>
+                </div>
+                <br />
+
+            }
+        </div>
+    </div>
+    <div class="d-grid justify-content-md-end">
+        <input type="button" value="Cancel" class="btn btn-primary" onclick="ReservationCancel()" />
+        <input type="submit" value="Book" class="btn btn-primary " />
+    </div>
+    <div class="modal fade modal-sm" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Alert <i class="fa-solid fa-exclamation"></i></h5>
+                </div>
+                <div class="modal-body">
+                    Time out. Please select again.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="ReservationCancel()">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section scripts
+{
+    <script type="text/javascript">
+    function ReservationCancel() {
+        window.location.href = '@Html.Raw(@Url.Action("ReservationCancel", "Reservation", new { roomId = ViewBag.RoomId, selectedSlots = ViewBag.selectedSlots }))';
+    }
+
+    function startTimer(duration, display) {
+        var timer = duration, minutes, seconds;
+        var interval = setInterval(function () {
+            minutes = parseInt(timer / 60, 10)
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                $('#staticBackdrop').modal('show');
+            }
+        }, 1000);
+    }
+
+    window.onload = function () {
+        var seconds = $("#Timer").val(),
+            display = document.getElementById('TimerDisplay');
+        startTimer(seconds, display);
+    };
+    </script>
+}
