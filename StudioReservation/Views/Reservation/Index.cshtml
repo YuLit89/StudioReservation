@@ -1,0 +1,22 @@
+﻿@model StudioReservation.Models.RoomViewModels
+@{
+    ViewBag.Title = "Reservation";
+}
+<main aria-labelledby="title">
+    <h2 id="title" style="text-align:center">@ViewBag.Title</h2>
+
+    <div class="row justify-content-center">
+        @foreach (var item in Model.Rooms)
+        {
+            <div class="col-md-3" style="height: 200px; border:double; margin: 10px 10px;">
+                <div style="height:50%; text-align:center">
+                    <img src="~/Content/Images/@item.Image" style="height: 100%; object-fit: contain" />
+                </div>
+                <div style="height:50%;text-align:center">
+                    <p><b>@item.Name</b></p>
+                    @Html.ActionLink("Book", "Schedule", new { id = @item.Id }, new { @class = "btn btn-outline-warning" })
+                </div>
+            </div>
+        }
+    </div>
+</main>

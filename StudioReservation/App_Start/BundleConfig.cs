@@ -25,6 +25,15 @@ namespace StudioReservation
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new StyleBundle("~/bundles/datepicker_CSS").Include(
+                    "~/Content/bootstrap-datepicker.min.css",
+                    "~/Content/FontAwesome/css/fontawesome.min.css",
+                    "~/Content/FontAwesome/css/regular.min.css"
+                    ));
+            
+            bundles.Add(new ScriptBundle("~/bundles/datepicker").Include(
+                    "~/Scripts/bootstrap-datepicker.min.js"));
         }
     }
 }
