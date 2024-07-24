@@ -10,7 +10,7 @@ using System.Web;
 
 namespace StudioReservation.BackOffice
 {
-   
+
     public static class ServiceConnection
     {
         public static IMemberService _memberService;
