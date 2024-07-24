@@ -121,9 +121,13 @@ namespace StudioReservation.Service
 
             var all = new List<ViewTimeSlot>();
 
+            int totelPage = _roomTimeSlot.Values.Where(x => x.Date >= now.Date).Count()/Size;
+
+            var sizeTaken = (LastId == 0) ? 0 : Size * (Page - 1);
+
             var timeSlot = (LastId == 0)
-                           ? _roomTimeSlot.Values.Where(x => x.Date >= now.Date).OrderBy(x => x.Id).Take(Size)
-                           : _roomTimeSlot.Values.Where(x => x.Id > LastId).OrderBy(x => x.Id).Take(Size);
+                           ? _roomTimeSlot.Values.Where(x => x.Date >= now.Date).OrderBy(x => x.Id).Take(sizeTaken)
+                           : _roomTimeSlot.Values.Where(x => x.Id > LastId).OrderBy(x => x.Id).Take(sizeTaken).Skip(sizeTaken-Size);
 
             foreach(var t in timeSlot)
             {
@@ -146,8 +150,8 @@ namespace StudioReservation.Service
             {
                 TimeSlots = all,
                 Error = 0,
-                TotalPage = (timeSlot.Count() / 2),
-                Paging = Page + 1,
+                TotalPage = totelPage,
+                Paging = (Page == 0 ) ? 1 : Page,
                 LastId = (all.Count() > 0) ? all.Last().Id : 0
             };
         }
