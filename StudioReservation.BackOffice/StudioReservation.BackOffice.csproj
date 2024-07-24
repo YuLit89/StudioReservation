@@ -171,13 +171,16 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\TimeSlotController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\TimeSlotRequestModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceConnection.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -256,6 +259,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\TimeSlot\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -281,6 +285,28 @@
     <Content Include="Scripts\bootstrap.esm.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\bootstrap.bundle.js.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StudioMember.Service.Contract\StudioMember.Service.Contract.csproj">
+      <Project>{1C82D02C-695F-4C80-8571-F653ACD0C66B}</Project>
+      <Name>StudioMember.Service.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioMember.Service.Proxy\StudioMember.Service.Proxy.csproj">
+      <Project>{0E7E7EF9-BD12-4564-AEA7-177ADEAEAC4D}</Project>
+      <Name>StudioMember.Service.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioReservation.Contract\StudioReservation.Contract.csproj">
+      <Project>{916D47FF-22BD-4F9A-B6BF-8FAEA3E4DA5F}</Project>
+      <Name>StudioReservation.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioReservation.DataModel\StudioReservation.DataModel.csproj">
+      <Project>{2C121AE3-206E-4D07-BC17-15BCA473E026}</Project>
+      <Name>StudioReservation.DataModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioReservation.Proxy\StudioReservation.Proxy.csproj">
+      <Project>{AEEF5D3F-F1EE-4780-BBE6-B049EE9A1540}</Project>
+      <Name>StudioReservation.Proxy</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
