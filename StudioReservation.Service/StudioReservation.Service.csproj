@@ -46,7 +46,6 @@
     <Compile Include="ReservationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReservationStatus.cs" />
-    <Compile Include="RoomService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StudioReservation.Contract\StudioReservation.Contract.csproj">
@@ -56,6 +55,14 @@
     <ProjectReference Include="..\StudioReservation.DataModel\StudioReservation.DataModel.csproj">
       <Project>{2C121AE3-206E-4D07-BC17-15BCA473E026}</Project>
       <Name>StudioReservation.DataModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioReservation\StudioReservation.csproj">
+      <Project>{D090F0BA-4A1D-4C22-8A92-580C44AB4771}</Project>
+      <Name>StudioReservation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioRoomType.DataModel\StudioRoomType.DataModel.csproj">
+      <Project>{7AE51DF6-6B4B-4D86-871C-4A1E50B0CB79}</Project>
+      <Name>StudioRoomType.DataModel</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

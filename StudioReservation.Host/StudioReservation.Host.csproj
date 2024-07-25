@@ -79,6 +79,14 @@
       <Project>{60F2D8A5-4C34-472A-98A6-2002FD0D4B7A}</Project>
       <Name>StudioReservation.Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StudioRoomType.ADO\StudioRoomType.ADO.csproj">
+      <Project>{B5713C05-2423-443D-85FF-9188C01F1973}</Project>
+      <Name>StudioRoomType.ADO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioRoomType.DataModel\StudioRoomType.DataModel.csproj">
+      <Project>{7ae51df6-6b4b-4d86-871c-4a1e50b0cb79}</Project>
+      <Name>StudioRoomType.DataModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -12,15 +12,17 @@ namespace StudioReservation.Contract
     public interface IReservationService : IDisposable
     {
         [OperationContract]
-        int CreateTimeSlot(RoomTimeSlotRequest Request);
+        int CreateTimeSlot(CreateRoomTimeSlot Request);
         [OperationContract]
-        int UpdateTimeSlot(long TimeSlotId, string Times, string UpdateBy, DateTime UpdateTime, bool Enable);
+        int EditTimeSlot(long TimeSlotId, string Times, string UpdateBy, DateTime UpdateTime, bool Enable);
         [OperationContract]
         ViewAllTimeSlot FindAllRoomTimeSlot(int Page, long LastId, int Size = 20);
         [OperationContract]
         ViewAllTimeSlot FindRoomTimeSlotByFilter(int RoomId, DateTime StartTime, DateTime EndTime, int Page, long LastId, int Size = 20);
 
-        //get available time slot
+        [OperationContract]
+        RoomTimeSlotDetail FindDetail(long TimeSlotId);
+
         [OperationContract]
         int TimeSlotReservation(TimeSlotReservationRequest Request);
 

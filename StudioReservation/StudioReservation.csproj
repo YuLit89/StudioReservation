@@ -330,6 +330,10 @@
       <Project>{AEEF5D3F-F1EE-4780-BBE6-B049EE9A1540}</Project>
       <Name>StudioReservation.Proxy</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StudioRoomType.DataModel\StudioRoomType.DataModel.csproj">
+      <Project>{7AE51DF6-6B4B-4D86-871C-4A1E50B0CB79}</Project>
+      <Name>StudioRoomType.DataModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

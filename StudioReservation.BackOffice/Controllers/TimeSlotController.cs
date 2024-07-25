@@ -19,10 +19,10 @@ namespace StudioReservation.BackOffice.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create([Bind(Include = "RoomId,Times,Enable,Dates")] CreateTimeSlot request)
+        public ActionResult Create([Bind(Include = "RoomId,Times,Enable,Dates")] CreateTimeSlotRequest request)
         {
 
-            var data = new RoomTimeSlotRequest
+            var data = new CreateRoomTimeSlot
             {
                 RoomId = request.RoomId,
                 Dates = request.Dates,
@@ -45,7 +45,7 @@ namespace StudioReservation.BackOffice.Controllers
         public ActionResult Edit([Bind(Include = "Id,RoomId,Times,Enable")] EditTimeSlot request)
         {
 
-            var result = _reservationService.UpdateTimeSlot(request.Id, request.Times, string.Empty, DateTime.Now, request.Enable);
+            var result = _reservationService.EditTimeSlot(request.Id, request.Times, string.Empty, DateTime.Now, request.Enable);
 
             return View(result);
 
@@ -70,6 +70,20 @@ namespace StudioReservation.BackOffice.Controllers
         {
 
             var result = _reservationService.FindRoomTimeSlotByFilter(roomId, startTime, endTime, page, lastId);
+
+            if (result.Error != 0)
+            {
+                return HttpNotFound();
+            }
+
+            return View(result);
+        }
+
+        [HttpGet]
+        public ActionResult FindDetail(long Id)
+        {
+
+            var result = _reservationService.FindDetail(Id);
 
             if (result.Error != 0)
             {
