@@ -17,6 +17,22 @@ namespace StudioReservation.BackOffice.Controllers
         {
             _reservationService = ServiceConnection._reservationService;
         }
+        public ActionResult Index()
+        {
+            ViewBag.RoomId = "";
+            ViewBag.StartDate = "";
+            ViewBag.EndDateDate = "";
+            var result = _reservationService.FindAllRoomTimeSlot(1, 0);
+            //if (result.Error != 0)
+            //{
+            //    ViewBag.ErrorCode = result.Error.ToString();
+            //    return View("Error");
+            //}
+            List<string> roomList = new List<string>() { "Studio1", "Studio2"};
+            ViewBag.MovieShow = new SelectList(roomList);
+
+            return View(result);
+        }
 
         [HttpPost]
         public ActionResult Create([Bind(Include = "RoomId,Times,Enable,Dates")] CreateTimeSlot request)
