@@ -26,7 +26,7 @@ namespace StudioReservation.Proxy
 
         }
 
-        public int CreateTimeSlot(RoomTimeSlotRequest Request)
+        public int CreateTimeSlot(CreateRoomTimeSlot Request)
         {
             IReservationService s = null;
             try
@@ -67,7 +67,7 @@ namespace StudioReservation.Proxy
             }
         }
 
-        public int UpdateTimeSlot(long TimeSlotId, string Times, string UpdateBy, DateTime UpdateTime, bool Enable)
+        public int EditTimeSlot(long TimeSlotId, string Times, string UpdateBy, DateTime UpdateTime, bool Enable)
         {
             IReservationService s = null;
             try
@@ -76,7 +76,7 @@ namespace StudioReservation.Proxy
 
                 if (s != null)
                 {
-                    return s.UpdateTimeSlot(TimeSlotId, Times, UpdateBy, UpdateTime, Enable);
+                    return s.EditTimeSlot(TimeSlotId, Times, UpdateBy, UpdateTime, Enable);
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
@@ -264,5 +264,45 @@ namespace StudioReservation.Proxy
             }
         }
 
+        public RoomTimeSlotDetail FindDetail(long TimeSlotId)
+        {
+            IReservationService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.FindDetail(TimeSlotId);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
+                return new RoomTimeSlotDetail { Error = -1 };
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
+                return new RoomTimeSlotDetail { Error = -2 };
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
+                return new RoomTimeSlotDetail { Error = -3 };
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
+                return new RoomTimeSlotDetail { Error = -4 };
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
+                return new RoomTimeSlotDetail { Error = -5 };
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
     }
 }

@@ -12,7 +12,6 @@ namespace StudioReservation.ADO
 
     public interface IStudioReservationADO : IDisposable
     {
-
         IEnumerable<RoomTimeSlot> GetAllTimeSlot();
 
         long CreateTimeSlot(RoomTimeSlot TimeSlot);

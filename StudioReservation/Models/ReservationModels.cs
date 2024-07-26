@@ -1,4 +1,5 @@
 ﻿using Microsoft.Ajax.Utilities;
+using StudioRoomType.DataModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,21 +8,7 @@ using System.Web;
 
 namespace StudioReservation.Models
 {
-    public class Room
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Image { get; set; }
-        public string Size { get; set; }
-        public string Style { get; set; }
-        public decimal Rate { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public string UpdatedBy { get; set; }
-    }
-
+   
     public class RoomViewModels
     {
         public List<Room> Rooms { get; set; }

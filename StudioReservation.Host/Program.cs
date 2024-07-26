@@ -1,6 +1,7 @@
 ﻿using StudioReservation.ADO;
 using StudioReservation.Contract;
 using StudioReservation.Service;
+using StudioRoomType.ADO;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -24,11 +25,15 @@ namespace StudioReservation.Host
             var url = $"net.tcp://localhost:{port}/ReservationService";
 
             var repo = new StudioReservationSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+            var roomRepo = new StudioRoomTypeSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+
 
             var service = new ReservationService(
+                getAllTimeSlot : repo.GetAllTimeSlot,
                 insertTimeSlot : repo.CreateTimeSlot,
                 updateTimeSlot : repo.UpdateTimeSlot,
-                insertReservation : repo.CreateReservation
+                insertReservation : repo.CreateReservation,
+                getAllRoomsType : roomRepo.GetAll
                 );
 
             new ServiceHost<IReservationService>().Boot(url, service);

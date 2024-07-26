@@ -1,4 +1,5 @@
 ﻿using StudioReservation.Models;
+using StudioRoomType.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace StudioReservation.Controllers
                Rooms =  new List<Room>
               {
                   new Room {
-                    Id =  "936BBCBD-7BD6-43EE-B7CF-131BA2867F0A",
+                    Id =  1,
                     Name = "Studio 1",
                     Description = "Measuring over 800 sqft and can accommodate up to 16 dancers comfortably. Our dance floor rests on a system of high-density rubber underlays and laminate wood flooring. It is fully air-conditioned and equipped with barres, mirrors and sound system compatible for audio input jack, USB device and SD card. This studio overlooks the street with many windows for natural lighting and ventilation.",
                     Image = "Studio1.jpg",
@@ -26,7 +27,7 @@ namespace StudioReservation.Controllers
                     Rate = 100.00M
                   },
                   new Room {
-                    Id =  "936BBCBD-7BD6-43EE-B7CF-131BA2867AAA",
+                    Id =  2,
                     Name = "Studio 2",
                     Description = "Measuring over 800 sqft and can accommodate up to 16 dancers comfortably. Our dance floor rests on a system of high-density rubber underlays and laminate wood flooring. It is fully air-conditioned and equipped with barres, mirrors and sound system compatible for audio input jack, USB device and SD card. This studio overlooks the street with many windows for natural lighting and ventilation.",
                     Image = "Studio2.jpg",
@@ -35,7 +36,7 @@ namespace StudioReservation.Controllers
                     Rate = 120.00M
                   },
                   new Room {
-                    Id =  "936BBCBD-7BD6-43EE-B7CF-131BA2867SSS",
+                    Id =  3,
                     Name = "Studio 3",
                     Description = "Measuring over 800 sqft and can accommodate up to 16 dancers comfortably. Our dance floor rests on a system of high-density rubber underlays and laminate wood flooring. It is fully air-conditioned and equipped with barres, mirrors and sound system compatible for audio input jack, USB device and SD card. This studio overlooks the street with many windows for natural lighting and ventilation.",
                     Image = "Studio3.jpg",
@@ -44,7 +45,7 @@ namespace StudioReservation.Controllers
                     Rate = 100.00M
                   },
                   new Room {
-                    Id =  "936BBCBD-7BD6-43EE-B7CF-131BA2867DDD",
+                    Id =  4,
                     Name = "Studio 4",
                     Description = "Measuring over 800 sqft and can accommodate up to 16 dancers comfortably. Our dance floor rests on a system of high-density rubber underlays and laminate wood flooring. It is fully air-conditioned and equipped with barres, mirrors and sound system compatible for audio input jack, USB device and SD card. This studio overlooks the street with many windows for natural lighting and ventilation.",
                     Image = "Studio4.jpg",
@@ -53,7 +54,7 @@ namespace StudioReservation.Controllers
                     Rate = 100.00M
                   },
                   new Room {
-                    Id =  "936BBCBD-7BD6-43EE-B7CF-131BA2867FFF",
+                    Id =  5,
                     Name = "Studio 5",
                     Description = "Measuring over 800 sqft and can accommodate up to 16 dancers comfortably. Our dance floor rests on a system of high-density rubber underlays and laminate wood flooring. It is fully air-conditioned and equipped with barres, mirrors and sound system compatible for audio input jack, USB device and SD card. This studio overlooks the street with many windows for natural lighting and ventilation.",
                     Image = "Studio5.jpg",

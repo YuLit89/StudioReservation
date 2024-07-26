@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2C121AE3-206E-4D07-BC17-15BCA473E026}</ProjectGuid>
+    <ProjectGuid>{B5713C05-2423-443D-85FF-9188C01F1973}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StudioReservation.DataModel</RootNamespace>
-    <AssemblyName>StudioReservation.DataModel</AssemblyName>
+    <RootNamespace>StudioRoomType.ADO</RootNamespace>
+    <AssemblyName>StudioRoomType.ADO</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,9 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ReservationHistory.cs" />
-    <Compile Include="TimeSlot.cs" />
+    <Compile Include="RoomTypeSQL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StudioRoomType.DataModel\StudioRoomType.DataModel.csproj">
+      <Project>{7AE51DF6-6B4B-4D86-871C-4A1E50B0CB79}</Project>
+      <Name>StudioRoomType.DataModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

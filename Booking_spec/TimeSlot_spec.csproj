@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F1B6A617-A666-40C2-A3B9-C1AE2C1A5320}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>StudioReservation.Host</RootNamespace>
-    <AssemblyName>StudioReservation.Host</AssemblyName>
+    <ProjectGuid>{93223655-F9EB-4E09-A78F-2670178E031E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Booking_spec</RootNamespace>
+    <AssemblyName>Booking_spec</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,14 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.5.3.2\lib\net46\NLog.dll</HintPath>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VS.QualityTools.UnitTestFramework.15.0.27323.2\lib\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,43 +44,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="UnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StudioReservation.ADO\StudioReservation.ADO.csproj">
-      <Project>{F5CA7D55-628D-419A-9E48-FFFAE53E6709}</Project>
-      <Name>StudioReservation.ADO</Name>
-    </ProjectReference>
     <ProjectReference Include="..\StudioReservation.Contract\StudioReservation.Contract.csproj">
-      <Project>{916d47ff-22bd-4f9a-b6bf-8faea3e4da5f}</Project>
+      <Project>{916D47FF-22BD-4F9A-B6BF-8FAEA3E4DA5F}</Project>
       <Name>StudioReservation.Contract</Name>
     </ProjectReference>
     <ProjectReference Include="..\StudioReservation.DataModel\StudioReservation.DataModel.csproj">
-      <Project>{2c121ae3-206e-4d07-bc17-15bca473e026}</Project>
+      <Project>{2C121AE3-206E-4D07-BC17-15BCA473E026}</Project>
       <Name>StudioReservation.DataModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StudioReservation.Service\StudioReservation.Service.csproj">
-      <Project>{60F2D8A5-4C34-472A-98A6-2002FD0D4B7A}</Project>
-      <Name>StudioReservation.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StudioRoomType.ADO\StudioRoomType.ADO.csproj">
-      <Project>{B5713C05-2423-443D-85FF-9188C01F1973}</Project>
-      <Name>StudioRoomType.ADO</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StudioRoomType.DataModel\StudioRoomType.DataModel.csproj">
-      <Project>{7ae51df6-6b4b-4d86-871c-4a1e50b0cb79}</Project>
-      <Name>StudioRoomType.DataModel</Name>
+    <ProjectReference Include="..\StudioReservation.Proxy\StudioReservation.Proxy.csproj">
+      <Project>{AEEF5D3F-F1EE-4780-BBE6-B049EE9A1540}</Project>
+      <Name>StudioReservation.Proxy</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

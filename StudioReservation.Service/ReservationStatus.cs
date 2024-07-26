@@ -12,6 +12,7 @@ namespace StudioReservation.Service
         Opening = 1 ,
         Lock = 2 ,
         Booked = 3,
-        Closed = 4
+        Closed = 4,
+        Cancel = 5
     }
 }
