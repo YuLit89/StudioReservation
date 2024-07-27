@@ -304,5 +304,46 @@ namespace StudioReservation.Proxy
                 CloseOrAbortServiceChannel((ICommunicationObject)s);
             }
         }
+
+        public NotAvailableRoomDate GetNotAvailableRoomDate(int RoomId)
+        {
+            IReservationService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.GetNotAvailableRoomDate(RoomId);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
+                return new NotAvailableRoomDate { Error = -1 };
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
+                return new NotAvailableRoomDate { Error = -2 };
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
+                return new NotAvailableRoomDate { Error = -3 };
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
+                return new NotAvailableRoomDate { Error = -4 };
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
+                return new NotAvailableRoomDate { Error = -5 };
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
     }
 }

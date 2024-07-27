@@ -27,13 +27,15 @@ namespace StudioReservation.Host
             var repo = new StudioReservationSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
             var roomRepo = new StudioRoomTypeSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
 
+            var timeSlotRange = int.Parse(ConfigurationManager.AppSettings["time-slot-range"]);
 
             var service = new ReservationService(
                 getAllTimeSlot : repo.GetAllTimeSlot,
                 insertTimeSlot : repo.CreateTimeSlot,
                 updateTimeSlot : repo.UpdateTimeSlot,
                 insertReservation : repo.CreateReservation,
-                getAllRoomsType : roomRepo.GetAll
+                getAllRoomsType : roomRepo.GetAll,
+                timeSlotRange : timeSlotRange
                 );
 
             new ServiceHost<IReservationService>().Boot(url, service);

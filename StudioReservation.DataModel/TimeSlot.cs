@@ -39,7 +39,6 @@ namespace StudioReservation.DataModel
     public class ViewAllTimeSlot 
     {
         public List<ViewTimeSlot> TimeSlots { get; set; }
-        public List<RoomType> RoomTypes { get; set; }
         public int TotalPage { get; set; }
         public int Paging { get; set; }
         public long LastId { get; set; }
@@ -48,15 +47,15 @@ namespace StudioReservation.DataModel
 
     public class ViewTimeSlot : RoomTimeSlotBase
     {
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public bool AbleToDelete { get; set; }
-        public List<string> AvailableTime { get; set; }
-        public List<string> BookedTime { get; set; }
+        public string AvailableTime { get; set; }
+        public string BookedTime { get; set; }
     }
 
     public class RoomTimeSlotDetail : RoomTimeSlotBase
     {
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public DateTime CreatedTime { get; set; }
 
         public List<string> AvailableTime { get; set; }
@@ -64,6 +63,7 @@ namespace StudioReservation.DataModel
         public List<string> LockedTime { get; set; }
 
         public string RoomTypeImage { get; set; }
+        public string RoomName { get; set; }
 
         public bool EnableEdit { get; set; }
 
@@ -78,9 +78,21 @@ namespace StudioReservation.DataModel
         public string ReservationTime { get; set; }
     }
 
+    public class NotAvailableRoomDate
+    {
+        public List<RoomType> Room { get; set; }
+        public string NotAvailableDates { get; set; }
+        public int Error { get; set; }
+    }
+
     public class RoomType
     {
-        public int Id { get; set; }
         public string Name { get; set; }
+        public int Id { get; set; }
+    }
+
+    public class NotAvaialbleDateTime : RoomTimeSlotBase
+    {
+        public string Date { get; set; }
     }
 }

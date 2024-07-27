@@ -11,6 +11,13 @@ namespace StudioReservation.Contract
     [ServiceContract]
     public interface IReservationService : IDisposable
     {
+
+        [OperationContract]
+        NotAvailableRoomDate GetNotAvailableRoomDate(int RoomId);
+
+        //[OperationContract]
+        //GetNotAvailableDateTime(int RoomId, int TimeRange);
+
         [OperationContract]
         int CreateTimeSlot(CreateRoomTimeSlot Request);
         [OperationContract]
@@ -25,6 +32,10 @@ namespace StudioReservation.Contract
 
         [OperationContract]
         int TimeSlotReservation(TimeSlotReservationRequest Request);
+
+        [OperationContract]
+        int DeleteTimeSlot(long TimeSlotId);
+        
 
     }
 }

@@ -89,5 +89,19 @@ namespace Booking_spec
             Assert.AreEqual(new DateTime(2024, 08, 16),result.Date);
         }
 
+        [TestMethod]
+        public void findNotAvailableDate()
+        {
+
+            var result = service.GetNotAvailableRoomDate(3);
+
+        }
+
+        [TestMethod]
+        public void x()
+        {
+            string xx = "";
+            var newString = string.Join(",", xx);
+        }
     }
 }
