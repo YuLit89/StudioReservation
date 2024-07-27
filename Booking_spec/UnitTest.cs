@@ -74,7 +74,7 @@ namespace Booking_spec
         public void tiemslot_GetHistory()
         {
         
-            var result = service.FindAllRoomTimeSlot(0, 0);
+            var result = service.FindAllRoomTimeSlot();
 
         }
 
@@ -100,8 +100,12 @@ namespace Booking_spec
         [TestMethod]
         public void x()
         {
-            string xx = "";
-            var newString = string.Join(",", xx);
+            string xx = "13:00:00";
+
+            var day = TimeSpan.Parse(xx);
+
+            var xxx = day.ToString(@"hh\:mm");
+
         }
     }
 }

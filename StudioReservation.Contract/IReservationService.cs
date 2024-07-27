@@ -23,9 +23,9 @@ namespace StudioReservation.Contract
         [OperationContract]
         int EditTimeSlot(long TimeSlotId, string Times, string UpdateBy, DateTime UpdateTime, bool Enable);
         [OperationContract]
-        ViewAllTimeSlot FindAllRoomTimeSlot(int Page, long LastId, int Size = 20);
+        ViewAllTimeSlot FindAllRoomTimeSlot();
         [OperationContract]
-        ViewAllTimeSlot FindRoomTimeSlotByFilter(int RoomId, DateTime StartTime, DateTime EndTime, int Page, long LastId, int Size = 20);
+        ViewAllTimeSlot FindRoomTimeSlotByFilter(int RoomId, DateTime StartTime, DateTime EndTime);
 
         [OperationContract]
         RoomTimeSlotDetail FindDetail(long TimeSlotId);
@@ -33,8 +33,8 @@ namespace StudioReservation.Contract
         [OperationContract]
         int TimeSlotReservation(TimeSlotReservationRequest Request);
 
-        [OperationContract]
-        int DeleteTimeSlot(long TimeSlotId);
+        //[OperationContract]
+        //int DeleteTimeSlot(long TimeSlotId);
         
 
     }

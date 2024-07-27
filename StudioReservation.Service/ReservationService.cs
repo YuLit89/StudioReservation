@@ -139,31 +139,25 @@ namespace StudioReservation.Service
             return 0;
         }
 
-        public ViewAllTimeSlot FindAllRoomTimeSlot(int Page,long LastId ,int Size = 20)
+        public ViewAllTimeSlot FindAllRoomTimeSlot()
         {
             var now = DateTime.Now;
 
-            int totelPage = _roomTimeSlot.Values.Where(x => x.Date >= now.Date).Count()/Size;
 
-            var sizeTaken = (LastId == 0) ? Size : Size * (Page - 1);
-
-            var timeSlots = (LastId == 0)
-                           ? _roomTimeSlot.Values.Where(x => x.Date >= now.Date).OrderBy(x => x.Id).Take(sizeTaken).ToList()
-                           : _roomTimeSlot.Values.Where(x => x.Id > LastId).OrderBy(x => x.Id).Take(sizeTaken).Skip(sizeTaken-Size);
+            var timeSlots = _roomTimeSlot.Values.Where(x => x.Date >= now.Date).OrderBy(x => x.Id).ToList();
+                            
+                           
 
             var history = InternalComputeTimeSlotHistory(timeSlots.ToList());
 
             return new ViewAllTimeSlot
             {
                 TimeSlots = history,
-                Error = 0,
-                TotalPage = (totelPage == 0 ) ? 1 : totelPage,
-                Paging = (Page == 0) ? 1 : Page,
-                LastId = (history.Count() > 0) ? history.Last().Id : 0,
+                Error = 0
             };
         }
 
-        public ViewAllTimeSlot FindRoomTimeSlotByFilter(int RoomId, DateTime StartDate, DateTime EndDate, int Page, long LastId, int Size = 20)
+        public ViewAllTimeSlot FindRoomTimeSlotByFilter(int RoomId, DateTime StartDate, DateTime EndDate)
         {
             var now = DateTime.Now;
 
@@ -174,23 +168,15 @@ namespace StudioReservation.Service
                 query = _roomTimeSlot.Where(x => x.Value.RoomId == RoomId).Select(x => x.Value);
             }
 
-            int totelPage = _roomTimeSlot.Values.Where(x => x.Date >= now.Date).Count() / Size;
-
-            var sizeTaken = (LastId == 0) ? Size : Size * (Page - 1);
-
-            var timeSlots = (LastId == 0)
-                           ? _roomTimeSlot.Values.Where(x => x.Date >= StartDate && x.Date <= EndDate).OrderBy(x => x.Id).Take(sizeTaken)
-                           : _roomTimeSlot.Values.Where(x => x.Id > LastId).OrderBy(x => x.Id).Take(sizeTaken).Skip(sizeTaken-Size);
-
+            var timeSlots = _roomTimeSlot.Values.Where(x => x.Date >= StartDate && x.Date <= EndDate).OrderBy(x => x.Id).ToList();
+            
             var history = InternalComputeTimeSlotHistory(timeSlots.ToList());
 
             return new ViewAllTimeSlot
             {
                 TimeSlots = history,
-                Error = 0,
-                TotalPage = (totelPage == 0) ? 1 : totelPage,
-                Paging = (Page == 0) ? 1 : Page,
-                LastId = (history.Count() > 0) ? history.Last().Id : 0
+                Error = 0
+           
             };
         }
 
@@ -373,11 +359,11 @@ namespace StudioReservation.Service
 
                     if (_dateBooked.ContainsKey(new DateTime(t.Date.Year, t.Date.Month, t.Date.Day, day.Hours, day.Minutes, day.Seconds)))
                     {
-                        booked += $"{day.Hours}:{day.Minutes} ;";
+                        booked += $"{day.ToString(@"hh\:mm")} ;";
                     }
                     else
                     {
-                        available += $"{day.Hours}:{day.Minutes} ;";
+                        available += $"{day.ToString(@"hh\:mm")} ;";
                     }
                 }
 

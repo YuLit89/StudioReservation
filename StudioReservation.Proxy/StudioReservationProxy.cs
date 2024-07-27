@@ -108,7 +108,7 @@ namespace StudioReservation.Proxy
             }
         }
 
-        public ViewAllTimeSlot FindAllRoomTimeSlot(int Page, long LastId, int Size = 20)
+        public ViewAllTimeSlot FindAllRoomTimeSlot()
         {
             IReservationService s = null;
             try
@@ -117,7 +117,7 @@ namespace StudioReservation.Proxy
 
                 if (s != null)
                 {
-                    return s.FindAllRoomTimeSlot(Page,LastId,Size);
+                    return s.FindAllRoomTimeSlot();
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
@@ -149,7 +149,7 @@ namespace StudioReservation.Proxy
             }
         }
 
-        public ViewAllTimeSlot FindRoomTimeSlotByFilter(int RoomId, DateTime StartTime, DateTime EndTime, int Page, long LastId, int Size = 20)
+        public ViewAllTimeSlot FindRoomTimeSlotByFilter(int RoomId, DateTime StartTime, DateTime EndTime)
         {
             IReservationService s = null;
             try
@@ -158,7 +158,7 @@ namespace StudioReservation.Proxy
 
                 if (s != null)
                 {
-                    return s.FindRoomTimeSlotByFilter(RoomId,StartTime,EndTime,Page,LastId,Size);
+                    return s.FindRoomTimeSlotByFilter(RoomId,StartTime,EndTime);
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
