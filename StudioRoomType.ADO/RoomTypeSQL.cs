@@ -50,6 +50,7 @@ namespace StudioRoomType.ADO
 
         internal Room InternalRead(SqlDataReader reader)
         {
+            DateTime? dt = null;
             return new Room
             {
                 Id = int.Parse(reader["Id"].ToString()),
@@ -60,7 +61,7 @@ namespace StudioRoomType.ADO
                 Style = reader["Style"].ToString(),
                 Rate= decimal.Parse(reader["Rate"].ToString()),
                 CreatedDate = Convert.ToDateTime(reader["CreatedDate"].ToString()),
-                UpdatedDate = Convert.ToDateTime(reader["UpdatedDate"].ToString()),
+                UpdatedDate = Convert.IsDBNull(reader["UpdatedDate"])   ? dt : Convert.ToDateTime(reader["UpdatedDate"]),
                 CreateBy = reader["CreatedBy"].ToString(),
                 UpdateBy = reader["UpdatedBy"].ToString()
             };

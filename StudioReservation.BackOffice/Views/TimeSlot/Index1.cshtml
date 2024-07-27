@@ -1,0 +1,61 @@
+﻿@model StudioReservation.DataModel.ViewAllTimeSlot
+@{
+    ViewBag.Title = "Time Slot Management";
+}
+@Styles.Render("~/bundles/datepicker_CSS")
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-sm-8" style="background-color:lightblue; border-radius:15px;">
+            <div class="col-md-12 col-sm-12" style="margin-left: 15px;">
+                <b>Filter</b>
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+                @Html.LabelFor(m => m.TimeSlots[0].RoomId, new { @class = "col-md-3" })
+                @Html.DropDownListFor(model => model.TimeSlots[0].RoomId, ViewBag.MovieShow as SelectList, new { @class = "col-md-5" })
+            </div><br />
+
+                  <div class="col-md-12 col-sm-12">
+                      <label class="col-md-2">Start Date</label>
+                      <div class="col-md-3" style="display:inline-block">
+                          <div class="input-group date">
+                              <input type="text" class="form-control" id="startDateFilter" value="">
+                              <span class="input-group-append">
+                                  <span class="input-group-text bg-white d-block">
+                                      <i class="fa-regular fa-calendar-days"></i>
+                                  </span>
+                              </span>
+                          </div>
+                      </div>
+
+
+                      @*<input type="Text" id="startDateFilter" class="col-md-3" />*@
+                      <label class="col-md-2">End Date</label>
+                      <div class="col-md-3" style="display:inline-block">
+                          <div class="input-group date">
+                              <input type="text" class="form-control" id="endDateFilter" value="">
+                              <span class="input-group-append">
+                                  <span class="input-group-text bg-white d-block">
+                                      <i class="fa-regular fa-calendar-days"></i>
+                                  </span>
+                              </span>
+                          </div>
+                      </div>
+                      @*<input type="Text" id="endDateFilter" class="col-md-3" />*@
+                  </div>
+                  <br/>
+                  <div class="row">
+                      <div class="col-md-2 offset-md-5">
+                          <input type="button" class="btn btn-sm btn-primary" value="Search" />
+                      </div>
+                      
+                  </div>            
+
+                 
+        </div>
+    </div>
+
+
+</main>
