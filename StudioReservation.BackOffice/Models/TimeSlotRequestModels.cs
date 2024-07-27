@@ -9,7 +9,7 @@ namespace StudioReservation.BackOffice.Models
     {
         public int RoomId { get; set; }
         public string Dates { get; set; }
-        public string Times { get; set; }
+        public string[] Times { get; set; }
         public bool Enable { get; set; }
     }
 

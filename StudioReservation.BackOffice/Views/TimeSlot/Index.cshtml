@@ -2,60 +2,71 @@
 @{
     ViewBag.Title = "Time Slot Management";
 }
-@Styles.Render("~/bundles/datepicker_CSS")
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.2/css/dataTables.dataTables.css" />
 <main aria-labelledby="title">
     <h2 id="title">@ViewBag.Title</h2>
 
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-sm-8" style="background-color:lightblue; border-radius:15px;">
-            <div class="col-md-12 col-sm-12" style="margin-left: 15px;">
-                <b>Filter</b>
-            </div>
+    <input type="button" class="btn btn-primary" value="Create New" onclick="CreateNew()"/>
+    <br />
+    <div class="row table-responsive">
+        <table class="table table-bordered" id="TimeslotView">
+            <thead class="table-secondary">
+                <tr>
+                    <th scope="col">Room</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Registered slots</th>
+                    <th scope="col">Booked slots</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.TimeSlots)
+                {
+                    <tr>
+                        <td>@item.RoomId</td>
+                        <td>@item.Date</td>
+                        <td>
+                            @foreach (var j in item.AvailableTime)
+                            {
+                                @j <span>;</span>
+                            }
+                        </td>
+                        <td>
+                            @foreach (var k in item.BookedTime)
+                            {
+                                @k <span>;</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                            @if (item.AbleToDelete)
+                            {
+                             <span>|</span> @Html.ActionLink("Remove", "Remove", new { id = item.Id })
+                            }
+                        </td>
+                    </tr>
+                }
 
-            <div class="col-md-6 col-sm-6">
-                @Html.LabelFor(m => m.TimeSlots[0].RoomId, new { @class = "col-md-3" })
-                @Html.DropDownListFor(model => model.TimeSlots[0].RoomId, ViewBag.MovieShow as SelectList, new { @class = "col-md-5" })
-            </div><br />
-
-                  <div class="col-md-12 col-sm-12">
-                      <label class="col-md-2">Start Date</label>
-                      <div class="col-md-3" style="display:inline-block">
-                          <div class="input-group date">
-                              <input type="text" class="form-control" id="startDateFilter" value="">
-                              <span class="input-group-append">
-                                  <span class="input-group-text bg-white d-block">
-                                      <i class="fa-regular fa-calendar-days"></i>
-                                  </span>
-                              </span>
-                          </div>
-                      </div>
-
-
-                      @*<input type="Text" id="startDateFilter" class="col-md-3" />*@
-                      <label class="col-md-2">End Date</label>
-                      <div class="col-md-3" style="display:inline-block">
-                          <div class="input-group date">
-                              <input type="text" class="form-control" id="endDateFilter" value="">
-                              <span class="input-group-append">
-                                  <span class="input-group-text bg-white d-block">
-                                      <i class="fa-regular fa-calendar-days"></i>
-                                  </span>
-                              </span>
-                          </div>
-                      </div>
-                      @*<input type="Text" id="endDateFilter" class="col-md-3" />*@
-                  </div>
-                  <br/>
-                  <div class="row">
-                      <div class="col-md-2 offset-md-5">
-                          <input type="button" class="btn btn-sm btn-primary" value="Search" />
-                      </div>
-                      
-                  </div>            
-
-                 
-        </div>
+            </tbody>
+        </table>
     </div>
 
 
+
 </main>
+@section scripts
+{
+    <script src="https://cdn.datatables.net/2.1.2/js/dataTables.js"></script>
+    <script type="text/javascript">
+        function CreateNew() {
+            window.location.href = '@Html.Raw(@Url.Action("CreateGet", "TimeSlot"))';
+        }
+        $(document).ready(function () {
+            $('#TimeslotView').DataTable({
+                order: [[0, 'asc']]
+            });
+        });
+
+    </script>
+}
+
