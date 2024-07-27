@@ -19,7 +19,7 @@ namespace StudioReservation.BackOffice.Controllers
         }        
         public ActionResult Index()
         {
-            var result = _reservationService.FindAllRoomTimeSlot(1, 0);
+            var result = _reservationService.FindAllRoomTimeSlot();
             if (result.Error != 0)
             {
                 ViewBag.ErrorCode = result.Error.ToString();
@@ -32,7 +32,7 @@ namespace StudioReservation.BackOffice.Controllers
             ViewBag.RoomId = "";
             ViewBag.StartDate = "";
             ViewBag.EndDateDate = "";
-            var result = _reservationService.FindAllRoomTimeSlot(1, 0);
+            var result = _reservationService.FindAllRoomTimeSlot();
             //if (result.Error != 0)
             //{
             //    ViewBag.ErrorCode = result.Error.ToString();
@@ -85,7 +85,7 @@ namespace StudioReservation.BackOffice.Controllers
             {
                 RoomId = request.RoomId,
                 Dates = request.Dates,
-                Times = request.Times,
+               // Times = request.Times,
                 Enable = request.Enable,
                 CreatedBy = "",
                 CreateTime = DateTime.Now,
@@ -111,10 +111,10 @@ namespace StudioReservation.BackOffice.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetAll(int page, long lastId)
+        public ActionResult GetAll()
         {
 
-            var result = _reservationService.FindAllRoomTimeSlot(page, lastId);
+            var result = _reservationService.FindAllRoomTimeSlot();
 
             if (result.Error != 0)
             {
@@ -125,10 +125,10 @@ namespace StudioReservation.BackOffice.Controllers
         }
 
         [HttpGet]
-        public ActionResult Search(int roomId, DateTime startTime, DateTime endTime, int page, long lastId)
+        public ActionResult Search(int roomId, DateTime startTime, DateTime endTime)
         {
 
-            var result = _reservationService.FindRoomTimeSlotByFilter(roomId, startTime, endTime, page, lastId);
+            var result = _reservationService.FindRoomTimeSlotByFilter(roomId, startTime, endTime);
 
             if (result.Error != 0)
             {

@@ -39,9 +39,6 @@ namespace StudioReservation.DataModel
     public class ViewAllTimeSlot 
     {
         public List<ViewTimeSlot> TimeSlots { get; set; }
-        public int TotalPage { get; set; }
-        public int Paging { get; set; }
-        public long LastId { get; set; }
         public int Error { get; set; }
     }
 
