@@ -151,5 +151,13 @@ namespace StudioReservation.BackOffice.Controllers
 
             return View(result);
         }
+
+        [HttpGet]
+        public ActionResult FindNotAvailableDate(int roomId)
+        {
+            var result = _reservationService.GetNotAvailableRoomDate(roomId);
+
+            return View(result);
+        }
     }
 }

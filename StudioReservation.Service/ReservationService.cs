@@ -33,17 +33,22 @@ namespace StudioReservation.Service
         
         ConcurrentDictionary<int, object> _sync = new ConcurrentDictionary<int, object>();
 
+        readonly int _timeSlotRange;
+
         public ReservationService(
             Func<IEnumerable<RoomTimeSlot>> getAllTimeSlot,
             Func<RoomTimeSlot, long> insertTimeSlot,
             Func<long,string,string,DateTime,bool,long> updateTimeSlot,
             Func<ReservationHistory,long> insertReservation,
-            Func<IEnumerable<Room>> getAllRoomsType)
+            Func<IEnumerable<Room>> getAllRoomsType,
+            int timeSlotRange)
         {
             _insertTimeSlot = insertTimeSlot;
             _updateTimeSlot = updateTimeSlot;
 
             _insertReservation = insertReservation;
+
+            _timeSlotRange = timeSlotRange; 
 
 
             Init(getAllTimeSlot(), getAllRoomsType());
@@ -155,7 +160,6 @@ namespace StudioReservation.Service
                 TotalPage = (totelPage == 0 ) ? 1 : totelPage,
                 Paging = (Page == 0) ? 1 : Page,
                 LastId = (history.Count() > 0) ? history.Last().Id : 0,
-                RoomTypes = InternalGetRoomType()
             };
         }
 
@@ -186,14 +190,97 @@ namespace StudioReservation.Service
                 Error = 0,
                 TotalPage = (totelPage == 0) ? 1 : totelPage,
                 Paging = (Page == 0) ? 1 : Page,
-                LastId = (history.Count() > 0) ? history.Last().Id : 0,
-                RoomTypes = InternalGetRoomType()
+                LastId = (history.Count() > 0) ? history.Last().Id : 0
+            };
+        }
+
+        public RoomTimeSlotDetail FindDetail(long TimeSlotId)
+        {
+            var now = DateTime.Now;
+
+            RoomTimeSlot info;
+            if (!_roomTimeSlot.TryGetValue(TimeSlotId, out info))
+            {
+                return new RoomTimeSlotDetail
+                {
+                    Error = -10
+                };
+            }
+
+            Room room;
+            if (!_roomType.TryGetValue(info.RoomId, out room))
+            {
+                return new RoomTimeSlotDetail
+                {
+                    Error = -11
+                };
+            }
+
+            Dictionary<string, int> timeStatus = new Dictionary<string, int>();
+
+            foreach (var time in info.Times.Split(','))
+            {
+                var day = TimeSpan.Parse(time);
+
+                var dateTime = new DateTime(info.Date.Year, info.Date.Month, info.Date.Day, day.Hours, day.Minutes, day.Seconds);
+
+                int status;
+                if (!_dateBooked.TryGetValue(dateTime, out status))
+                {
+                    timeStatus.Add(time, (int)ReservationStatus.Opening);
+                }
+                else
+                {
+                    if (status == (int)ReservationStatus.Booked) timeStatus.Add(time, (int)ReservationStatus.Booked);
+                    if (status == (int)ReservationStatus.Lock) timeStatus.Add(time, (int)ReservationStatus.Lock);
+                }
+            }
+
+            return new RoomTimeSlotDetail()
+            {
+                Id = info.Id,
+                RoomId = info.RoomId,
+                RoomName = room.Name,
+                Enable = info.Enable,
+                Date = info.Date.ToString("yyyy-MM-dd"),
+                CreatedTime = info.CreateTime,
+                AvailableTime = timeStatus.Where(x => x.Value == (int)ReservationStatus.Opening).Select(x => x.Key).ToList(),
+                BookedTime = timeStatus.Where(x => x.Value == (int)ReservationStatus.Booked).Select(x => x.Key).ToList(),
+                LockedTime = timeStatus.Where(x => x.Value == (int)ReservationStatus.Lock).Select(x => x.Key).ToList(),
+                RoomTypeImage = room.Image,
+                EnableEdit = (now.Date > info.Date.Date) ? false : true,
+                Error = 0
+            };
+        }
+
+        public NotAvailableRoomDate GetNotAvailableRoomDate(int RoomId)
+        {
+
+            var now = DateTime.Now;
+            var limitDate = now.AddDays(_timeSlotRange);
+
+            var room = new List<RoomType>();
+
+            foreach (var r in _roomType.Values)
+            {
+                var r1 = new RoomType { Id = r.Id, Name = r.Name };
+
+                room.Add(r1);
+            }
+
+            var i = _roomTimeSlot.Values.Where(x => x.RoomId == RoomId).Where(x => x.Date >= now && x.Date <= limitDate).Select(x => x.Date.ToString("yyyy-MM-dd")).Distinct().ToList();
+
+            return new NotAvailableRoomDate
+            {
+                Room = room,
+                NotAvailableDates = string.Join(",", i),
+                Error = 0,
             };
         }
 
         public int TimeSlotReservation(TimeSlotReservationRequest Request)
         {
-            
+
             var times = Request.ReservationTime.Split(',');
 
             var thread = _sync.GetOrAdd(Request.RoomId, new object());
@@ -237,7 +324,7 @@ namespace StudioReservation.Service
                 {
                     // insert to new table - member history
 
-                    foreach(var r in reservations)
+                    foreach (var r in reservations)
                     {
                         var id = _insertReservation(r);
                         if (id <= 0)
@@ -252,7 +339,7 @@ namespace StudioReservation.Service
                     process.Complete();
                 }
 
-                foreach(var r in reservations)
+                foreach (var r in reservations)
                 {
                     _reservation.Add(r.Id, r);
                     _dateBooked.Add(r.DateTime, (int)ReservationStatus.Lock);
@@ -265,14 +352,20 @@ namespace StudioReservation.Service
         }
 
 
+        public void Dispose()
+        {
+        }
+
+
+
         internal List<ViewTimeSlot> InternalComputeTimeSlotHistory(List<RoomTimeSlot> timeSlots)
         {
             var list = new List<ViewTimeSlot>();
 
             foreach (var t in timeSlots)
             {
-                List<string> available = new List<string>();
-                List<string> booked = new List<string>();
+                string available = string.Empty;
+                string booked = string.Empty;
 
                 foreach (var time in t.Times.Split(','))
                 {
@@ -280,11 +373,11 @@ namespace StudioReservation.Service
 
                     if (_dateBooked.ContainsKey(new DateTime(t.Date.Year, t.Date.Month, t.Date.Day, day.Hours, day.Minutes, day.Seconds)))
                     {
-                        booked.Add(time);
+                        booked += $"{day.Hours}:{day.Minutes} ;";
                     }
                     else
                     {
-                        available.Add(time);
+                        available += $"{day.Hours}:{day.Minutes} ;";
                     }
                 }
 
@@ -292,11 +385,11 @@ namespace StudioReservation.Service
                 {
                     Id = t.Id,
                     RoomId = t.RoomId,
-                    Date = t.Date,
+                    Date = t.Date.ToString("yyyy-MM-dd"),
                     AvailableTime = available,
                     BookedTime = booked,
                     Enable = t.Enable,
-                    AbleToDelete = (booked.Count > 0) ? false : true,
+                    AbleToDelete = string.IsNullOrEmpty(booked) ? false : true,
                 };
 
                 list.Add(date);
@@ -305,85 +398,9 @@ namespace StudioReservation.Service
             return list;
         }
 
-        internal List<RoomType> InternalGetRoomType()
+        public int DeleteTimeSlot(long TimeSlotId)
         {
-
-            var roomTypes = new List<RoomType>();
-
-            foreach(var r in _roomType.Values)
-            {
-                var type = new RoomType
-                {
-                    Id = r.Id,
-                    Name = r.Name,
-                };
-
-                roomTypes.Add(type);
-            }
-
-            return roomTypes;
-        }
-
-        public void Dispose()
-        {
-        }
-
-        public RoomTimeSlotDetail FindDetail(long TimeSlotId)
-        {
-            var now = DateTime.Now;
-
-            RoomTimeSlot info;
-            if(!_roomTimeSlot.TryGetValue(TimeSlotId,out info))
-            {
-                return new RoomTimeSlotDetail
-                {
-                    Error = -10
-                };
-            }
-
-            Room room;
-            if (!_roomType.TryGetValue(info.RoomId, out room))
-            {
-                return new RoomTimeSlotDetail
-                {
-                    Error = -11
-                };
-            }
-
-            Dictionary<string, int> timeStatus = new Dictionary<string, int>();
-
-            foreach(var time in info.Times.Split(','))
-            {
-                var day = TimeSpan.Parse(time);
-
-                var dateTime = new DateTime(info.Date.Year, info.Date.Month, info.Date.Day,day.Hours,day.Minutes,day.Seconds);
-
-                int status;
-                if (!_dateBooked.TryGetValue(dateTime,out status))
-                {
-                    timeStatus.Add(time, (int)ReservationStatus.Opening);
-                }
-                else
-                {
-                    if (status == (int)ReservationStatus.Booked) timeStatus.Add(time, (int)ReservationStatus.Booked);
-                    if (status == (int)ReservationStatus.Lock) timeStatus.Add(time, (int)ReservationStatus.Lock);
-                }
-            }
-
-            return new RoomTimeSlotDetail()
-            {
-                Id = info.Id,
-                RoomId = info.RoomId,
-                Enable = info.Enable,
-                Date = info.Date,
-                CreatedTime = info.CreateTime,
-                AvailableTime = timeStatus.Where(x => x.Value == (int)ReservationStatus.Opening).Select(x => x.Key).ToList(),
-                BookedTime = timeStatus.Where(x => x.Value == (int)ReservationStatus.Booked).Select(x => x.Key).ToList(),
-                LockedTime = timeStatus.Where(x => x.Value == (int)ReservationStatus.Lock).Select(x => x.Key).ToList(),
-                RoomTypeImage = room.Image,
-                EnableEdit = (now.Date > info.Date.Date) ? false : true,
-                Error = 0
-            };
+            throw new NotImplementedException();
         }
     }
 }
