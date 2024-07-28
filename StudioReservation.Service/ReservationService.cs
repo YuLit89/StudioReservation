@@ -263,8 +263,8 @@ namespace StudioReservation.Service
             {
                 Room = room,
                 NotAvailableDates = string.Join(",", i),
-                StartTime = now.ToString(),
-                EndTime = endDate.ToString(),
+                StartTime = now.ToString("dd/MM/yyyy"),
+                EndTime = endDate.ToString("dd/MM/yyyy"),
                 Error = 0,
             };
         }
