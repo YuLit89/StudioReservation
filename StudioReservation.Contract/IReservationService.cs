@@ -36,8 +36,8 @@ namespace StudioReservation.Contract
         [OperationContract]
         int DeleteTimeSlot(long TimeSlotId);
 
-        [OperationContract]
-        ScheduleViewModel ReservationSchedule(long RoomId, string selectedDate);
+        //[OperationContract]
+        //ScheduleViewModel ReservationSchedule(long RoomId, string selectedDate);
 
 
     }
