@@ -419,5 +419,11 @@ namespace StudioReservation.Service
             return -11;
 
         }
+
+        public ScheduleViewModel ReservationSchedule(long RoomId, string selectedDate)
+        {
+            var model = new ScheduleViewModel();
+            model.DisplayDate = selectedDate;
+        }
     }
 }
