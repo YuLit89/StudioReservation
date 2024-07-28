@@ -6,12 +6,13 @@
 <main aria-labelledby="title">
     <h2 id="title">@ViewBag.Title</h2>
 
-    <input type="button" class="btn btn-primary" value="Create New" onclick="CreateNew()"/>
+    <input type="button" class="btn btn-primary" value="Create New" onclick="CreateNew()" />
     <br />
     <div class="row table-responsive">
         <table class="table table-bordered" id="TimeslotView">
             <thead class="table-secondary">
                 <tr>
+                    <th scope="col">ID</th>
                     <th scope="col">Room</th>
                     <th scope="col">Date</th>
                     <th scope="col">Registered slots</th>
@@ -23,15 +24,17 @@
                 @foreach (var item in Model.TimeSlots)
                 {
                     <tr>
-                        <td>@item.RoomId</td>
+                        <td>@item.Id</td>
+                        <td>@item.RoomName</td>
                         <td>@item.Date</td>
                         <td>@item.AvailableTime</td>
                         <td>@item.BookedTime</td>
                         <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { style = "text-decoration:none;" })
                             @if (item.AbleToDelete)
                             {
-                             <span>|</span> @Html.ActionLink("Remove", "Remove", new { id = item.Id })
+                                <span>|</span> //@Html.ActionLink("Remove", "Remove", new { id = item.Id }, new {id = "RemoveTimeSlotBtn"})
+                                <btn id="@item.Id" style="color:#0d6efd" onclick="PopConfirm(this)">Remove</btn>
                             }
                         </td>
                     </tr>
@@ -40,17 +43,43 @@
             </tbody>
         </table>
     </div>
-
-
-
 </main>
+<!-- Modal -->
+<div class="modal fade modal-sm" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Confirmation <i class="fa-solid fa-exclamation"></i></h5>
+            </div>
+            <div class="modal-body">
+                Do you confirm to remove this record? ID:<input type="Text" id="roomIdToRemove" style="width:100px;" disabled/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" onclick="ConfirmDelete()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts
 {
     <script src="https://cdn.datatables.net/2.1.2/js/dataTables.js"></script>
     <script type="text/javascript">
+        
+
+        function ConfirmDelete() {
+            window.location.href = '@Html.Raw(@Url.Action("ConfirmDelete", "TimeSlot"))' + "?recordId=" + $('#roomIdToRemove').val();
+        }
+
         function CreateNew() {
             window.location.href = '@Html.Raw(@Url.Action("CreateGet", "TimeSlot"))';
         }
+
+        function PopConfirm(e) {
+            $('#roomIdToRemove').val(e.id);
+            $('#staticBackdrop').modal('show');
+        }
+
         $(document).ready(function () {
             $('#TimeslotView').DataTable({
                 order: [[0, 'asc']]

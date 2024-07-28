@@ -4,6 +4,7 @@ using StudioReservation.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
 using System.Web.Mvc;
 
@@ -27,22 +28,22 @@ namespace StudioReservation.BackOffice.Controllers
             }
             return View(result);
         }
-        public ActionResult Index1()
-        {
-            ViewBag.RoomId = "";
-            ViewBag.StartDate = "";
-            ViewBag.EndDateDate = "";
-            var result = _reservationService.FindAllRoomTimeSlot();
-            //if (result.Error != 0)
-            //{
-            //    ViewBag.ErrorCode = result.Error.ToString();
-            //    return View("Error");
-            //}
-            List<string> roomList = new List<string>() { "Studio1", "Studio2"};
-            ViewBag.MovieShow = new SelectList(roomList);
+        //public ActionResult Index1()
+        //{
+        //    ViewBag.RoomId = "";
+        //    ViewBag.StartDate = "";
+        //    ViewBag.EndDateDate = "";
+        //    var result = _reservationService.FindAllRoomTimeSlot();
+        //    //if (result.Error != 0)
+        //    //{
+        //    //    ViewBag.ErrorCode = result.Error.ToString();
+        //    //    return View("Error");
+        //    //}
+        //    List<string> roomList = new List<string>() { "Studio1", "Studio2"};
+        //    ViewBag.MovieShow = new SelectList(roomList);
 
-            return View(result);
-        }
+        //    return View(result);
+        //}
 
         public ActionResult CreateGet(int roomId = 0)
         {
@@ -50,8 +51,8 @@ namespace StudioReservation.BackOffice.Controllers
 
             var result = _reservationService.GetNotAvailableRoomDate(roomId);
             ViewBag.DisabledDate = result.NotAvailableDates;
-            ViewBag.StartDate = "";
-            ViewBag.EndDate = "";
+            ViewBag.StartDate = result.StartTime;
+            ViewBag.EndDate = result.EndTime;
 
             List<SelectListItem> roomList = new List<SelectListItem>();
             foreach(var i in result.Room)
@@ -113,7 +114,7 @@ namespace StudioReservation.BackOffice.Controllers
             {
                 RoomId = request.RoomId,
                 Dates = request.Dates,
-                //Times = request.Times,
+                Times = request.Times,
                 Enable = request.Enable,
                 CreatedBy = "",
                 CreateTime = DateTime.Now,
@@ -122,9 +123,13 @@ namespace StudioReservation.BackOffice.Controllers
             };
 
             var result = _reservationService.CreateTimeSlot(data);
+            if(result != 0)
+            {
+                ViewBag.ErrorCode = result.ToString();
+                return View("Error");
+            }
 
-            ModelState.AddModelError(result.ToString(), "Success");
-            return View("Error"); // 0 is success , other code is fail
+            return RedirectToAction("Index"); // 0 is success , other code is fail
         }
 
 
@@ -138,19 +143,32 @@ namespace StudioReservation.BackOffice.Controllers
 
         }
 
-        [HttpGet]
-        public ActionResult GetAll()
+        public ActionResult ConfirmDelete(string recordId = "")
         {
+            var result = _reservationService.DeleteTimeSlot(long.Parse(recordId));
 
-            var result = _reservationService.FindAllRoomTimeSlot();
-
-            if (result.Error != 0)
+            if (result != 0)
             {
-                return HttpNotFound();
+                ViewBag.ErrorCode = result.ToString();
+                return View("Error");
             }
 
-            return View(result);
+            return RedirectToAction("Index"); // 0 is success , other code is fail
         }
+
+        //[HttpGet]
+        //public ActionResult GetAll()
+        //{
+
+        //    var result = _reservationService.FindAllRoomTimeSlot();
+
+        //    if (result.Error != 0)
+        //    {
+        //        return HttpNotFound();
+        //    }
+
+        //    return View(result);
+        //}
 
         //[HttpGet]
         //public ActionResult Search(int roomId, DateTime startTime, DateTime endTime)
@@ -166,26 +184,26 @@ namespace StudioReservation.BackOffice.Controllers
         //    return View(result);
         //}
 
-        [HttpGet]
-        public ActionResult FindDetail(long Id)
-        {
+        //[HttpGet]
+        //public ActionResult FindDetail(long Id)
+        //{
 
-            var result = _reservationService.FindDetail(Id);
+        //    var result = _reservationService.FindDetail(Id);
 
-            if (result.Error != 0)
-            {
-                return HttpNotFound();
-            }
+        //    if (result.Error != 0)
+        //    {
+        //        return HttpNotFound();
+        //    }
 
-            return View(result);
-        }
+        //    return View(result);
+        //}
 
-        [HttpGet]
-        public ActionResult FindNotAvailableDate(int roomId)
-        {
-            var result = _reservationService.GetNotAvailableRoomDate(roomId);
+        //[HttpGet]
+        //public ActionResult FindNotAvailableDate(int roomId)
+        //{
+        //    var result = _reservationService.GetNotAvailableRoomDate(roomId);
 
-            return View(result);
-        }
+        //    return View(result);
+        //}
     }
 }
