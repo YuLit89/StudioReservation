@@ -5,6 +5,7 @@ using StudioRoomType.DataModel;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.ServiceModel;
@@ -83,7 +84,7 @@ namespace StudioReservation.Service
             {
                 foreach ( var d in dates.Split(','))
                 {
-                    var date = Convert.ToDateTime(d);
+                    var date = DateTime.ParseExact(d, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
                     var timeSlot = new RoomTimeSlot
                     {
@@ -245,7 +246,7 @@ namespace StudioReservation.Service
         public NotAvailableRoomDate GetNotAvailableRoomDate(int RoomId)
         {
 
-            var now = DateTime.Now;
+            var now = DateTime.Now.Date;
             var endDate = now.AddDays(_timeSlotRange);
 
             var room = new List<RoomType>();
@@ -416,7 +417,7 @@ namespace StudioReservation.Service
                 _roomTimeSlot.Remove(TimeSlotId);
             }
 
-            return -11;
+            return 0;
 
         }
 

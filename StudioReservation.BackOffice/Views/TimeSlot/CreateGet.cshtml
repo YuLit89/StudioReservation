@@ -10,6 +10,9 @@
     @using (Html.BeginForm("Create", "TimeSlot", FormMethod.Post, new { role = "form" }))
     {
         @Html.AntiForgeryToken()
+        <input type="hidden" id="DisabledDate" value="@ViewBag.DisabledDate" />
+        <input type="hidden" id="StartDate" value="@ViewBag.StartDate" />
+        <input type="hidden" id="EndDate" value="@ViewBag.EndDate" />
         <div class="row">
             @Html.LabelFor(m => m.RoomId, new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8">
@@ -46,10 +49,10 @@
                 @Html.ListBoxFor(m => m.Times, ViewBag.Timeslots as MultiSelectList, new { id = "Times", multiple = "multiple" })
             </div>
         </div>
-        <br/>
+        <br />
         <div class="row">
             <div class="offset-md-3 col-md-9">
-                <input type="submit" value="Create" class="btn btn-primary" id="submitBtn"/>
+                <input type="submit" value="Create" class="btn btn-primary" id="submitBtn" />
             </div>
         </div>
     }
@@ -69,13 +72,17 @@
                 $('#Times').prop('disabled', true);
                 $('#submitBtn').prop('disabled', true);
             };
-
+            let disabledDate = $('#DisabledDate').val().split(',');
             $('.input-group').datepicker({
                 format: "dd/mm/yyyy",
                 weekStart: 1,
                 todayBtn: "linked",
                 multidate: true,
-                orientation: "bottom left"
+                orientation: "bottom left",
+                startDate: $('#StartDate').val(),
+                endDate: $('#EndDate').val(),
+                datesDisabled: disabledDate,
+
             });
 
             $("#Times").chosen({ width: "50%" });
