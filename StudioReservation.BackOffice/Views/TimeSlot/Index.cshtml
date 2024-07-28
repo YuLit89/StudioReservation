@@ -25,18 +25,8 @@
                     <tr>
                         <td>@item.RoomId</td>
                         <td>@item.Date</td>
-                        <td>
-                            @foreach (var j in item.AvailableTime)
-                            {
-                                @j <span>;</span>
-                            }
-                        </td>
-                        <td>
-                            @foreach (var k in item.BookedTime)
-                            {
-                                @k <span>;</span>
-                            }
-                        </td>
+                        <td>@item.AvailableTime</td>
+                        <td>@item.BookedTime</td>
                         <td>
                             @Html.ActionLink("Edit", "Edit", new { id = item.Id })
                             @if (item.AbleToDelete)

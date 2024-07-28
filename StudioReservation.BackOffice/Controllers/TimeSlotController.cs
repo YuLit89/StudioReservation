@@ -44,13 +44,25 @@ namespace StudioReservation.BackOffice.Controllers
             return View(result);
         }
 
-        public ActionResult CreateGet(string roomId = "")
+        public ActionResult CreateGet(int roomId = 0)
         {
             CreateTimeSlotRequest model = new CreateTimeSlotRequest();
-            List<SelectListItem> roomList = new List<SelectListItem>()
-            { new SelectListItem(){ Text="Studio1", Value="1"},
-              new SelectListItem(){ Text="Studio2", Value="2"}
-            };
+
+            var result = _reservationService.GetNotAvailableRoomDate(roomId);
+            ViewBag.DisabledDate = result.NotAvailableDates;
+            ViewBag.StartDate = "";
+            ViewBag.EndDate = "";
+
+            List<SelectListItem> roomList = new List<SelectListItem>();
+            foreach(var i in result.Room)
+            {
+                roomList.Add(new SelectListItem()
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                });
+            }
+
             List<SelectListItem> timeslots = new List<SelectListItem>()
                 {
                     new SelectListItem(){ Text = "00:00", Value = "00:00"},
@@ -58,24 +70,40 @@ namespace StudioReservation.BackOffice.Controllers
                     new SelectListItem(){ Text = "02:00", Value = "02:00"},
                     new SelectListItem(){ Text = "03:00", Value = "03:00"},
                     new SelectListItem(){ Text = "04:00", Value = "04:00"},
-                    new SelectListItem(){ Text = "05:00", Value = "05:00"}
+                    new SelectListItem(){ Text = "05:00", Value = "05:00"},
+                    new SelectListItem(){ Text = "06:00", Value = "06:00"},
+                    new SelectListItem(){ Text = "07:00", Value = "07:00"},
+                    new SelectListItem(){ Text = "08:00", Value = "08:00"},
+                    new SelectListItem(){ Text = "09:00", Value = "09:00"},
+
+                    new SelectListItem(){ Text = "10:00", Value = "10:00"},
+                    new SelectListItem(){ Text = "11:00", Value = "11:00"},
+                    new SelectListItem(){ Text = "12:00", Value = "12:00"},
+                    new SelectListItem(){ Text = "13:00", Value = "13:00"},
+                    new SelectListItem(){ Text = "14:00", Value = "14:00"},
+                    new SelectListItem(){ Text = "15:00", Value = "15:00"},
+                    new SelectListItem(){ Text = "16:00", Value = "16:00"},
+                    new SelectListItem(){ Text = "17:00", Value = "17:00"},
+                    new SelectListItem(){ Text = "18:00", Value = "18:00"},
+                    new SelectListItem(){ Text = "19:00", Value = "19:00"},
+
+                    new SelectListItem(){ Text = "20:00", Value = "20:00"},
+                    new SelectListItem(){ Text = "21:00", Value = "21:00"},
+                    new SelectListItem(){ Text = "22:00", Value = "22:00"},
+                    new SelectListItem(){ Text = "23:00", Value = "23:00"}
                 };
             ViewBag.Timeslots = new MultiSelectList(timeslots, "Value", "Text");
 
-            if (string.IsNullOrEmpty(roomId))
+            if (roomId == 0)
             {                 
-                ViewBag.RoomId = new SelectList(roomList, "Value", "Text");
-                
+                ViewBag.RoomId = new SelectList(roomList, "Value", "Text");               
             }
             else
             {
-                roomList.Where(x => x.Value == roomId).First().Selected = true;
+                roomList.Where(x => x.Value ==  roomId.ToString()).First().Selected = true;
                 ViewBag.RoomId = new SelectList(roomList, "Value", "Text");
             }
             return View(model);
-
-
-
         }
         [HttpPost]
         public ActionResult Create([Bind(Include = "RoomId,Times,Enable,Dates")] CreateTimeSlotRequest request)
@@ -85,7 +113,7 @@ namespace StudioReservation.BackOffice.Controllers
             {
                 RoomId = request.RoomId,
                 Dates = request.Dates,
-               // Times = request.Times,
+                //Times = request.Times,
                 Enable = request.Enable,
                 CreatedBy = "",
                 CreateTime = DateTime.Now,

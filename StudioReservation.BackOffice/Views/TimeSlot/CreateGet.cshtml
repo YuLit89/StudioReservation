@@ -10,6 +10,7 @@
     @using (Html.BeginForm("Create", "TimeSlot", FormMethod.Post, new { role = "form" }))
     {
         @Html.AntiForgeryToken()
+        <input type="hidden" id ="DisabledDate" value="@ViewBag.DisabledDate"/>
         <div class="row">
             @Html.LabelFor(m => m.RoomId, new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8">
@@ -69,13 +70,14 @@
                 $('#Times').prop('disabled', true);
                 $('#submitBtn').prop('disabled', true);
             };
-
+            let disabledDate = $('#DisabledDate').val().split(',');
             $('.input-group').datepicker({
                 format: "dd/mm/yyyy",
                 weekStart: 1,
                 todayBtn: "linked",
                 multidate: true,
-                orientation: "bottom left"
+                orientation: "bottom left",
+                datesDisabled: disabledDate
             });
 
             $("#Times").chosen({ width: "50%" });
