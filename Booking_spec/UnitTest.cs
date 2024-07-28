@@ -2,6 +2,7 @@
 using StudioReservation.Contract;
 using StudioReservation.DataModel;
 using StudioReservation.Proxy;
+using StudioRoomType.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,8 +43,8 @@ namespace Booking_spec
             
             var result = service.CreateTimeSlot(new CreateRoomTimeSlot
             {
-                Dates = "2024-08-01,2024-08-02,2024-08-03,2024-08-04,2024-08-05,2024-08-06,2024-08-07,2024-08-08,2024-08-09,2024-08-10,2024-08-11,2024-08-12,2024-08-13,2024-08-14,2024-08-15,2024-08-16",
-                Times = "03:00:00,04:00:00,05:00:00,06:00:00,12:00:00,13:00:00,14:00:00,22:00:00,23:00:00",
+                Dates = "2024-07-25,2024-07-26,2024-07-27",
+                Times = new string[] {"13:00:00","14:00:00","15:00:00","16:00:00","20:00:00","21:00:00"},
                 CreatedBy = string.Empty,
                 CreateTime = DateTime.Now,
                 RoomId = 1,
@@ -57,7 +58,7 @@ namespace Booking_spec
             var result1 = service.CreateTimeSlot(new CreateRoomTimeSlot
             {
                 Dates = "2024-08-01,2024-08-02,2024-08-03,2024-08-04,2024-08-05,2024-08-06,2024-08-07,2024-08-08,2024-08-09,2024-08-10,2024-08-11,2024-08-12,2024-08-13,2024-08-14,2024-08-15,2024-08-16",
-                Times = "05:00:00,07:00:00,11:00:00,12:00:00,15:00:00,20:00:00",
+                Times =  new string[] {"06:00:00","07:00:00","08:00:00","09:00:00"},
                 CreatedBy = string.Empty,
                 CreateTime = DateTime.Now,
                 RoomId = 2,
@@ -93,7 +94,7 @@ namespace Booking_spec
         public void findNotAvailableDate()
         {
 
-            var result = service.GetNotAvailableRoomDate(3);
+            var result = service.GetNotAvailableRoomDate(1);
 
         }
 
@@ -106,6 +107,28 @@ namespace Booking_spec
 
             var xxx = day.ToString(@"hh\:mm");
 
+        }
+
+        [TestMethod]
+        public void get_null_room()
+        {
+            Room room = null;
+
+            string v = room?.Name ?? string.Empty;
+        }
+
+        [TestMethod]
+        public void delete()
+        {
+            var delete = service.DeleteTimeSlot(37);
+        }
+
+        [TestMethod]
+        public void timespan_convert()
+        {
+            string v = "13:00";
+
+            TimeSpan v1 = TimeSpan.Parse(v);
         }
     }
 }

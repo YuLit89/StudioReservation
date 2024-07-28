@@ -23,12 +23,13 @@ namespace StudioReservation.DataModel
         public DateTime CreateTime { get; set; }
         public string UpdateBy { get; set; }
         public DateTime UpdateTime { get; set; }
+        public bool isDeleted { get; set; }
     }
 
     public class CreateRoomTimeSlot : RoomTimeSlotBase
     {
         public string Dates { get; set; }
-        public string Times { get; set; }
+        public string[] Times { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime UpdateTime { get; set; }
@@ -48,6 +49,7 @@ namespace StudioReservation.DataModel
         public bool AbleToDelete { get; set; }
         public string AvailableTime { get; set; }
         public string BookedTime { get; set; }
+        public string RoomName { get; set; }
     }
 
     public class RoomTimeSlotDetail : RoomTimeSlotBase
@@ -79,6 +81,9 @@ namespace StudioReservation.DataModel
     {
         public List<RoomType> Room { get; set; }
         public string NotAvailableDates { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+
         public int Error { get; set; }
     }
 

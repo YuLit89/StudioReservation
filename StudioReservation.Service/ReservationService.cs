@@ -30,7 +30,8 @@ namespace StudioReservation.Service
         Func<RoomTimeSlot, long> _insertTimeSlot;
         Func<long, string, string, DateTime, bool, long> _updateTimeSlot;
         Func<ReservationHistory, long> _insertReservation;
-        
+        Func<long, int> _roomTimeSlotDelete;
+
         ConcurrentDictionary<int, object> _sync = new ConcurrentDictionary<int, object>();
 
         readonly int _timeSlotRange;
@@ -41,15 +42,16 @@ namespace StudioReservation.Service
             Func<long,string,string,DateTime,bool,long> updateTimeSlot,
             Func<ReservationHistory,long> insertReservation,
             Func<IEnumerable<Room>> getAllRoomsType,
-            int timeSlotRange)
+            int timeSlotRange,
+            Func<long,int> roomTimeSlotDelete)
         {
             _insertTimeSlot = insertTimeSlot;
             _updateTimeSlot = updateTimeSlot;
 
             _insertReservation = insertReservation;
 
-            _timeSlotRange = timeSlotRange; 
-
+            _timeSlotRange = timeSlotRange;
+            _roomTimeSlotDelete = roomTimeSlotDelete;
 
             Init(getAllTimeSlot(), getAllRoomsType());
 
@@ -59,6 +61,8 @@ namespace StudioReservation.Service
         {
             foreach(var timeSlot in getAllTimeSlot)
             {
+                if (timeSlot.isDeleted) continue;
+
                 _roomTimeSlot.Add(timeSlot.Id, timeSlot);
             }
 
@@ -73,11 +77,11 @@ namespace StudioReservation.Service
 
             var timeSlots = new List<RoomTimeSlot>();
 
-            var dates = request.Dates.Split(',');
+            var dates = request.Dates;
 
             using (var process = new TransactionScope())
             {
-                foreach ( var d in dates)
+                foreach ( var d in dates.Split(','))
                 {
                     var date = Convert.ToDateTime(d);
 
@@ -85,12 +89,13 @@ namespace StudioReservation.Service
                     {
                         Date = date,
                         RoomId = request.RoomId,
-                        Times = request.Times,
+                        Times = string.Join(",", request.Times),
                         CreatedBy = request.CreatedBy,
                         CreateTime = request.CreateTime,
                         UpdateBy = request.UpdateBy,
                         UpdateTime = request.UpdateTime,
-                        Enable = request.Enable
+                        Enable = request.Enable,
+                        isDeleted = false
                     };
 
                     var id = _insertTimeSlot(timeSlot);
@@ -144,41 +149,39 @@ namespace StudioReservation.Service
             var now = DateTime.Now;
 
 
-            var timeSlots = _roomTimeSlot.Values.Where(x => x.Date >= now.Date).OrderBy(x => x.Id).ToList();
+            var timeSlots = _roomTimeSlot.Values.Where(x => !x.isDeleted).Where(x => x.Date >= now.Date).OrderBy(x => x.Id).ToList();
                             
-                           
-
             var history = InternalComputeTimeSlotHistory(timeSlots.ToList());
 
-            return new ViewAllTimeSlot
+            return new ViewAllTimeSlot 
             {
                 TimeSlots = history,
                 Error = 0
             };
         }
 
-        public ViewAllTimeSlot FindRoomTimeSlotByFilter(int RoomId, DateTime StartDate, DateTime EndDate)
-        {
-            var now = DateTime.Now;
+        //public ViewAllTimeSlot FindRoomTimeSlotByFilter(int RoomId, DateTime StartDate, DateTime EndDate)
+        //{
+        //    var now = DateTime.Now;
 
-            IEnumerable<RoomTimeSlot> query;
+        //    IEnumerable<RoomTimeSlot> query;
 
-            if(RoomId != 0)
-            {
-                query = _roomTimeSlot.Where(x => x.Value.RoomId == RoomId).Select(x => x.Value);
-            }
+        //    if(RoomId != 0)
+        //    {
+        //        query = _roomTimeSlot.Where(x => x.Value.RoomId == RoomId).Select(x => x.Value);
+        //    }
 
-            var timeSlots = _roomTimeSlot.Values.Where(x => x.Date >= StartDate && x.Date <= EndDate).OrderBy(x => x.Id).ToList();
+        //    var timeSlots = _roomTimeSlot.Values.Where(x => x.Date >= StartDate && x.Date <= EndDate).OrderBy(x => x.Id).ToList();
             
-            var history = InternalComputeTimeSlotHistory(timeSlots.ToList());
+        //    var history = InternalComputeTimeSlotHistory(timeSlots.ToList());
 
-            return new ViewAllTimeSlot
-            {
-                TimeSlots = history,
-                Error = 0
+        //    return new ViewAllTimeSlot
+        //    {
+        //        TimeSlots = history,
+        //        Error = 0
            
-            };
-        }
+        //    };
+        //}
 
         public RoomTimeSlotDetail FindDetail(long TimeSlotId)
         {
@@ -243,7 +246,7 @@ namespace StudioReservation.Service
         {
 
             var now = DateTime.Now;
-            var limitDate = now.AddDays(_timeSlotRange);
+            var endDate = now.AddDays(_timeSlotRange);
 
             var room = new List<RoomType>();
 
@@ -254,12 +257,14 @@ namespace StudioReservation.Service
                 room.Add(r1);
             }
 
-            var i = _roomTimeSlot.Values.Where(x => x.RoomId == RoomId).Where(x => x.Date >= now && x.Date <= limitDate).Select(x => x.Date.ToString("yyyy-MM-dd")).Distinct().ToList();
+            var i = _roomTimeSlot.Values.Where(x => x.RoomId == RoomId).Where(x => x.Date >= now && x.Date <= endDate).Select(x => x.Date.ToString("dd/MM/yyyy")).Distinct().ToList();
 
             return new NotAvailableRoomDate
             {
                 Room = room,
                 NotAvailableDates = string.Join(",", i),
+                StartTime = now.ToString(),
+                EndTime = endDate.ToString(),
                 Error = 0,
             };
         }
@@ -342,8 +347,6 @@ namespace StudioReservation.Service
         {
         }
 
-
-
         internal List<ViewTimeSlot> InternalComputeTimeSlotHistory(List<RoomTimeSlot> timeSlots)
         {
             var list = new List<ViewTimeSlot>();
@@ -367,6 +370,9 @@ namespace StudioReservation.Service
                     }
                 }
 
+                Room room;
+                _roomType.TryGetValue(t.RoomId, out room);
+
                 var date = new ViewTimeSlot
                 {
                     Id = t.Id,
@@ -375,7 +381,8 @@ namespace StudioReservation.Service
                     AvailableTime = available,
                     BookedTime = booked,
                     Enable = t.Enable,
-                    AbleToDelete = string.IsNullOrEmpty(booked) ? false : true,
+                    RoomName = room?.Name ?? string.Empty,
+                    AbleToDelete = string.IsNullOrEmpty(booked) ? true : false,
                 };
 
                 list.Add(date);
@@ -386,7 +393,31 @@ namespace StudioReservation.Service
 
         public int DeleteTimeSlot(long TimeSlotId)
         {
-            throw new NotImplementedException();
+            RoomTimeSlot timeInfo;
+
+            if(_roomTimeSlot.TryGetValue(TimeSlotId,out timeInfo))
+            {
+
+                foreach (var time in timeInfo.Times.Split(','))
+                {
+                    var day = TimeSpan.Parse(time);
+
+                    if(_dateBooked.ContainsKey(new DateTime(timeInfo.Date.Year, timeInfo.Date.Month, timeInfo.Date.Day, day.Hours, day.Minutes, day.Seconds)))
+                    {
+                        return -10;
+                    }
+                }
+            }
+
+            var delete = _roomTimeSlotDelete(TimeSlotId);
+
+            if(delete == 0)
+            {
+                _roomTimeSlot.Remove(TimeSlotId);
+            }
+
+            return -11;
+
         }
     }
 }
