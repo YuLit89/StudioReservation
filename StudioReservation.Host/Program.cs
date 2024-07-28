@@ -35,7 +35,8 @@ namespace StudioReservation.Host
                 updateTimeSlot : repo.UpdateTimeSlot,
                 insertReservation : repo.CreateReservation,
                 getAllRoomsType : roomRepo.GetAll,
-                timeSlotRange : timeSlotRange
+                timeSlotRange : timeSlotRange,
+                roomTimeSlotDelete : repo.DeleteTimeSlot
                 );
 
             new ServiceHost<IReservationService>().Boot(url, service);

@@ -71,7 +71,8 @@ namespace StudioReservation.ADO
                 CreateTime = Convert.ToDateTime(reader["CreateTime"].ToString()),
                 UpdateBy = reader["UpdateBy"].ToString(),
                 UpdateTime = Convert.ToDateTime(reader["UpdateTime"].ToString()),
-                Enable = bool.Parse(reader["Enable"].ToString())
+                Enable = bool.Parse(reader["Enable"].ToString()),
+                isDeleted = bool.Parse(reader["isDeleted"].ToString())
             };
 
             return m;
@@ -97,6 +98,7 @@ namespace StudioReservation.ADO
                     cmd.Parameters.AddWithValue("@UpdateBy", Request.UpdateBy);
                     cmd.Parameters.AddWithValue("@UpdateTime", Request.UpdateTime);
                     cmd.Parameters.AddWithValue("@Enable", Request.Enable);
+                    cmd.Parameters.AddWithValue("isDeleted", Request.isDeleted);
 
                     var o = new SqlParameter("@Id", SqlDbType.BigInt) { Direction = ParameterDirection.Output };
 

@@ -152,19 +152,19 @@ namespace StudioReservation.BackOffice.Controllers
             return View(result);
         }
 
-        [HttpGet]
-        public ActionResult Search(int roomId, DateTime startTime, DateTime endTime)
-        {
+        //[HttpGet]
+        //public ActionResult Search(int roomId, DateTime startTime, DateTime endTime)
+        //{
 
-            var result = _reservationService.FindRoomTimeSlotByFilter(roomId, startTime, endTime);
+        //    var result = _reservationService.FindRoomTimeSlotByFilter(roomId, startTime, endTime);
 
-            if (result.Error != 0)
-            {
-                return HttpNotFound();
-            }
+        //    if (result.Error != 0)
+        //    {
+        //        return HttpNotFound();
+        //    }
 
-            return View(result);
-        }
+        //    return View(result);
+        //}
 
         [HttpGet]
         public ActionResult FindDetail(long Id)
