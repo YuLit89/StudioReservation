@@ -1,4 +1,4 @@
-﻿@model StudioReservation.Models.ScheduleViewModel
+﻿@*@model StudioReservation.Models.ScheduleViewModel*@
 @{
     ViewBag.Title = "Schedule";
     //int i = 0;
@@ -253,9 +253,7 @@ break;
 
         $('#datepicker').change(function () {
             console.log(this.value);
-            //$('#datepicker').val('111');
             //console.log($('#datepicker').val());
-            //$('#datepicker').val($('#OriSelectedDate').val());
             $('#staticBackdrop').modal('show');
         });
 

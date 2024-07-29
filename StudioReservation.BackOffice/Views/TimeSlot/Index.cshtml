@@ -30,7 +30,7 @@
                         <td>@item.AvailableTime</td>
                         <td>@item.BookedTime</td>
                         <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { style = "text-decoration:none;" })
+                            @Html.ActionLink("Edit", "EditGet", new { recordId = item.Id }, new { style = "text-decoration:none;" })
                             @if (item.AbleToDelete)
                             {
                                 <span>|</span> //@Html.ActionLink("Remove", "Remove", new { id = item.Id }, new {id = "RemoveTimeSlotBtn"})
