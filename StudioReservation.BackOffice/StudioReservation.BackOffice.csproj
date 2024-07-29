@@ -274,6 +274,7 @@
     <Content Include="Views\TimeSlot\Index1.cshtml" />
     <Content Include="Views\TimeSlot\Index.cshtml" />
     <Content Include="Views\TimeSlot\CreateGet.cshtml" />
+    <Content Include="Views\TimeSlot\EditGet.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

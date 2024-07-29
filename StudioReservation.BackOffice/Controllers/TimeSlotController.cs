@@ -107,7 +107,8 @@ namespace StudioReservation.BackOffice.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Create([Bind(Include = "RoomId,Times,Enable,Dates")] CreateTimeSlotRequest request)
+        //public ActionResult Create([Bind(Include = "RoomId,Times,Enable,Dates")] CreateTimeSlotRequest request)
+        public ActionResult Create(CreateTimeSlotRequest request)
         {
 
             var data = new CreateRoomTimeSlot
@@ -131,13 +132,29 @@ namespace StudioReservation.BackOffice.Controllers
 
             return RedirectToAction("Index"); // 0 is success , other code is fail
         }
+        [HttpGet]
+        public ActionResult EditGet(long recordId)
+        {
+            var result = _reservationService.FindDetail(recordId);
 
+            if(result.Error != 0)
+            {
+                ViewBag.ErrorCode = result.Error.ToString();
+                return View("Error");
+            }
+            if (result.EnableEdit == false)
+            {
+                ViewBag.errorMessage = "You are not allowed to edit today or passed time slot.";
+            }
+
+            return View(result); 
+        }
 
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id,RoomId,Times,Enable")] EditTimeSlot request)
+        public ActionResult Edit(RoomTimeSlotDetail request)
         {
 
-            var result = _reservationService.EditTimeSlot(request.Id, request.Times, string.Empty, DateTime.Now, request.Enable);
+            var result = _reservationService.EditTimeSlot(request.Id, "request.Times", string.Empty, DateTime.Now, request.Enable);
 
             return View(result);
 

@@ -1,0 +1,78 @@
+﻿@model StudioReservation.DataModel.RoomTimeSlotDetail
+@{
+    ViewBag.Title = "Editing Timeslot";
+}
+
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title</h2>
+    <br />
+    @using (Html.BeginForm("Edit", "TimeSlot", FormMethod.Post, new { role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            @Html.LabelFor(m => m.RoomName, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.RoomName, new { @class = "form-control" , disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.Date, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Date, new { @class = "form-control", disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.Enable, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8" style="margin-top:8px;">
+                @Html.RadioButtonFor(m => m.Enable, "True") Yes
+                @Html.RadioButtonFor(m => m.Enable, "False") No
+                @*@Html.HiddenFor(m => m.Enable)*@
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(m => m.Times, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-7">
+                @for (int i = 0; i < 24; i++)
+                {
+                    int v;
+                    string val = i.ToString("D2") + ":00";
+                    if (Model.Times.TryGetValue(val, out v) && (v == 2 || v == 3))
+                    {
+
+                        <input type="checkbox" name="Times" value="@val" disabled checked/><label>@val<span>&nbsp;</span></label>
+                    }
+                    else if ((Model.Times.TryGetValue(val, out v) && v == 1))
+                    {
+                        <input type="checkbox" name="Times" value="@val" checked/><label>@val<span>&nbsp;</span></label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" name="Times" value="@val" /><label>@val<span>&nbsp;</span></label>
+                    }
+                }
+            </div>
+        </div>
+        @*<div class="row">
+            @Html.Label("Times", new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.ListBoxFor(m => m.Times, ViewBag.Timeslots as MultiSelectList, new { id = "Times", multiple = "multiple" })
+            </div>
+        </div>*@
+        <br />
+        <div class="row">
+            <div class="offset-md-3 col-md-9">
+                <input type="submit" value="Update" class="btn btn-primary" id="submitBtn" />
+            </div>
+        </div>
+    }
+</main>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+    </script>
+}
