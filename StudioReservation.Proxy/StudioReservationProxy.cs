@@ -190,11 +190,6 @@ namespace StudioReservation.Proxy
         //    }
         //}
 
-        public int TimeSlotReservation(TimeSlotReservationRequest Request)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Dispose()
         {
         }
@@ -356,6 +351,88 @@ namespace StudioReservation.Proxy
                 if (s != null)
                 {
                     return s.DeleteTimeSlot(TimeSlotId);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
+                return -1;
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
+                return -2;
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
+                return -3;
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
+                return -4;
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
+                return -5;
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
+
+        public int UpdateSuccessReservation(long ReservationId)
+        {
+            IReservationService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.UpdateSuccessReservation(ReservationId);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
+                return -1;
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
+                return -2;
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
+                return -3;
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
+                return -4;
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
+                return -5;
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
+
+        public int LockTimeSlotReservation(TimeSlotReservationRequest Request)
+        {
+            IReservationService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.LockTimeSlotReservation(Request);
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");

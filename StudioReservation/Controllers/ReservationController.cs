@@ -15,7 +15,7 @@
 //        {
 //            RoomViewModels roomViewModel = new RoomViewModels()
 //            {
-//               Rooms =  new List<Room>
+//                Rooms = new List<Room>
 //              {
 //                  new Room {
 //                    Id =  1,
