@@ -453,10 +453,66 @@ namespace StudioReservation.Service
 
         }
 
-        public ScheduleViewModel ReservationSchedule(long RoomId, string selectedDate)
+        public ScheduleViewModel ReservationSchedule(long RoomId, string selectedDate = null)
         {
             var model = new ScheduleViewModel();
-            model.DisplayDate = selectedDate;
+
+            var date = selectedDate == null ? DateTime.Now.Date : DateTime.ParseExact(selectedDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+         
+            var schedule = new List<ScheduleDate>();
+
+            var timeSlots = _roomTimeSlot.Values.Where(x=> x.RoomId == RoomId).Where(x => !x.isDeleted).Where(x => x.Date >= date).Where(x => x.Date < date.AddDays(7)).OrderBy(x=> x.Date);
+
+
+            for(int i = 0; i < 7; i++)
+            {
+                 var newDate = date.AddDays(i);
+                 var timeInfo = _roomTimeSlot.Values.Where(x => x.Date == newDate).Where(x => !x.isDeleted).FirstOrDefault();
+
+                if (timeInfo == null)
+                {
+                    schedule.Add(new ScheduleDate
+                    {
+                        Enable = false,
+                        Date = newDate.ToString("dd/MM/yyyy"),
+                        roomStatuses = new List<RoomStatus>()
+                    });
+                }
+                else
+                {
+                    var dateTimes = timeInfo.Times.GenerateDateTime(newDate);
+
+                    var times = new Dictionary<TimeSpan,int>();
+
+                    foreach (var time in dateTimes)
+                    {
+                        int status;
+                        if (_dateBooked.TryGetValue(time, out status))
+                        {
+                            times.Add(new TimeSpan(time.Hour, time.Minute, time.Second),status);
+                        }
+                        else
+                        {
+                            times.Add(new TimeSpan(time.Hour, time.Minute, time.Second),(int)ReservationStatus.Opening);
+                        }
+                    }
+
+                    var fullTimes = Compute24HourTime(times);
+
+                    var s = new ScheduleDate()
+                    {
+                        Date = newDate.ToString("dd/MM/yyyy"),
+                        Enable = true,
+                        roomStatuses = fullTimes
+                    };
+
+                    schedule.Add(s);
+                }
+            }
+      
+            model.DisplayDate = date.ToString("dd/MM/yyyy");
+            model.scheduleDates = schedule;
+            model.ErrorCode = 0;
 
             return model;
         }
@@ -493,8 +549,57 @@ namespace StudioReservation.Service
 
             return 0;
             
+        }
+
+        internal List<RoomStatus> Compute24HourTime(IDictionary<TimeSpan, int> RoomStatus)
+        {
+
+            var result = new List<RoomStatus>();
+            for (int i = 0; i < 24; i++)
+            {
+                var time = new TimeSpan(i, 00, 00);
+
+                int status;
+                if (!RoomStatus.TryGetValue(time, out status))
+                {
+                    RoomStatus.Add(time, (int)ReservationStatus.Closed);
+                }
+            }
+
+            var item = RoomStatus.OrderBy(x => x.Key);
+
+            foreach (var i in item)
+            {
+                result.Add(new DataModel.RoomStatus
+                {
+                    timeslot = i.Key.ToString(@"hhmm"),
+                    status = i.Value.ToString()
+                });
+            };
 
 
+            return result;
+        }
+
+    }
+
+    public static class Extension
+    {
+        public static List<DateTime> GenerateDateTime(this string times ,DateTime date)
+        {
+
+            var dts = new List<DateTime>();
+
+            foreach(var time in times.Split(','))
+            {
+                var t = TimeSpan.Parse(time);
+
+                dts.Add(new DateTime(date.Year, date.Month, date.Day, t.Hours, t.Minutes, t.Seconds));
+            }
+
+            
+
+            return dts;
         }
     }
 }

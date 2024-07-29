@@ -463,5 +463,46 @@ namespace StudioReservation.Proxy
                 CloseOrAbortServiceChannel((ICommunicationObject)s);
             }
         }
+
+        public ScheduleViewModel ReservationSchedule(long RoomId, string selectedDate)
+        {
+            IReservationService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.ReservationSchedule(RoomId,selectedDate);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
+                return new ScheduleViewModel { ErrorCode = -1 };
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
+                return new ScheduleViewModel { ErrorCode = -2 };
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
+                return new ScheduleViewModel { ErrorCode = -3 };
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
+                return new ScheduleViewModel { ErrorCode = -4 };
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
+                return new ScheduleViewModel { ErrorCode = -5 };
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
     }
 }
