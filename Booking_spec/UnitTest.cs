@@ -137,13 +137,44 @@ namespace Booking_spec
         [TestMethod]
         public void findDetail()
         {
-            var result = service.FindDetail(30);
+            var result = service.FindDetail(21);
         }
 
         [TestMethod]
         public void edit()
         {
             var result = service.EditTimeSlot(30, "01:00,02:00,03:00,04:00,10:00,20:00", "", DateTime.Now, true);
+        }
+
+        [TestMethod]
+        public void lock_reservation()
+        {
+
+            var result = service.LockTimeSlotReservation(new TimeSlotReservationRequest
+            {
+                MemberId = string.Empty,
+                RoomId = 2,
+                ReservationTime = "2024-08-04 06:00:00,2024-08-05 09:00:00"
+            });
+
+            Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void update_success_reservation()
+        {
+
+            var result = service.UpdateSuccessReservation(1);
+
+            Assert.AreEqual(0, result);
+
+            var view = service.FindDetail(20);
+
+            var result2 = service.UpdateSuccessReservation(2);
+
+            Assert.AreEqual(0, result2);
+
+            var view1 = service.FindDetail(21);
         }
     }
 }

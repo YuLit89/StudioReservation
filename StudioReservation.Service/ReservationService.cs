@@ -32,6 +32,7 @@ namespace StudioReservation.Service
         Func<long, string, string, DateTime, bool, long> _updateTimeSlot;
         Func<ReservationHistory, long> _insertReservation;
         Func<long, int> _roomTimeSlotDelete;
+        Func<long, int, DateTime, string, long> _updateReservationStatus;
 
         ConcurrentDictionary<int, object> _sync = new ConcurrentDictionary<int, object>();
 
@@ -44,7 +45,9 @@ namespace StudioReservation.Service
             Func<ReservationHistory, long> insertReservation,
             Func<IEnumerable<Room>> getAllRoomsType,
             int timeSlotRange,
-            Func<long, int> roomTimeSlotDelete)
+            Func<long, int> roomTimeSlotDelete,
+            Func<IEnumerable<ReservationHistory>> getAllReservation,
+            Func<long,int,DateTime,string,long> updateReservationStatus)
         {
             _insertTimeSlot = insertTimeSlot;
             _updateTimeSlot = updateTimeSlot;
@@ -53,12 +56,13 @@ namespace StudioReservation.Service
 
             _timeSlotRange = timeSlotRange;
             _roomTimeSlotDelete = roomTimeSlotDelete;
+            _updateReservationStatus = updateReservationStatus;
 
-            Init(getAllTimeSlot(), getAllRoomsType());
+            Init(getAllTimeSlot(), getAllRoomsType(),getAllReservation());
 
         }
 
-        internal void Init(IEnumerable<RoomTimeSlot> getAllTimeSlot, IEnumerable<Room> getRoomType)
+        internal void Init(IEnumerable<RoomTimeSlot> getAllTimeSlot, IEnumerable<Room> getRoomType,IEnumerable<ReservationHistory> getReservation)
         {
             foreach (var timeSlot in getAllTimeSlot)
             {
@@ -70,6 +74,12 @@ namespace StudioReservation.Service
             foreach (var room in getRoomType)
             {
                 _roomType.Add(room.Id, room);
+            }
+
+            foreach(var reservation in getReservation)
+            {
+                _reservation.Add(reservation.Id, reservation);
+                _dateBooked.Add(reservation.DateTime, reservation.Status);
             }
         }
 
@@ -294,7 +304,7 @@ namespace StudioReservation.Service
             };
         }
 
-        public int TimeSlotReservation(TimeSlotReservationRequest Request)
+        public int LockTimeSlotReservation(TimeSlotReservationRequest Request)
         {
 
             var times = Request.ReservationTime.Split(',');
@@ -324,7 +334,7 @@ namespace StudioReservation.Service
                     {
                         RoomId = Request.RoomId,
                         DateTime = d,
-                        Status = (int)ReservationStatus.Booked,
+                        Status = (int)ReservationStatus.Lock,
                         ReservationBy = Request.MemberId,
                         CreateTime = DateTime.Now,
                         UpdateTime = DateTime.Now,
@@ -360,8 +370,6 @@ namespace StudioReservation.Service
                     _reservation.Add(r.Id, r);
                     _dateBooked.Add(r.DateTime, (int)ReservationStatus.Lock);
                 }
-
-
             }
 
             return 0;
@@ -451,6 +459,42 @@ namespace StudioReservation.Service
             model.DisplayDate = selectedDate;
 
             return model;
+        }
+
+        public int UpdateSuccessReservation(long ReservationId)
+        {
+            var now = DateTime.Now;
+
+            ReservationHistory history;
+            if (!_reservation.TryGetValue(ReservationId,out history))
+            {
+                return -10;
+            }
+
+            if(history.Status == (int)ReservationStatus.Booked)
+            {
+                return 0;
+            }
+
+            history.Status = (int)ReservationStatus.Booked;
+            history.UpdateTime = DateTime.Now;
+
+            var err = _updateReservationStatus(history.Id, (int)ReservationStatus.Booked, now, string.Empty);
+
+            if(err <= 0)
+            {
+                return -11;
+            }
+
+            history.Status = (int)ReservationStatus.Booked;
+            history.UpdateTime = DateTime.Now;
+
+            _dateBooked[history.DateTime] = (int)ReservationStatus.Booked;
+
+            return 0;
+            
+
+
         }
     }
 }

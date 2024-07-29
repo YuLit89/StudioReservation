@@ -31,7 +31,11 @@ namespace StudioReservation.Contract
         RoomTimeSlotDetail FindDetail(long TimeSlotId);
 
         [OperationContract]
-        int TimeSlotReservation(TimeSlotReservationRequest Request);
+        int UpdateSuccessReservation(long ReservationId);
+
+        [OperationContract]
+        int LockTimeSlotReservation(TimeSlotReservationRequest Request);
+
 
         [OperationContract]
         int DeleteTimeSlot(long TimeSlotId);
