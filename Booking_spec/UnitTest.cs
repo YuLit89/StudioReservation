@@ -1,10 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StudioReservation.ADO;
 using StudioReservation.Contract;
 using StudioReservation.DataModel;
 using StudioReservation.Proxy;
+using StudioReservation.Service;
+using StudioRoomType.ADO;
 using StudioRoomType.DataModel;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -17,10 +21,27 @@ namespace Booking_spec
     {
         IReservationService service;
 
+
+        IReservationService service1;
         [TestInitialize]
         public void init()
         {
              service = new ReservationServiceProxy(1001);
+
+            var repo = new StudioReservationSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+            var roomRepo = new StudioRoomTypeSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+
+            service1 = new ReservationService(
+                getAllTimeSlot: repo.GetAllTimeSlot,
+                insertTimeSlot: repo.CreateTimeSlot,
+                updateTimeSlot: repo.UpdateTimeSlot,
+                insertReservation: repo.CreateReservation,
+                getAllRoomsType: roomRepo.GetAll,
+                timeSlotRange: 30,
+                roomTimeSlotDelete: repo.DeleteTimeSlot,
+                getAllReservation: repo.GetAllReservationHistory,
+                updateReservationStatus: repo.UpdateReservationStatus
+                );
         }
 
         [TestMethod]
@@ -76,7 +97,7 @@ namespace Booking_spec
         public void tiemslot_GetHistory()
         {
         
-            var result = service.FindAllRoomTimeSlot();
+            var result = service1.FindAllRoomTimeSlot();
 
         }
 
