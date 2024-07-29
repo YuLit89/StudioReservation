@@ -14,24 +14,9 @@ namespace StudioReservation.Models
         public List<Room> Rooms { get; set; }
     }
 
-    public class RoomStatus
-    {
-        public string timeslot { get; set; }
-        public string status { get; set; }
-    }
+   
 
-    public class ScheduleDate
-    {
-        public string Date { get; set; }
-        public bool Enable { get; set; }
-        public List<RoomStatus> roomStatuses {get;set;}
-    }
-
-    public class ScheduleViewModel
-    {
-        public string DisplayDate { get; set; }
-        public List<ScheduleDate> scheduleDates { get; set; }
-    }
+    
 
     public class Order
     {

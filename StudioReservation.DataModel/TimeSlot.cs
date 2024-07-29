@@ -56,18 +56,18 @@ namespace StudioReservation.DataModel
     {
         public string Date { get; set; }
         public DateTime CreatedTime { get; set; }
-
-        public List<string> AvailableTime { get; set; }
-        public List<string> BookedTime { get; set; }
-        public List<string> LockedTime { get; set; }
-
+        public string CreatedBy { get; set; }
+        public DateTime UpdateTime { get; set; }
+        public string UpdateBy { get; set; }
+        public Dictionary<string,int> Times { get; set; } // 1 - opening  , 3 - book , 2 - lock 
+      
         public string RoomTypeImage { get; set; }
         public string RoomName { get; set; }
 
         public bool EnableEdit { get; set; }
 
         public int Error { get; set; }
-
+        
     }
 
     public class TimeSlotReservationRequest
@@ -96,5 +96,26 @@ namespace StudioReservation.DataModel
     public class NotAvaialbleDateTime : RoomTimeSlotBase
     {
         public string Date { get; set; }
+    }
+
+    public class ScheduleDate
+    {
+        public string Date { get; set; }
+        public bool Enable { get; set; }
+        public List<RoomStatus> roomStatuses { get; set; }
+    }
+
+    public class ScheduleViewModel
+    {
+        public string DisplayDate { get; set; }
+        public List<ScheduleDate> scheduleDates { get; set; }
+        public int ErrorCode { get; set; }
+             
+    }
+
+    public class RoomStatus
+    {
+        public string timeslot { get; set; }
+        public string status { get; set; }
     }
 }
