@@ -1,10 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StudioReservation.ADO;
 using StudioReservation.Contract;
 using StudioReservation.DataModel;
 using StudioReservation.Proxy;
+using StudioReservation.Service;
+using StudioRoomType.ADO;
 using StudioRoomType.DataModel;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -17,25 +21,27 @@ namespace Booking_spec
     {
         IReservationService service;
 
+
+        IReservationService service1;
         [TestInitialize]
         public void init()
         {
              service = new ReservationServiceProxy(1001);
-        }
 
-        [TestMethod]
-        public void TimeParse()
-        {
-            string time = "13:00:00";
+            var repo = new StudioReservationSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+            var roomRepo = new StudioRoomTypeSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
 
-            TimeSpan t = TimeSpan.Parse(time);
-
-            DateTime t1 = DateTime.Parse(time);
-
-            string date = "2024-05-20";
-
-            DateTime t2 = DateTime.Parse(date);
-
+            service1 = new ReservationService(
+                getAllTimeSlot: repo.GetAllTimeSlot,
+                insertTimeSlot: repo.CreateTimeSlot,
+                updateTimeSlot: repo.UpdateTimeSlot,
+                insertReservation: repo.CreateReservation,
+                getAllRoomsType: roomRepo.GetAll,
+                timeSlotRange: 30,
+                roomTimeSlotDelete: repo.DeleteTimeSlot,
+                getAllReservation: repo.GetAllReservationHistory,
+                updateReservationStatus: repo.UpdateReservationStatus
+                );
         }
 
         [TestMethod]
@@ -76,7 +82,7 @@ namespace Booking_spec
         public void tiemslot_GetHistory()
         {
         
-            var result = service.FindAllRoomTimeSlot();
+            var result = service1.FindAllRoomTimeSlot();
 
         }
 
@@ -99,24 +105,6 @@ namespace Booking_spec
 
         }
 
-        [TestMethod]
-        public void x()
-        {
-            string xx = "13:00:00";
-
-            var day = TimeSpan.Parse(xx);
-
-            var xxx = day.ToString(@"hh\:mm");
-
-        }
-
-        [TestMethod]
-        public void get_null_room()
-        {
-            Room room = null;
-
-            string v = room?.Name ?? string.Empty;
-        }
 
         [TestMethod]
         public void delete()
@@ -124,15 +112,6 @@ namespace Booking_spec
             var delete = service.DeleteTimeSlot(37);
         }
 
-        [TestMethod]
-        public void timespan_convert()
-        {
-            string v = "20/08/2024";
-
-            DateTime dt = DateTime.ParseExact(v, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-
-            //DateTime v1 = Convert.ToDateTime(v);
-        }
 
         [TestMethod]
         public void findDetail()
@@ -144,6 +123,8 @@ namespace Booking_spec
         public void edit()
         {
             var result = service.EditTimeSlot(30, "01:00,02:00,03:00,04:00,10:00,20:00", "", DateTime.Now, true);
+
+
         }
 
         [TestMethod]
@@ -175,6 +156,25 @@ namespace Booking_spec
             Assert.AreEqual(0, result2);
 
             var view1 = service.FindDetail(21);
+        }
+
+        [TestMethod]
+        public void schedule()
+        {
+
+            var result = service1.ReservationSchedule(2,null);
+
+
+        }
+
+        [TestMethod]
+        public void s()
+        {
+
+            var v = new TimeSpan(01, 00, 30);
+
+            var s = v.ToString(@"hhmm");
+
         }
     }
 }

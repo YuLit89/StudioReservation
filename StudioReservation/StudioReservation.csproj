@@ -188,6 +188,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ReservationModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceConnection.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -325,6 +326,10 @@
     <ProjectReference Include="..\StudioReservation.Contract\StudioReservation.Contract.csproj">
       <Project>{916D47FF-22BD-4F9A-B6BF-8FAEA3E4DA5F}</Project>
       <Name>StudioReservation.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioReservation.DataModel\StudioReservation.DataModel.csproj">
+      <Project>{2c121ae3-206e-4d07-bc17-15bca473e026}</Project>
+      <Name>StudioReservation.DataModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\StudioReservation.Proxy\StudioReservation.Proxy.csproj">
       <Project>{AEEF5D3F-F1EE-4780-BBE6-B049EE9A1540}</Project>

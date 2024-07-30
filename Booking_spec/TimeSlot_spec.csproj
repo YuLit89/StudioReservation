@@ -35,6 +35,7 @@
       <HintPath>..\packages\VS.QualityTools.UnitTestFramework.15.0.27323.2\lib\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -48,9 +49,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StudioReservation.ADO\StudioReservation.ADO.csproj">
+      <Project>{F5CA7D55-628D-419A-9E48-FFFAE53E6709}</Project>
+      <Name>StudioReservation.ADO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StudioReservation.Contract\StudioReservation.Contract.csproj">
       <Project>{916D47FF-22BD-4F9A-B6BF-8FAEA3E4DA5F}</Project>
       <Name>StudioReservation.Contract</Name>
@@ -62,6 +68,14 @@
     <ProjectReference Include="..\StudioReservation.Proxy\StudioReservation.Proxy.csproj">
       <Project>{AEEF5D3F-F1EE-4780-BBE6-B049EE9A1540}</Project>
       <Name>StudioReservation.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioReservation.Service\StudioReservation.Service.csproj">
+      <Project>{60F2D8A5-4C34-472A-98A6-2002FD0D4B7A}</Project>
+      <Name>StudioReservation.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioRoomType.ADO\StudioRoomType.ADO.csproj">
+      <Project>{B5713C05-2423-443D-85FF-9188C01F1973}</Project>
+      <Name>StudioRoomType.ADO</Name>
     </ProjectReference>
     <ProjectReference Include="..\StudioRoomType.DataModel\StudioRoomType.DataModel.csproj">
       <Project>{7AE51DF6-6B4B-4D86-871C-4A1E50B0CB79}</Project>
