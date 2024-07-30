@@ -110,7 +110,12 @@ namespace StudioReservation.BackOffice.Controllers
         //public ActionResult Create([Bind(Include = "RoomId,Times,Enable,Dates")] CreateTimeSlotRequest request)
         public ActionResult Create(CreateTimeSlotRequest request)
         {
-
+            if(request.Times == null )
+            {
+                ViewBag.errorMessage = "Please select at least one timeslot.";
+                return View("Error");
+            }
+            
             var data = new CreateRoomTimeSlot
             {
                 RoomId = request.RoomId,
@@ -146,18 +151,41 @@ namespace StudioReservation.BackOffice.Controllers
             {
                 ViewBag.errorMessage = "You are not allowed to edit today or passed time slot.";
             }
+            EditTimeSlot model = new EditTimeSlot()
+            {
+                Id= result.Id,
+                RoomName = result.RoomName,
+                Enable = result.Enable,
+                Date = result.Date,
+                TimeDic=result.Times,
+            };
 
-            return View(result); 
+            return View(model); 
         }
 
         [HttpPost]
-        public ActionResult Edit(RoomTimeSlotDetail request)
+        public ActionResult Edit(EditTimeSlot request)
         {
+            List<String> avaiAndReserveSlots = new List<string>();
+            if (request.Times != null)
+                avaiAndReserveSlots.AddRange(request.Times);
+            if(request.DisabledTimes!= null)
+                avaiAndReserveSlots.AddRange(request.DisabledTimes.Split(','));
+            avaiAndReserveSlots.Sort();
 
-            var result = _reservationService.EditTimeSlot(request.Id, "request.Times", string.Empty, DateTime.Now, request.Enable);
+            if (avaiAndReserveSlots.Count() == 0)
+            {
+                ViewBag.errorMessage = "Please select at least one timeslot.";
+                return View("Error");
+            }
+            var result = _reservationService.EditTimeSlot(request.Id, string.Join(",", avaiAndReserveSlots), string.Empty, DateTime.Now, request.Enable);
+            if (result != 0)
+            {
+                ViewBag.ErrorCode = result.ToString();
+                return View("Error");
+            }
 
-            return View(result);
-
+            return RedirectToAction("Index");
         }
 
         public ActionResult ConfirmDelete(string recordId = "")
