@@ -3,25 +3,32 @@
     ViewBag.Title = "Schedule";
     //int i = 0;
     int init_row = 0;
-    int max_row = Model.scheduleDates[0].roomStatuses.Count;
+    int max_row = 24;
 }
 
 @Styles.Render("~/bundles/datepicker_CSS")
 <style>
     .clicked {
-        background: green !important;
+        background: #00FF00 !important;
     }
 
     .available {
         background: white !important;
     }
 
+    .notOpenToBook {
+        background: LightGrey !important;
+    }
     .booked {
-        background: lightgrey !important;
+        background: Grey !important;
     }
 
     .lock {
-        background: blue !important;
+        background: yellow !important;
+    }
+    .unknw {
+        background: LightGrey !important;
+        text-align: center;
     }
 </style>
 
@@ -49,21 +56,30 @@
                 <br />
                 <ul style="list-style-type: none;">
                     <li style="display:inline">
-                        <input type="text" disabled style="width: 25px;background-color:white;" />
+                        <input class="available" type="text" disabled style="width: 25px;" />
                         Available
                     </li>
                     <li style="display:inline">
-                        <input type="text" disabled style="width: 25px;background-color:green;" />
+                        <input class="clicked" type="text" disabled style="width: 25px;" />
                         Your selection
                     </li>
                     <li style="display:inline">
-                        <input type="text" disabled style="width: 25px;background-color:blue;" />
+                        <input class="booked" type="text" disabled style="width: 25px;" />
+                        Booked
+                    </li>
+                    <li style="display:inline">
+                        <input class="lock" type="text" disabled style="width: 25px;" />
                         Locked
                     </li>
                     <li style="display:inline">
-                        <input type="text" disabled style="width: 25px; background-color: lightgrey;" />
+                        <input class="notOpenToBook" type="text" disabled style="width: 25px;" />
                         Unavailable
                     </li>
+                    <li style="display:inline">
+                        <input class="unknw" type="text" value="&#10005;" disabled style="width: 25px;" />
+                        Unknown
+                    </li>
+
                 </ul>
             </caption>
             <thead class="table-secondary">
@@ -79,83 +95,83 @@
                 @while (init_row < max_row)
                 {
                     <tr>
-                        @switch (@Model.scheduleDates[0].roomStatuses[init_row].timeslot)
+                        @switch (init_row.ToString("D2")+"00")
                         {
                             case "0000":
                                 <th scope="row" class="table-secondary">00:00-01:00</th>
- break;
+                                break;
                             case "0100":
                                 <th scope="row" class="table-secondary">01:00-02:00</th>
- break;
+                                break;
                             case "0200":
                                 <th scope="row" class="table-secondary">02:00-03:00</th>
- break;
+                                break;
                             case "0300":
                                 <th scope="row" class="table-secondary">03:00-04:00</th>
- break;
+                                break;
                             case "0400":
                                 <th scope="row" class="table-secondary">04:00-05:00</th>
- break;
+                                break;
                             case "0500":
                                 <th scope="row" class="table-secondary">05:00-06:00</th>
- break;
+                                break;
                             case "0600":
                                 <th scope="row" class="table-secondary">06:00-07:00</th>
- break;
+                                break;
                             case "0700":
                                 <th scope="row" class="table-secondary">07:00-08:00</th>
- break;
+                                break;
                             case "0800":
                                 <th scope="row" class="table-secondary">08:00-09:00</th>
- break;
+                                break;
                             case "0900":
                                 <th scope="row" class="table-secondary">09:00-10:00</th>
- break;
+                                break;
                             case "1000":
                                 <th scope="row" class="table-secondary">10:00-11:00</th>
- break;
+                                break;
                             case "1100":
                                 <th scope="row" class="table-secondary">11:00-12:00</th>
- break;
+                                break;
                             case "1200":
                                 <th scope="row" class="table-secondary">12:00-13:00</th>
- break;
+                                break;
                             case "1300":
                                 <th scope="row" class="table-secondary">13:00-14:00</th>
- break;
+                                break;
                             case "1400":
                                 <th scope="row" class="table-secondary">14:00-15:00</th>
- break;
+                                break;
                             case "1500":
                                 <th scope="row" class="table-secondary">15:00-16:00</th>
- break;
+                                break;
                             case "1600":
                                 <th scope="row" class="table-secondary">16:00-17:00</th>
- break;
+                                break;
                             case "1700":
                                 <th scope="row" class="table-secondary">17:00-18:00</th>
- break;
+                                break;
                             case "1800":
                                 <th scope="row" class="table-secondary">18:00-19:00</th>
- break;
+                                break;
                             case "1900":
                                 <th scope="row" class="table-secondary">19:00-20:00</th>
- break;
+                                break;
                             case "2000":
                                 <th scope="row" class="table-secondary">20:00-21:00</th>
- break;
+                                break;
                             case "2100":
                                 <th scope="row" class="table-secondary">21:00-22:00</th>
- break;
+                                break;
                             case "2200":
                                 <th scope="row" class="table-secondary">22:00-23:00</th>
- break;
+                                break;
                             case "2300":
                                 <th scope="row" class="table-secondary">23:00-00:00</th>
- break;
+                                break;
                             default:
                                 <th scope="row" class="table-secondary">error</th>
-break;
+                                break;
                         }
 
                         @*<th scope="row" class="table-secondary">@Model.scheduleDates[0].studioStatuses[init_row].timeslot</th>*@
@@ -165,13 +181,25 @@ break;
                             {
                                 <td class="slot available" id="@inner.Date@inner.roomStatuses[init_row].timeslot"></td>
                             }
-                            else if (inner.Enable == true && inner.roomStatuses[init_row].status == "3")
+                            else if (inner.Enable == true && inner.roomStatuses[init_row].status == "2")
                             {
                                 <td class="lock"></td>
                             }
-                            else
+                            else if (inner.Enable == true && inner.roomStatuses[init_row].status == "3")
                             {
                                 <td class="booked"></td>
+                            }
+                            else if (inner.Enable == true && inner.roomStatuses[init_row].status == "4")
+                            {
+                                <td class="notOpenToBook"></td>
+                            }
+                            else if (inner.Enable == false)
+                            {
+                                <td class="notOpenToBook"></td>
+                            }
+                            else
+                            {
+                                <td class="unknw">&#10005;</td>
                             }
                         }
                     </tr>

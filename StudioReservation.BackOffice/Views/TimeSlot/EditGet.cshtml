@@ -1,4 +1,4 @@
-﻿@model StudioReservation.DataModel.RoomTimeSlotDetail
+﻿@model StudioReservation.BackOffice.Models.EditTimeSlot
 @{
     ViewBag.Title = "Editing Timeslot";
 }
@@ -9,10 +9,15 @@
     @using (Html.BeginForm("Edit", "TimeSlot", FormMethod.Post, new { role = "form" }))
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.RoomName)
+        @Html.HiddenFor(m => m.Date)
+        @Html.HiddenFor(m => m.DisabledTimes)
+
         <div class="row">
             @Html.LabelFor(m => m.RoomName, new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8">
-                @Html.TextBoxFor(m => m.RoomName, new { @class = "form-control" , disabled = "disabled" })
+                @Html.TextBoxFor(m => m.RoomName, new { @class = "form-control", disabled = "disabled" })
             </div>
         </div>
 
@@ -28,43 +33,48 @@
             <div class="col-md-8" style="margin-top:8px;">
                 @Html.RadioButtonFor(m => m.Enable, "True") Yes
                 @Html.RadioButtonFor(m => m.Enable, "False") No
-                @*@Html.HiddenFor(m => m.Enable)*@
             </div>
         </div>
 
-        <div>
-            @Html.LabelFor(m => m.Times, new { @class = "col-md-8 col-form-label" })
+        <div class="row">
+
             <div class="col-md-7">
+                @Html.LabelFor(m => m.Times, new { @class = "col-md-12 col-form-label" })
                 @for (int i = 0; i < 24; i++)
                 {
                     int v;
                     string val = i.ToString("D2") + ":00";
-                    if (Model.Times.TryGetValue(val, out v) && (v == 2 || v == 3))
+                    if (Model.TimeDic.TryGetValue(val, out v) && (v == 2 || v == 3))
                     {
-
-                        <input type="checkbox" name="Times" value="@val" disabled checked/><label>@val<span>&nbsp;</span></label>
+                        <input type="checkbox" id="Times" name="Times" value="@val" disabled checked /><label>@val<span>&nbsp;</span></label>
                     }
-                    else if ((Model.Times.TryGetValue(val, out v) && v == 1))
+                    else if ((Model.TimeDic.TryGetValue(val, out v) && v == 1))
                     {
-                        <input type="checkbox" name="Times" value="@val" checked/><label>@val<span>&nbsp;</span></label>
+                        <input type="checkbox" id="Times" name="Times" value="@val" checked /><label>@val<span>&nbsp;</span></label>
                     }
                     else
                     {
-                        <input type="checkbox" name="Times" value="@val" /><label>@val<span>&nbsp;</span></label>
+                        <input type="checkbox" id="Times" name="Times" value="@val" /><label>@val<span>&nbsp;</span></label>
                     }
                 }
+                <br />
             </div>
+
+            @*<div class="col-md-3 col-sm-3" style="border:2px groove lime">
+                        <h6>&lowast; Reserved</h6>
+                        @foreach (var item in Model.TimeDic)
+                        {
+                            if (item.Value == 2 || item.Value == 3)
+                            {
+                                <input type="checkbox" name="DisTimes" value="@item.Key" disabled checked/><label style="text-decoration: line-through">@item.Key<span>&nbsp;</span></label>
+                            }
+                        }
+                </div>*@
         </div>
-        @*<div class="row">
-            @Html.Label("Times", new { @class = "col-md-8 col-form-label" })
-            <div class="col-md-8">
-                @Html.ListBoxFor(m => m.Times, ViewBag.Timeslots as MultiSelectList, new { id = "Times", multiple = "multiple" })
-            </div>
-        </div>*@
         <br />
         <div class="row">
             <div class="offset-md-3 col-md-9">
-                <input type="submit" value="Update" class="btn btn-primary" id="submitBtn" />
+                <input type="submit" value="Update" class="btn btn-primary" id="submitBtn" onclick="PostingDisTimes()" />
             </div>
         </div>
     }
@@ -73,6 +83,14 @@
 @section scripts
 {
     <script type="text/javascript">
+        var disTimes = [];
+        function PostingDisTimes() {
+            
+            $('input[name ="Times"]:disabled').each(function () {
+                disTimes.push(this.value);
+            });
+            $('#DisabledTimes').val(disTimes);
 
+        }
     </script>
 }
