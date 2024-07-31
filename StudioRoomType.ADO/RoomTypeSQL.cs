@@ -13,7 +13,9 @@ namespace StudioRoomType.ADO
     public interface IStudioRoomTypeSQL : IDisposable
     {
         IEnumerable<Room> GetAll();
-        long Create(Room roomType); 
+        int Create(Room roomType);
+
+        int Delete(int RoomId);
     }
 
     public class StudioRoomTypeSQL : IStudioRoomTypeSQL
@@ -67,15 +69,59 @@ namespace StudioRoomType.ADO
             };
         }
 
-        public long Create(Room roomType)
+        public int Create(Room roomType)
         {
-            throw new NotImplementedException();
+            using (var conn = new SqlConnection(_connection))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Room_Create";
+                    cmd.Parameters.AddWithValue("@Name", roomType.Name);
+                    cmd.Parameters.AddWithValue("@Description",roomType.Description);
+                    cmd.Parameters.AddWithValue("@Image", roomType.Image);
+                    cmd.Parameters.AddWithValue("@Size", roomType.Size);
+                    cmd.Parameters.AddWithValue("@Style", roomType.Style);
+                    cmd.Parameters.AddWithValue("@Rate", roomType.Rate);
+                    cmd.Parameters.AddWithValue("@CreatedBy", roomType.CreateBy);
+                    cmd.Parameters.AddWithValue("@CreatedDate", roomType.CreatedDate);
+                    
+                    var o = new SqlParameter("@Id", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                    cmd.Parameters.Add(o);
+
+                    cmd.ExecuteNonQuery();
+
+                    return int.Parse(o.Value.ToString());
+                }
+            }
         }
 
         public void Dispose()
         {
         }
 
-        
+        public int Delete(int RoomId)
+        {
+            using (var conn = new SqlConnection(_connection))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Room_Delete";
+                    cmd.Parameters.AddWithValue("@Id", RoomId);
+
+                    var r = cmd.ExecuteNonQuery();
+
+                    if (r > 0) return 0;
+
+                    return -1;
+                }
+            }
+        }
     }
 }
