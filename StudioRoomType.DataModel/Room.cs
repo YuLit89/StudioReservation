@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace StudioRoomType.DataModel
 {
+    public class RoomsViewModel
+    {
+       public List<Room> Rooms { get; set; }
+       public int Error { get; set; }
+    }
+
     public class Room
     {
         public int Id { get; set; }
@@ -13,6 +20,7 @@ namespace StudioRoomType.DataModel
         public string Description { get; set; }
         public string Image { get; set; }
         public string Size { get; set; }
+        public string[] StyleArr { get; set; }
         public string Style { get; set; }
         public decimal Rate { get; set; }
         public DateTime CreatedDate { get; set; }

@@ -1,0 +1,95 @@
+﻿@model StudioRoomType.DataModel.RoomsViewModel
+
+@{
+    ViewBag.Title = "Room Management";
+}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.2/css/dataTables.dataTables.css" />
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title</h2>
+
+    <input type="button" class="btn btn-primary" value="Create New" onclick="CreateNew()" />
+    <br />
+    <div class="row table-responsive">
+        <table class="table table-bordered" id="RoomsView">
+            <thead class="table-secondary">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Style</th>
+                    <th scope="col">Rate(RM)</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Rooms)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Name</td>
+                        <td>@item.Description</td>
+                        <td>@item.Size</td>
+                        <td>@item.Style</td>
+                        <td>@item.Rate</td>
+                        <td>
+                            @Html.ActionLink("Edit", "EditGet", new { roomId = item.Id }, new { style = "text-decoration:none;" })
+                            <span>|</span>
+                            <btn id="@item.Id" style="color:#0d6efd" onclick="PopConfirm(this)">Remove</btn>
+                            @*@if (item.AbleToDelete)//maintenance button or remove btn or both
+                                {
+                                   <span>|</span>
+                                   <btn id="@item.Id" style="color:#0d6efd" onclick="PopConfirm(this)">Remove</btn>
+                                 }*@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>
+<div class="modal fade modal-sm" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Confirmation <i class="fa-solid fa-exclamation"></i></h5>
+            </div>
+            <div class="modal-body">
+                Do you confirm to remove this record? ID:<input type="Text" id="roomIdToRemove" style="width:100px;" disabled />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" onclick="ConfirmDelete()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="https://cdn.datatables.net/2.1.2/js/dataTables.js"></script>
+    <script type="text/javascript">
+
+
+        function ConfirmDelete() {
+            window.location.href = '@Html.Raw(@Url.Action("ConfirmDelete", "Room"))' + "?roomId=" + $('#roomIdToRemove').val();
+        }
+
+        function CreateNew() {
+            window.location.href = '@Html.Raw(@Url.Action("CreateGet", "Room"))';
+        }
+
+        function PopConfirm(e) {
+            $('#roomIdToRemove').val(e.id);
+            $('#staticBackdrop').modal('show');
+        }
+
+        $(document).ready(function () {
+            $('#RoomsView').DataTable({
+                order: [[0, 'asc']],
+                columnDefs: [{ width: '50%', targets: 2 }]
+            });
+        });
+
+    </script>
+}
