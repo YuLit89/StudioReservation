@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity.SqlServer.Utilities;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -117,13 +118,16 @@ namespace StudioReservation.Controllers
                 return View(model);
             }
             // Generate the token and send it
+            var email = await UserManager.GetEmailAsync(User.Identity.GetUserId()).WithCurrentCulture();
+
             var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number);
             if (UserManager.EmailService != null)
             {
                 var message = new IdentityMessage
                 {
-                    Destination = model.Number,
-                    Body = "Your security code is: " + code
+                    Destination = email,
+                    Body = "Your security code is: " + code,
+                    Subject = "Change Phone Number"
                 };
                 await UserManager.EmailService.SendAsync(message);
             }
