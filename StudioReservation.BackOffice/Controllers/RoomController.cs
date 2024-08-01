@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -108,6 +109,20 @@ namespace StudioReservation.BackOffice.Controllers
         [HttpPost]
         public ActionResult Create(Room room, HttpPostedFileBase file)
         {
+            if (!ModelState.IsValid)
+            {
+                List<SelectListItem> styleOption = new List<SelectListItem>()
+                {
+                    new SelectListItem(){ Text = "Hip Hop", Value = "Hip Hop"},
+                    new SelectListItem(){ Text = "Jazz", Value = "Jazz"},
+                    new SelectListItem(){ Text = "K-pop", Value = "K-pop"},
+                    new SelectListItem(){ Text = "Latin", Value = "Latin"},
+                    new SelectListItem(){ Text = "Breaking", Value = "Breaking"}
+                };
+                ViewBag.Style = new MultiSelectList(styleOption, "Value", "Text");
+                return View(room);
+            }
+
             if (file != null && file.ContentLength > 0)
             {
                 string fileExtension = Path.GetExtension(file.FileName);
@@ -118,22 +133,28 @@ namespace StudioReservation.BackOffice.Controllers
                     
                     ViewBag.errorMessage = "Only PDF, JPG, PNG and GIF file extension supported.";
                     return View("Error");
-
                 }
 
                 //Store to ~/App_Data/Uploads folder
                 var fileName = Path.GetFileName(file.FileName);
-                var path = Path.Combine(Server.MapPath("~/App_Data/UserUploads"), fileName);
+                var path = Path.Combine(Server.MapPath("~/Images/UserUploads"), fileName);
                 file.SaveAs(path);
 
                 //insert to db
-                room.Image = path;
+                room.Image = fileName;
+                room.Style = (room.StyleArr == null) ? "" : string.Join(",", room.StyleArr);
                 room.CreateBy = string.Empty;
                 room.CreatedDate = DateTime.Now;
 
                 var result = _miscellaneousSerice.CreateRoomType(room);
 
-                return View(result);
+                if (result != 0)
+                {
+                    ViewBag.ErrorCode = result.ToString();
+                    return View("Error");
+                }
+
+                return RedirectToAction("Index");
             }
             else
             {
@@ -155,6 +176,40 @@ namespace StudioReservation.BackOffice.Controllers
             }
 
             return RedirectToAction("Index"); // 0 is success , other code is fail
+        }
+
+        public ActionResult EditGet(int roomId = 0)
+        {
+            var result= _miscellaneousSerice.GetAllRoomType();
+            var room = result.Rooms.Where(x => x.Id == roomId).FirstOrDefault();
+            if (room == null)
+            {
+                ViewBag.errorMessage = "Room detail is not available.";
+                return View("Error");
+            }
+
+            List<SelectListItem> styleOption = new List<SelectListItem>()
+                {
+                    new SelectListItem(){ Text = "Hip Hop", Value = "Hip Hop"},
+                    new SelectListItem(){ Text = "Jazz", Value = "Jazz"},
+                    new SelectListItem(){ Text = "K-pop", Value = "K-pop"},
+                    new SelectListItem(){ Text = "Latin", Value = "Latin"},
+                    new SelectListItem(){ Text = "Breaking", Value = "Breaking"}
+                };
+            ViewBag.Style = new MultiSelectList(styleOption, "Value", "Text");
+            room.StyleArr = room.Style.Split(',');
+            room.RateOri = room.Rate;
+            return View(room);
+        }
+        [HttpPost]
+        public ActionResult Edit(Room room,HttpPostedFileBase file)
+        {
+            //room.Image = fileName;
+            //room.Style = (room.StyleArr == null) ? "" : string.Join(",", room.StyleArr);
+            //room.CreateBy = string.Empty;
+            //room.CreatedDate = DateTime.Now;
+            string bb = "";
+            return RedirectToAction("Index");
         }
     }
 }

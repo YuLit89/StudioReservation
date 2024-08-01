@@ -46,9 +46,6 @@ namespace StudioMiscellaneous.Service
         //todo
         public int CreateRoomType(Room Room)
         {
-
-            Room.Style = string.Join(",", Room.StyleArr);
-
             var id = _createRoomType(Room);
 
             if(id > 0)
