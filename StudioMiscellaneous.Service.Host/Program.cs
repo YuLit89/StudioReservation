@@ -28,7 +28,7 @@ namespace StudioMiscellaneous.Service.Host
             var service = new MiscellaneousService(
                 getAllRoomType: roomRepo.GetAll,
                 createRoomType: roomRepo.Create,
-                updateRoomType: null,
+                updateRoomType: roomRepo.Edit,
                 deleteRoomType: roomRepo.Delete);
           
 

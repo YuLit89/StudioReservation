@@ -18,10 +18,13 @@ namespace StudioMiscellaneous.Service.Contract
         RoomsViewModel GetAllRoomType();
 
         [OperationContract]
-        int EditRoomType(int RoomId, string Description, string Image, string Size, string[] Style, decimal Rate, DateTime UpdateTime, string UpdateBy);
+        int EditRoomType(Room room);
 
         [OperationContract]
         int DeleteRoomType(int RoomId);
+
+        [OperationContract]
+        RoomViewDetail FindRoomDetail(int RoomId);
 
     }
 }

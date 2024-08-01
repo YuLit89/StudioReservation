@@ -1,7 +1,7 @@
 ﻿
 using NLog;
+using StudioMember.DataModel;
 using StudioMember.Service.Contract;
-using StudioMember.Service.Contract.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,7 @@ namespace StudioMember.Service.Proxy
           
         }
 
-        public Member Find(string Id)
+        public MemberViewModel Find(string Id)
         {
             IMemberService s = null;
             try
@@ -46,27 +46,27 @@ namespace StudioMember.Service.Proxy
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {Id}");
-                return null;
+                return new MemberViewModel { Error = -1 };
             }
             catch (FaultException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {Id}");
-                return null;
+                return new MemberViewModel { Error = -2 };
             }
             catch (CommunicationException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {Id}");
-                return null;
+                return new MemberViewModel { Error = -3 };
             }
             catch (TimeoutException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {Id}");
-                return null;
+                return new MemberViewModel { Error = -4 };
             }
             catch (Exception ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {Id}");
-                return null;
+                return new MemberViewModel { Error = -5 };
             }
             finally
             {
@@ -74,7 +74,7 @@ namespace StudioMember.Service.Proxy
             }
         }
 
-        public Member FindByUserName(string Username)
+        public MemberViewModel FindByUserName(string Username)
         {
             IMemberService s = null;
             try
@@ -87,27 +87,27 @@ namespace StudioMember.Service.Proxy
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {Username}");
-                return null;
+                return new MemberViewModel { Error = -1 };
             }
             catch (FaultException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {Username}");
-                return null;
+                return new MemberViewModel { Error = -2 };
             }
             catch (CommunicationException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {Username}");
-                return null;
+                return new MemberViewModel { Error = -3 };
             }
             catch (TimeoutException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {Username}");
-                return null;
+                return new MemberViewModel { Error = -4 };
             }
             catch (Exception ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {Username}");
-                return null;
+                return new MemberViewModel { Error = -5 };
             }
             finally
             {
@@ -115,7 +115,7 @@ namespace StudioMember.Service.Proxy
             }
         }
 
-        public List<Member> GetAll()
+        public MembersViewModel GetAll()
         {
             IMemberService s = null;
             try
@@ -128,27 +128,27 @@ namespace StudioMember.Service.Proxy
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
-                return null;
+                return new MembersViewModel { Error = -1 };
             }
             catch (FaultException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
-                return null;
+                return new MembersViewModel { Error = -2 };
             }
             catch (CommunicationException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
-                return null;
+                return new MembersViewModel { Error = -3 };
             }
             catch (TimeoutException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
-                return null;
+                return new MembersViewModel { Error = -4 };
             }
             catch (Exception ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
-                return null;
+                return new MembersViewModel { Error = -5 };
             }
             finally
             {

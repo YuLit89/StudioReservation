@@ -85,28 +85,28 @@ namespace StudioMiscellaneous.Service
         {
         }
 
-        public int EditRoomType(int RoomId,string Description,string Size, string Image, string[] Style, decimal Rate,DateTime UpdateTime,string UpdateBy)
+        public int EditRoomType(Room room)
         {
             
              Room roomInfo;
-             if(_roomType.TryGetValue(RoomId,out roomInfo))
+             if(_roomType.TryGetValue(room.Id,out roomInfo))
              {
                 var r = new Room()
                 {
                     Id = roomInfo.Id,
-                    Name = roomInfo.Name,
-                    Description = Description,
-                    Image = Image,
-                    Size = Size,
-                    Style = string.Join(",",Style),
-                    Rate = Rate,
+                    Name = room.Name,
+                    Description = room.Description,
+                    Image = room.Image,
+                    Size = room.Size,
+                    Style = room.Style,
+                    Rate = room.Rate,
                     CreateBy = roomInfo.CreateBy,
                     CreatedDate = roomInfo.CreatedDate,
-                    UpdateBy = UpdateBy,
-                    UpdatedDate = UpdateTime
+                    UpdateBy = room.UpdateBy,
+                    UpdatedDate = room.UpdatedDate
                 };
                    
-                var error = _updateRoomType(roomInfo);
+                var error = _updateRoomType(r);
 
                 if(error == 0)
                 {
@@ -122,6 +122,15 @@ namespace StudioMiscellaneous.Service
              }
 
             return -11;
+        }
+
+        public RoomViewDetail FindRoomDetail(int RoomId)
+        {
+            Room room;
+
+            return _roomType.TryGetValue(RoomId, out room)
+                   ? new RoomViewDetail { Room = room, Error = 0 }
+                   : new RoomViewDetail { Room = new Room(), Error = -10 };
         }
 
         public RoomsViewModel GetAllRoomType()

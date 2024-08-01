@@ -150,6 +150,8 @@ namespace StudioReservation.BackOffice.Controllers
 
                 if (result != 0)
                 {
+                    System.IO.File.Delete(path);
+
                     ViewBag.ErrorCode = result.ToString();
                     return View("Error");
                 }
@@ -180,9 +182,9 @@ namespace StudioReservation.BackOffice.Controllers
 
         public ActionResult EditGet(int roomId = 0)
         {
-            var result= _miscellaneousSerice.GetAllRoomType();
-            var room = result.Rooms.Where(x => x.Id == roomId).FirstOrDefault();
-            if (room == null)
+            var result = _miscellaneousSerice.FindRoomDetail(roomId);
+          
+            if (result.Error != 0)
             {
                 ViewBag.errorMessage = "Room detail is not available.";
                 return View("Error");
@@ -196,20 +198,58 @@ namespace StudioReservation.BackOffice.Controllers
                     new SelectListItem(){ Text = "Latin", Value = "Latin"},
                     new SelectListItem(){ Text = "Breaking", Value = "Breaking"}
                 };
+
             ViewBag.Style = new MultiSelectList(styleOption, "Value", "Text");
-            room.StyleArr = room.Style.Split(',');
-            room.RateOri = room.Rate;
-            return View(room);
+
+            result.Room.StyleArr = result.Room.Style.Split(',');
+            result.Room.RateOri = result.Room.Rate;
+
+            return View(result);
         }
         [HttpPost]
         public ActionResult Edit(Room room,HttpPostedFileBase file)
         {
-            //room.Image = fileName;
-            //room.Style = (room.StyleArr == null) ? "" : string.Join(",", room.StyleArr);
-            //room.CreateBy = string.Empty;
-            //room.CreatedDate = DateTime.Now;
-            string bb = "";
-            return RedirectToAction("Index");
+
+            if (file != null && file.ContentLength > 0)
+            {
+                string fileExtension = Path.GetExtension(file.FileName);
+                string[] allowedExtensions = { ".pdf", ".jpg", ".png", ".gif" };
+
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+
+                    ViewBag.errorMessage = "Only PDF, JPG, PNG and GIF file extension supported.";
+                    return View("Error");
+                }
+
+                //Store to ~/App_Data/Uploads folder
+                var fileName = Path.GetFileName(file.FileName);
+                var path = Path.Combine(Server.MapPath("~/Images/UserUploads"), fileName);
+                file.SaveAs(path);
+                
+                //insert to db
+                room.Image = fileName;
+                room.Style = (room.StyleArr == null) ? "" : string.Join(",", room.StyleArr);
+                room.UpdatedDate = DateTime.Now;
+                room.UpdateBy = string.Empty;
+
+                var result = _miscellaneousSerice.EditRoomType(room);
+
+                if (result != 0)
+                {
+                    System.IO.File.Delete(path);
+
+                    ViewBag.ErrorCode = result.ToString();
+                    return View("Error");
+                }
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewBag.errorMessage = "Something wrong with uploaded file.";
+                return View("Error");
+            }
         }
     }
 }

@@ -113,7 +113,7 @@ namespace StudioMiscellaneous.Service.Proxy
         {
         }
 
-        public int EditRoomType(int RoomId, string Description, string Image, string Size, string[] Style, decimal Rate, DateTime UpdateTime, string UpdateBy)
+        public int EditRoomType(Room room)
         {
             IStudioMiscellaneousService s = null;
             try
@@ -122,7 +122,7 @@ namespace StudioMiscellaneous.Service.Proxy
 
                 if (s != null)
                 {
-                    return s.EditRoomType(RoomId, Description, Image, Size, Style, Rate, UpdateTime, UpdateBy);
+                    return s.EditRoomType(room);
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
@@ -259,5 +259,45 @@ namespace StudioMiscellaneous.Service.Proxy
             }
         }
 
+        public RoomViewDetail FindRoomDetail(int RoomId)
+        {
+            IStudioMiscellaneousService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.FindRoomDetail(RoomId);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
+                return new RoomViewDetail { Error = -1 };
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
+                return new RoomViewDetail { Error = -2 };
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
+                return new RoomViewDetail { Error = -3 };
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
+                return new RoomViewDetail { Error = -4 };
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
+                return new RoomViewDetail { Error = -5 };
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
     }
 }

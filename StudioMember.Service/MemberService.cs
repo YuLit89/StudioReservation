@@ -1,7 +1,7 @@
 ﻿
 using NLog;
+using StudioMember.DataModel;
 using StudioMember.Service.Contract;
-using StudioMember.Service.Contract.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -41,28 +41,52 @@ namespace StudioMember.Service
         {
         }
 
-        public Member Find(string Id)
+        public MemberViewModel Find(string Id)
         {
             var member = _sync.GetOrAdd(Id, new object());
 
             lock (member)
             {
                 Member m;
-                return _members.TryGetValue(Id, out m) ? m : null;
+
+                if(_members.TryGetValue(Id, out m))
+                {
+                    return new MemberViewModel
+                    {
+                        Member = m,
+                        Error = 0
+                    };
+                }
+
+                return new MemberViewModel
+                {
+                    Error = -10
+                };
             }
         }
 
-        public Member FindByUserName(string Username)
+        public MemberViewModel FindByUserName(string Username)
         {
             var member = _members.Values.Where(x => x.UserName == Username)?.First();
 
-            return (member == null) ? null : member;
+            return (member != null) ? new MemberViewModel
+            {
+                Member = member,
+                Error = 0
+            } : new MemberViewModel
+            {
+                Error = -10
+            };
 
         }
 
-        public List<Member> GetAll()
+        public MembersViewModel GetAll()
         {
-            return _members.Values.ToList();
+            return new MembersViewModel
+            {
+                Members = _members.Values.ToList(),
+                Error = 0
+            };
         }
 
       

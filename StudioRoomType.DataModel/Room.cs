@@ -33,4 +33,10 @@ namespace StudioRoomType.DataModel
         public DateTime? UpdatedDate { get; set; }
 
     }
+
+    public class RoomViewDetail
+    {
+        public Room Room { get; set; }
+        public int Error { get; set; }
+    }
 }
