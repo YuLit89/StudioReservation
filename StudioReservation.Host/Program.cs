@@ -1,4 +1,5 @@
-﻿using StudioReservation.ADO;
+﻿using Redis;
+using StudioReservation.ADO;
 using StudioReservation.Contract;
 using StudioReservation.Service;
 using StudioRoomType.ADO;
@@ -29,7 +30,13 @@ namespace StudioReservation.Host
 
             var timeSlotRange = int.Parse(ConfigurationManager.AppSettings["time-slot-range"]);
 
+            var redisIp = ConfigurationManager.AppSettings["redis-ip"];
+            var redisPassword = ConfigurationManager.AppSettings["redis-password"];
+
+            var redis = new RedisConnection(redisIp, redisPassword);
+
             var service = new ReservationService(
+                redis : redis,
                 getAllTimeSlot : repo.GetAllTimeSlot,
                 insertTimeSlot : repo.CreateTimeSlot,
                 updateTimeSlot : repo.UpdateTimeSlot,

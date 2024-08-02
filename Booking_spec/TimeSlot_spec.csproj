@@ -53,6 +53,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Redis\Redis.csproj">
+      <Project>{50128942-080C-49D8-B78D-548251C22CB4}</Project>
+      <Name>Redis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StudioReservation.ADO\StudioReservation.ADO.csproj">
       <Project>{F5CA7D55-628D-419A-9E48-FFFAE53E6709}</Project>
       <Name>StudioReservation.ADO</Name>

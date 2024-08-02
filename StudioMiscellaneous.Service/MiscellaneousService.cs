@@ -1,5 +1,4 @@
-﻿using StackExchange.Redis;
-using StudioMiscellaneous.Service.Contract;
+﻿using StudioMiscellaneous.Service.Contract;
 using StudioRoomType.DataModel;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Redis;
 
 namespace StudioMiscellaneous.Service
 {
@@ -22,8 +22,12 @@ namespace StudioMiscellaneous.Service
         Func<Room, int> _updateRoomType;
         Func<int, int> _deleteRoomType;
 
+        IRedisConnection _redis;
+
+        const string _syncRoomChannel = "sync-roomType";
 
         public MiscellaneousService(
+            IRedisConnection redisConnection,
             Func<IEnumerable<Room>> getAllRoomType,
             Func<Room,int> createRoomType,
             Func<Room,int> updateRoomType,
@@ -31,6 +35,7 @@ namespace StudioMiscellaneous.Service
 
             ) 
         {
+            _redis = redisConnection;
 
             _createRoomType = createRoomType;
             _updateRoomType = updateRoomType;
@@ -54,7 +59,7 @@ namespace StudioMiscellaneous.Service
 
                 _roomType[id] = Room;
 
-                // todo : call redis publish
+                _redis.Publish<Room>(_syncRoomChannel, Room);
 
                 return 0;
             }
@@ -72,7 +77,7 @@ namespace StudioMiscellaneous.Service
             {
                 _roomType.Remove(RoomId);
 
-                // todo : call redis publish
+                _redis.Publish<bool>("delete-roomType", true);
 
                 return 0;
             }
@@ -112,8 +117,8 @@ namespace StudioMiscellaneous.Service
                 {
                     _roomType[r.Id] = r;
 
-                    // todo : call redis publish
-
+                    _redis.Publish<Room>(_syncRoomChannel, r);
+                    
                     return 0;
                 }
 

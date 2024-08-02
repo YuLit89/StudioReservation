@@ -1,4 +1,5 @@
 ﻿
+using Redis;
 using StudioReservation.Contract;
 using StudioReservation.DataModel;
 using StudioRoomType.DataModel;
@@ -38,7 +39,10 @@ namespace StudioReservation.Service
 
         readonly int _timeSlotRange;
 
+        readonly IRedisConnection _redis;
+
         public ReservationService(
+            IRedisConnection redis,
             Func<IEnumerable<RoomTimeSlot>> getAllTimeSlot,
             Func<RoomTimeSlot, long> insertTimeSlot,
             Func<long, string, string, DateTime, bool, long> updateTimeSlot,
@@ -49,6 +53,9 @@ namespace StudioReservation.Service
             Func<IEnumerable<ReservationHistory>> getAllReservation,
             Func<long,int,DateTime,string,long> updateReservationStatus)
         {
+
+            _redis = redis;
+
             _insertTimeSlot = insertTimeSlot;
             _updateTimeSlot = updateTimeSlot;
 
@@ -59,6 +66,13 @@ namespace StudioReservation.Service
             _updateReservationStatus = updateReservationStatus;
 
             Init(getAllTimeSlot(), getAllRoomsType(),getAllReservation());
+
+            _redis.Subscribe<Room>("sync-roomType", (message) => SyncRoomType(message));
+
+            _redis.Subscribe<int>("delete-roomType", (message) =>
+            {
+                _roomType.Remove(message);
+            });
 
         }
 
@@ -579,6 +593,11 @@ namespace StudioReservation.Service
 
 
             return result;
+        }
+
+        internal void SyncRoomType(Room room)
+        {
+            _roomType[room.Id] = room;
         }
 
     }

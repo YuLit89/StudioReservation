@@ -48,6 +48,10 @@
     <Compile Include="ReservationStatus.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Redis\Redis.csproj">
+      <Project>{50128942-080c-49d8-b78d-548251c22cb4}</Project>
+      <Name>Redis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StudioReservation.Contract\StudioReservation.Contract.csproj">
       <Project>{916d47ff-22bd-4f9a-b6bf-8faea3e4da5f}</Project>
       <Name>StudioReservation.Contract</Name>
