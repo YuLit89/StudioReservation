@@ -6,6 +6,54 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/bundles/datepicker_CSS")
+
+    <style>
+        .navbar a {
+            padding: 14px 16px;
+            color: white;
+        }
+
+        .subnav .subnavbtn {
+            font-size: 16px;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 14px 16px;
+            background-color: inherit;
+            font-family: inherit;
+            margin: inherit;
+        }
+
+        .navbar a:hover, .subnav:hover .subnavbtn {
+            background-color: red;
+        }
+
+        .subnav-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            background-color: red;
+            width: 100%;
+            z-index: 1;
+        }
+
+            .subnav-content a {
+                float: left;
+                color: white;
+                text-decoration: none;
+                margin-left: 20px
+            }
+
+                .subnav-content a:hover {
+                    background-color: #eee;
+                    color: black;
+                }
+
+        .subnav:hover .subnav-content {
+            display: block;
+        }
+    </style>
 
 </head>
 <body>
@@ -21,8 +69,17 @@
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Room", "Index", "Room", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("TimeSlot", "Index", "TimeSlot", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>
+                        <div class="subnav">
+                            <button class="subnavbtn">Management <i class="fa-solid fa-square-caret-down"></i></button>
+                            <div class="subnav-content">
+                                @Html.ActionLink("Room", "Index", "Room", new { area = "" }, new { @class = "nav-link" })
+                                @Html.ActionLink("TimeSlot", "Index", "TimeSlot", new { area = "" }, new { @class = "nav-link" })
+                                @Html.ActionLink("Member", "Index", "Member", new { area = "" }, new { @class = "nav-link" })
+                            </div>
+                        </div>
+
+                    </li>
                 </ul>
                  @Html.Partial("_LoginPartial")
             </div>

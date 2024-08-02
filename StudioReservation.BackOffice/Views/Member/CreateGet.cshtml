@@ -1,0 +1,78 @@
+﻿@model StudioMember.DataModel.MemberViewModel
+@{
+    ViewBag.Title = "Member Management";
+}
+
+<main aria-labelledby="title">
+<h2 id="title">@ViewBag.Title</h2>
+<br />
+@using (Html.BeginForm("Create", "Member", FormMethod.Post, new { role = "form"}))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.i)
+    <div class="row">
+        @Html.LabelFor(m => m.Name, new { @class = "col-md-8 col-form-label" })
+        <div class="col-md-8">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="row">
+        @Html.LabelFor(m => m.Description, new { @class = "col-md-8 col-form-label" })
+        <div class="col-md-8">
+            @Html.TextAreaFor(m => m.Description, 7, 70, new { @class = "form-control", style = "max-width:70%", maxlength = "500" })
+        </div>
+    </div>
+
+    <div class="row">
+        @Html.Label("Width x Height (in cm)", new { @class = "col-md-8 col-form-label" })
+        <div class="col-md-8" style="display:inherit">
+            <input type="number" step=".01" class="form-control" id="SizeW" name="SizeW" style="width:90px;" />
+            <span>&nbsp;&nbsp;X&nbsp;&nbsp;</span>
+            <input type="number" step=".01" class="form-control" id="SizeH" name="SizeH" style="width:90px;" />
+        </div>
+    </div>
+
+    <div class="row">
+        @Html.LabelFor(m => m.Style, new { @class = "col-md-8 col-form-label" })
+        <div class="col-md-8">
+            @Html.ListBoxFor(m => m.StyleArr, ViewBag.Style as MultiSelectList, new { id = "Style", multiple = "multiple" })
+        </div>
+    </div>
+    <div class="row">
+        @Html.Label("Rate (RM)", new { @class = "col-md-12 col-form-label" })
+        <div class="col-md-4">
+            <input type="number" step=".01" class="form-control" id="Rate" name="Rate" style="width:100px;" />
+        </div>
+    </div>
+    <div class="row">
+        @Html.LabelFor(m => m.Image, new { @class = "col-md-8 col-form-label" })
+        <div class="col-md-8">
+            <input type="file" name="file" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="offset-md-3 col-md-9">
+            <input type="submit" value="Create" class="btn btn-primary" id="submitBtn" onclick="PostingValue()" />
+        </div>
+    </div>
+}
+</main>
+
+@section scripts
+{
+    <script src="~/Scripts/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/init.js"></script>
+    <script type="text/javascript">
+        function PostingValue() {
+            var w = $('#SizeW').val();
+            var h = $('#SizeH').val();
+            $('#Size').val(w + ' * ' + h);
+        };
+
+        $(document).ready(function () {
+            $("#Style").chosen({ width: "50%" });
+        });
+    </script>
+}
