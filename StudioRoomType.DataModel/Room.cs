@@ -13,6 +13,7 @@ namespace StudioRoomType.DataModel
        public int Error { get; set; }
     }
 
+    [Serializable]
     public class Room
     {
         public int Id { get; set; }
