@@ -19,12 +19,14 @@
             @Html.LabelFor(m => m.Name, new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8">
                 @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="row">
             @Html.LabelFor(m => m.Description, new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8">
                 @Html.TextAreaFor(m => m.Description, 7, 70, new { @class = "form-control", style = "max-width:70%", maxlength = "500" })
+                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="row">
@@ -45,13 +47,13 @@
             @Html.Label("Rate (RM)", new { @class = "col-md-12 col-form-label" })
             <div class="col-md-4">
                 <input type="number" step=".01" class="form-control" id="Rate" name="Rate" style="width:100px;" />
-
+                @Html.ValidationMessageFor(m => m.Rate, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="row">
             @Html.Label("Existing Image", new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8" id="imgDiv">
-                <img src="/Images/UserUploads/@Model.Image" alt="@Model.Image" width="500;" />
+                <img src="/Images/UserUploads/@Model.Image" alt="@Model.Image" width="500px;" />
                 <br />
                 <input type="file" id="file" name="file" accept=".jpg, .img, .png, .gif" />
             </div>
@@ -79,7 +81,7 @@
         function PostingValue() {
             var w = $('#SizeW').val();
             var h = $('#SizeH').val();
-            $('#Size').val(w + ' * ' + h);  
+            $('#Size').val(w + ' * ' + h);
             $('#RateOri').val($('#Rate').val());
         };
 
@@ -120,11 +122,8 @@
                         //$('#imgDiv')[0].replaceChildren(image);
 
                     }
-                } 
-
-            });//dnot remove
+                }
+            });//do not remove
         });
-
-
     </script>
 }
