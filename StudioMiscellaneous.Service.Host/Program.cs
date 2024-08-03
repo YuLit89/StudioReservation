@@ -1,13 +1,18 @@
-﻿using StudioMiscellaneous.Service.Contract;
+﻿using StackExchange.Redis;
+using StudioMiscellaneous.Service.Contract;
 using StudioRoomType.ADO;
+using StudioRoomType.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Text;
 using System.Threading.Tasks;
+using Redis;
 
 namespace StudioMiscellaneous.Service.Host
 {
@@ -24,13 +29,19 @@ namespace StudioMiscellaneous.Service.Host
 
             var roomRepo = new StudioRoomTypeSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
 
+            var redisIp = ConfigurationManager.AppSettings["redis-ip"];
+            var redisPassword = ConfigurationManager.AppSettings["redis-password"];
+
+            var redis = new RedisConnection(redisIp, redisPassword);
+
 
             var service = new MiscellaneousService(
+                redisConnection : redis,
                 getAllRoomType: roomRepo.GetAll,
                 createRoomType: roomRepo.Create,
-                updateRoomType: null,
-                deleteRoomType: roomRepo.Delete);
-          
+                updateRoomType: roomRepo.Edit,
+                deleteRoomType: roomRepo.Delete
+                );
 
             new ServiceHost<IStudioMiscellaneousService>().Boot(url, service);
 
@@ -44,6 +55,9 @@ namespace StudioMiscellaneous.Service.Host
         public static void Boot()
         {
         }
+
+      
+
 
     }
 

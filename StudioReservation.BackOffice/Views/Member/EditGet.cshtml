@@ -1,0 +1,39 @@
+﻿@model StudioMember.DataModel.Member
+
+@{
+    ViewBag.Title = "Modify Member's Detail";
+}
+
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title</h2>
+    <br />
+    @using (Html.BeginForm("Edit", "Member", FormMethod.Post, new { role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.Password)
+        @Html.HiddenFor(m => m.ConfirmPassword)
+        @Html.HiddenFor(m => m.Email)
+        <div class="row">
+            @Html.LabelFor(m => m.UserName, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="offset-md-3 col-md-9">
+                <input type="submit" value="Update" class="btn btn-primary" id="submitBtn" />
+            </div>
+        </div>
+    }
+</main>
+

@@ -16,6 +16,9 @@ namespace StudioRoomType.ADO
         int Create(Room roomType);
 
         int Delete(int RoomId);
+
+        int Edit(Room room);
+
     }
 
     public class StudioRoomTypeSQL : IStudioRoomTypeSQL
@@ -114,6 +117,35 @@ namespace StudioRoomType.ADO
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = "Room_Delete";
                     cmd.Parameters.AddWithValue("@Id", RoomId);
+
+                    var r = cmd.ExecuteNonQuery();
+
+                    if (r > 0) return 0;
+
+                    return -1;
+                }
+            }
+        }
+
+        public int Edit(Room room)
+        {
+            using (var conn = new SqlConnection(_connection))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Room_Edit";
+                    cmd.Parameters.AddWithValue("@id", room.Id);
+                    cmd.Parameters.AddWithValue("@name", room.Name);
+                    cmd.Parameters.AddWithValue("@description", room.Description);
+                    cmd.Parameters.AddWithValue("@image", room.Image);
+                    cmd.Parameters.AddWithValue("@size", room.Size);
+                    cmd.Parameters.AddWithValue("@style", room.Style);
+                    cmd.Parameters.AddWithValue("@rate", room.Rate);
+                    cmd.Parameters.AddWithValue("@updatedby", room.UpdateBy);
+                    cmd.Parameters.AddWithValue("@updatetime", room.UpdatedDate);
 
                     var r = cmd.ExecuteNonQuery();
 

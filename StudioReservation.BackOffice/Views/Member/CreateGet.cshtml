@@ -1,0 +1,76 @@
+﻿@model StudioMember.DataModel.Member
+@{
+    ViewBag.Title = "Adding New Member";
+}
+
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title</h2>
+    <br />
+    @using (Html.BeginForm("Create", "Member", FormMethod.Post, new { role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        <div class="row">
+            @Html.LabelFor(m => m.UserName, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.Email, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.DropDownListFor(m => m.CountryCode, @ViewBag.CountryCode as SelectList, new { @class = "col-md-1", id = "CountryCodeId", name = "CountryCodeId" })
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control col-md-4", style="display:inline" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.Password, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+        <br />
+        <div class="row">
+            <div class="offset-md-3 col-md-9">
+                <input type="submit" value="Create" class="btn btn-primary" id="submitBtn" onclick="PostingValue()" />
+            </div>
+        </div>
+    }
+</main>
+
+@section scripts
+{
+    <script type="text/javascript">
+        /*function PostingValue() {
+            var w = $('#SizeW').val();
+            var h = $('#SizeH').val();
+            $('#Size').val(w + ' * ' + h);
+        };*/
+
+        $(document).ready(function () {
+           //$("#Style").chosen({ width: "50%" });
+        });
+    </script>
+}

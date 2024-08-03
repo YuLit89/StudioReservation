@@ -1,6 +1,5 @@
 ﻿
-
-using StudioMember.Service.Contract.Models;
+using StudioMember.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,23 +13,25 @@ namespace StudioMember.Service.Contract
     public interface IMemberService : IDisposable
     {
         [OperationContract]
-        Member FindByUserName(string Username);
+        MemberViewModel FindByUserName(string Username);
 
         [OperationContract]
-        Member Find(string Id);
+        MemberViewModel Find(string Id);
 
         [OperationContract]
-        List<Member> GetAll();
+        MembersViewModel GetAll();
 
         [OperationContract]
-        int Update(string Id,string Email, string PhoneNumber);
+        int Update(string Id,string NickName, string PhoneNumber,DateTime UpdateTime,bool Disable = false);
 
         [OperationContract]
-        int Register(string MemberId,string Email,bool EmailConfirmed,string Password,string PhoneNumber,string UserName);
+        int SyncRegister(Member member);
 
         [OperationContract]
-        int UpdateUser(string MemberId , string Password,bool EmailConfirmed);
-  
+        int SyncUser(string MemberId , string Password,bool EmailConfirmed);
+        [OperationContract]
+        int UpdateMemberStatus(string MemberId, bool isDisable);
+
 
     }
 }

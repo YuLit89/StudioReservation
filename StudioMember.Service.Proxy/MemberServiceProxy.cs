@@ -1,7 +1,7 @@
 ﻿
 using NLog;
+using StudioMember.DataModel;
 using StudioMember.Service.Contract;
-using StudioMember.Service.Contract.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,7 @@ namespace StudioMember.Service.Proxy
           
         }
 
-        public Member Find(string Id)
+        public MemberViewModel Find(string Id)
         {
             IMemberService s = null;
             try
@@ -46,27 +46,27 @@ namespace StudioMember.Service.Proxy
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {Id}");
-                return null;
+                return new MemberViewModel { Error = -1 };
             }
             catch (FaultException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {Id}");
-                return null;
+                return new MemberViewModel { Error = -2 };
             }
             catch (CommunicationException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {Id}");
-                return null;
+                return new MemberViewModel { Error = -3 };
             }
             catch (TimeoutException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {Id}");
-                return null;
+                return new MemberViewModel { Error = -4 };
             }
             catch (Exception ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {Id}");
-                return null;
+                return new MemberViewModel { Error = -5 };
             }
             finally
             {
@@ -74,7 +74,7 @@ namespace StudioMember.Service.Proxy
             }
         }
 
-        public Member FindByUserName(string Username)
+        public MemberViewModel FindByUserName(string Username)
         {
             IMemberService s = null;
             try
@@ -87,27 +87,27 @@ namespace StudioMember.Service.Proxy
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {Username}");
-                return null;
+                return new MemberViewModel { Error = -1 };
             }
             catch (FaultException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {Username}");
-                return null;
+                return new MemberViewModel { Error = -2 };
             }
             catch (CommunicationException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {Username}");
-                return null;
+                return new MemberViewModel { Error = -3 };
             }
             catch (TimeoutException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {Username}");
-                return null;
+                return new MemberViewModel { Error = -4 };
             }
             catch (Exception ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {Username}");
-                return null;
+                return new MemberViewModel { Error = -5 };
             }
             finally
             {
@@ -115,7 +115,7 @@ namespace StudioMember.Service.Proxy
             }
         }
 
-        public List<Member> GetAll()
+        public MembersViewModel GetAll()
         {
             IMemberService s = null;
             try
@@ -128,27 +128,27 @@ namespace StudioMember.Service.Proxy
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
-                return null;
+                return new MembersViewModel { Error = -1 };
             }
             catch (FaultException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
-                return null;
+                return new MembersViewModel { Error = -2 };
             }
             catch (CommunicationException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
-                return null;
+                return new MembersViewModel { Error = -3 };
             }
             catch (TimeoutException ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
-                return null;
+                return new MembersViewModel { Error = -4 };
             }
             catch (Exception ex)
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
-                return null;
+                return new MembersViewModel { Error = -5 };
             }
             finally
             {
@@ -156,7 +156,7 @@ namespace StudioMember.Service.Proxy
             }
         }
 
-        public int Update(string Id, string Email, string PhoneNumber)
+        public int Update(string Id, string Email, string PhoneNumber,DateTime UpdateTime , bool isDisable = false)
         {
             IMemberService s = null;
             try
@@ -165,7 +165,7 @@ namespace StudioMember.Service.Proxy
 
                 if (s != null)
                 {
-                    return s.Update(Id,Email,PhoneNumber);
+                    return s.Update(Id,Email,PhoneNumber,UpdateTime,isDisable);
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {Id},{Email},{PhoneNumber}");
@@ -262,7 +262,7 @@ namespace StudioMember.Service.Proxy
             }
         }
 
-        public int Register(string MemberId, string Email, bool EmailConfirmed, string Password, string PhoneNumber, string UserName)
+        public int SyncRegister(Member member)
         {
             IMemberService s = null;
             try
@@ -271,7 +271,48 @@ namespace StudioMember.Service.Proxy
 
                 if (s != null)
                 {
-                    return s.Register(MemberId,Email,EmailConfirmed,Password,PhoneNumber,UserName);
+                    return s.SyncRegister(member);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {member.UserName}");
+                return -1;
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {member.UserName}");
+                return -2;
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {member.UserName}");
+                return -3;
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {member.UserName}");
+                return -4;
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {member.UserName}");
+                return -5;
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
+
+        public int SyncUser(string MemberId, string Password, bool EmailConfirmed)
+        {
+            IMemberService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.SyncUser(MemberId,Password,EmailConfirmed);
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {MemberId}");
@@ -303,7 +344,7 @@ namespace StudioMember.Service.Proxy
             }
         }
 
-        public int UpdateUser(string MemberId, string Password, bool EmailConfirmed)
+        public int UpdateMemberStatus(string MemberId, bool isDisable)
         {
             IMemberService s = null;
             try
@@ -312,7 +353,7 @@ namespace StudioMember.Service.Proxy
 
                 if (s != null)
                 {
-                    return s.UpdateUser(MemberId,Password,EmailConfirmed);
+                    return s.UpdateMemberStatus(MemberId,isDisable);
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {MemberId}");

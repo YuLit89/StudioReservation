@@ -173,6 +173,8 @@ namespace StudioReservation.Controllers
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Thanks you for signing up at our site. Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
+                    await this.UserManager.AddToRoleAsync(user.Id, "User");
+
                     ViewBag.Title = "Registration Successful";
                     ViewBag.Message = "An email will be sent to you to activate your account";
 

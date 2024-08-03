@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StudioReservation.ADO;
+using Redis;
 using StudioReservation.Contract;
 using StudioReservation.DataModel;
 using StudioReservation.Proxy;
@@ -31,7 +31,10 @@ namespace Booking_spec
             var repo = new StudioReservationSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
             var roomRepo = new StudioRoomTypeSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
 
+            var redis = new RedisConnection("", "");
+
             service1 = new ReservationService(
+                redis : redis,
                 getAllTimeSlot: repo.GetAllTimeSlot,
                 insertTimeSlot: repo.CreateTimeSlot,
                 updateTimeSlot: repo.UpdateTimeSlot,
@@ -174,6 +177,22 @@ namespace Booking_spec
             var v = new TimeSpan(01, 00, 30);
 
             var s = v.ToString(@"hhmm");
+
+        }
+
+        [TestMethod]
+        public void redis()
+        {
+            
+            var redis = new RedisConnection("119.81.200.187", "qry9WGz@ec95");
+
+            redis.Publish<Room>("testing", new Room
+            {
+                Id = 100,
+                Name = "yuwei",
+                Size = "10*10",
+                Rate = 10m
+            });
 
         }
     }

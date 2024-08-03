@@ -1,5 +1,4 @@
-﻿using StackExchange.Redis;
-using StudioMiscellaneous.Service.Contract;
+﻿using StudioMiscellaneous.Service.Contract;
 using StudioRoomType.DataModel;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Redis;
 
 namespace StudioMiscellaneous.Service
 {
@@ -22,8 +22,12 @@ namespace StudioMiscellaneous.Service
         Func<Room, int> _updateRoomType;
         Func<int, int> _deleteRoomType;
 
+        IRedisConnection _redis;
+
+        const string _syncRoomChannel = "sync-roomType";
 
         public MiscellaneousService(
+            IRedisConnection redisConnection,
             Func<IEnumerable<Room>> getAllRoomType,
             Func<Room,int> createRoomType,
             Func<Room,int> updateRoomType,
@@ -31,6 +35,7 @@ namespace StudioMiscellaneous.Service
 
             ) 
         {
+            _redis = redisConnection;
 
             _createRoomType = createRoomType;
             _updateRoomType = updateRoomType;
@@ -46,9 +51,6 @@ namespace StudioMiscellaneous.Service
         //todo
         public int CreateRoomType(Room Room)
         {
-
-            Room.Style = string.Join(",", Room.StyleArr);
-
             var id = _createRoomType(Room);
 
             if(id > 0)
@@ -57,7 +59,7 @@ namespace StudioMiscellaneous.Service
 
                 _roomType[id] = Room;
 
-                // todo : call redis publish
+                _redis.Publish<Room>(_syncRoomChannel, Room);
 
                 return 0;
             }
@@ -75,7 +77,7 @@ namespace StudioMiscellaneous.Service
             {
                 _roomType.Remove(RoomId);
 
-                // todo : call redis publish
+                _redis.Publish<bool>("delete-roomType", true);
 
                 return 0;
             }
@@ -88,35 +90,35 @@ namespace StudioMiscellaneous.Service
         {
         }
 
-        public int EditRoomType(int RoomId,string Description,string Size, string Image, string[] Style, decimal Rate,DateTime UpdateTime,string UpdateBy)
+        public int EditRoomType(Room room)
         {
             
              Room roomInfo;
-             if(_roomType.TryGetValue(RoomId,out roomInfo))
+             if(_roomType.TryGetValue(room.Id,out roomInfo))
              {
                 var r = new Room()
                 {
                     Id = roomInfo.Id,
-                    Name = roomInfo.Name,
-                    Description = Description,
-                    Image = Image,
-                    Size = Size,
-                    Style = string.Join(",",Style),
-                    Rate = Rate,
+                    Name = room.Name,
+                    Description = room.Description,
+                    Image = room.Image,
+                    Size = room.Size,
+                    Style = room.Style,
+                    Rate = room.Rate,
                     CreateBy = roomInfo.CreateBy,
                     CreatedDate = roomInfo.CreatedDate,
-                    UpdateBy = UpdateBy,
-                    UpdatedDate = UpdateTime
+                    UpdateBy = room.UpdateBy,
+                    UpdatedDate = room.UpdatedDate
                 };
                    
-                var error = _updateRoomType(roomInfo);
+                var error = _updateRoomType(r);
 
                 if(error == 0)
                 {
                     _roomType[r.Id] = r;
 
-                    // todo : call redis publish
-
+                    _redis.Publish<Room>(_syncRoomChannel, r);
+                    
                     return 0;
                 }
 
@@ -125,6 +127,15 @@ namespace StudioMiscellaneous.Service
              }
 
             return -11;
+        }
+
+        public RoomViewDetail FindRoomDetail(int RoomId)
+        {
+            Room room;
+
+            return _roomType.TryGetValue(RoomId, out room)
+                   ? new RoomViewDetail { Room = room, Error = 0 }
+                   : new RoomViewDetail { Room = new Room(), Error = -10 };
         }
 
         public RoomsViewModel GetAllRoomType()

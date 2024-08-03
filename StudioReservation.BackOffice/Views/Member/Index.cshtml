@@ -1,0 +1,91 @@
+﻿@model StudioMember.DataModel.MembersViewModel
+@{
+    ViewBag.Title = "Member Management";
+}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.2/css/dataTables.dataTables.css" />
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title</h2>
+
+    <input type="button" class="btn btn-primary" value="Create New" onclick="CreateNew()" />
+    <br />
+    <div class="row table-responsive">
+        <table class="table table-bordered" id="MembersView">
+            <thead class="table-secondary">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">UserName</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">IP</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Members)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.UserName </td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.Ip </td>
+                        <td>
+                            @Html.ActionLink("Edit", "EditGet", new { memberId = item.Id }, new { style = "text-decoration:none;" })
+                            @if (true)
+                            {
+                                <span>|</span> //@Html.ActionLink("Remove", "Remove", new { id = item.Id }, new {id = "RemoveTimeSlotBtn"})
+                                <btn id="@item.Id" style="color:#0d6efd" onclick="PopConfirm(this)">Remove</btn>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</main>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Confirmation <i class="fa-solid fa-exclamation"></i></h5>
+            </div>
+            <div class="modal-body">
+                Do you confirm to remove this record? ID:<input type="Text" id="memberIdToRemove" style="width:350px;" disabled />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" onclick="ConfirmDelete()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="https://cdn.datatables.net/2.1.2/js/dataTables.js"></script>
+    <script type="text/javascript">
+
+
+        function ConfirmDelete() {
+            window.location.href = '@Html.Raw(@Url.Action("ConfirmDelete", "Member"))' + "?memberId=" + $('#memberIdToRemove').val();
+        }
+
+        function CreateNew() {
+            window.location.href = '@Html.Raw(@Url.Action("CreateGet", "Member"))';
+        }
+
+        function PopConfirm(e) {
+            $('#memberIdToRemove').val(e.id);
+            $('#staticBackdrop').modal('show');
+        }
+
+        $(document).ready(function () {
+            $('#MembersView').DataTable({
+                order: [[1, 'asc']]
+            });
+        });
+
+    </script>
+}
+

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
-using StudioMember.Service.Contract.Models;
+using StudioMember.DataModel;
 
 namespace StudioMember.Service
 {
@@ -14,7 +14,7 @@ namespace StudioMember.Service
     public interface IMemberSQL : IDisposable
     {
         IEnumerable<Member> GetAll();
-        int Update(string MemberId,string Email , string PhoneNumber);
+        int Update(string MemberId,string NickName , string PhoneNumber,bool isDisable , DateTime UpdateTime);
     }
 
     public class MemberSQL : IMemberSQL
@@ -67,7 +67,7 @@ namespace StudioMember.Service
 
         }
 
-        public int Update(string MemberId ,string Email, string PhoneNumber)
+        public int Update(string MemberId ,string NickName, string PhoneNumber, bool isDisable, DateTime UpdateTime)
         {
             using (var conn = new SqlConnection(_connection))
             {
@@ -78,9 +78,11 @@ namespace StudioMember.Service
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = "Member_Update";
 
-                    cmd.Parameters.AddWithValue("@email", Email);
+                    cmd.Parameters.AddWithValue("@username", NickName);
                     cmd.Parameters.AddWithValue("@phone", PhoneNumber);
                     cmd.Parameters.AddWithValue("@id", MemberId);
+                    cmd.Parameters.AddWithValue("@isdisable", isDisable);
+                    cmd.Parameters.AddWithValue("@updatetime", UpdateTime);
                     
                     var r = cmd.ExecuteNonQuery();
 

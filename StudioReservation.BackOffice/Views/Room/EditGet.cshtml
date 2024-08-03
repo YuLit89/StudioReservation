@@ -1,0 +1,130 @@
+﻿@model StudioRoomType.DataModel.Room
+
+@{
+    ViewBag.Title = "Edit Room Detail";
+}
+
+<link href="~/Content/Chosen/chosen.min.css" rel="stylesheet" />
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title</h2>
+    <br />
+    @using (Html.BeginForm("Edit", "Room", FormMethod.Post, new { role = "form", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.Size)
+        @Html.HiddenFor(m => m.RateOri)
+        @Html.HiddenFor(m => m.Image)
+        <div class="row">
+            @Html.LabelFor(m => m.Name, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.Description, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextAreaFor(m => m.Description, 7, 70, new { @class = "form-control", style = "max-width:70%", maxlength = "500" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.Label("Width x Height (in cm)", new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8" style="display:inherit">
+                <input type="number" step=".01" class="form-control" id="SizeW" name="SizeW" style="width:90px;" />
+                <span>&nbsp;&nbsp;X&nbsp;&nbsp;</span>
+                <input type="number" step=".01" class="form-control" id="SizeH" name="SizeH" style="width:90px;" />
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.Style, new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8">
+                @Html.ListBoxFor(m => m.StyleArr, ViewBag.Style as MultiSelectList, new { id = "Style", multiple = "multiple" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.Label("Rate (RM)", new { @class = "col-md-12 col-form-label" })
+            <div class="col-md-4">
+                <input type="number" step=".01" class="form-control" id="Rate" name="Rate" style="width:100px;" />
+
+            </div>
+        </div>
+        <div class="row">
+            @Html.Label("Existing Image", new { @class = "col-md-8 col-form-label" })
+            <div class="col-md-8" id="imgDiv">
+                <img src="/Images/UserUploads/@Model.Image" alt="@Model.Image" width="500;" />
+                <br />
+                <input type="file" id="file" name="file" accept=".jpg, .img, .png, .gif" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="preview">
+
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="offset-md-3 col-md-9">
+                <input type="submit" value="Update" class="btn btn-primary" id="submitBtn" onclick="PostingValue()" />
+            </div>
+        </div>
+    }
+</main>
+@section scripts
+{
+    <script src="~/Scripts/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/init.js"></script>
+    <script type="text/javascript">
+        function PostingValue() {
+            var w = $('#SizeW').val();
+            var h = $('#SizeH').val();
+            $('#Size').val(w + ' * ' + h);  
+            $('#RateOri').val($('#Rate').val());
+        };
+
+        $(document).ready(function () {
+            $("#Style").chosen({ width: "50%" });
+
+            var sizearr = $('#Size').val().replace(/\s+/g, '').split('*');
+            if (sizearr[0] != '') {
+                $('#SizeW').val(sizearr[0]);
+                $('#SizeH').val(sizearr[1]);
+            }
+            $('#Rate').val($('#RateOri').val());
+
+            //for image preview
+            const fileButton = $('#file');
+            const preview = $(".preview");
+
+            fileButton.change(function () {
+                while (preview[0].firstChild)
+                {
+                    preview[0].removeChild(preview[0].firstChild);
+                }
+                let curFiles = fileButton[0].files;
+                if (curFiles.length === 0) {
+                    let para = document.createElement("p");
+                    para.textContent = "No new file currently selected for upload";
+                    preview[0].appendChild(para);
+                } else
+                {
+                    for (const file of curFiles)
+                    {
+                        const image = document.createElement("img");
+                        image.src = URL.createObjectURL(file);
+                        image.alt = image.title = file.name;
+                        image.width = 500;
+                        //preview[0].appendChild(image);
+                        preview[0].replaceChildren(image);
+                        //$('#imgDiv')[0].replaceChildren(image);
+
+                    }
+                } 
+
+            });//dnot remove
+        });
+
+
+    </script>
+}

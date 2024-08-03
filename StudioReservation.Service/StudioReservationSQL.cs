@@ -7,22 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudioReservation.ADO
+namespace StudioReservation.Service
 {
-
     public interface IStudioReservationADO : IDisposable
     {
         IEnumerable<RoomTimeSlot> GetAllTimeSlot();
 
         long CreateTimeSlot(RoomTimeSlot TimeSlot);
-        long UpdateTimeSlot(long Id,string Times,string UpdateBy,DateTime UpdateTime,bool Enable);
+        long UpdateTimeSlot(long Id, string Times, string UpdateBy, DateTime UpdateTime, bool Enable);
 
         int DeleteTimeSlot(long Id);
 
         IEnumerable<ReservationHistory> GetAllReservationHistory();
 
         long CreateReservation(ReservationHistory Reservation);
-        long UpdateReservationStatus(long ReservationId, int Status,DateTime UpdateTime,string Remark);
+        long UpdateReservationStatus(long ReservationId, int Status, DateTime UpdateTime, string Remark);
     }
 
     public class StudioReservationSQL : IStudioReservationADO
@@ -123,7 +122,7 @@ namespace StudioReservation.ADO
                     cmd.CommandText = "RoomTimeSlot_Delete";
 
                     cmd.Parameters.AddWithValue("@Id", Id);
-                
+
                     var r = cmd.ExecuteNonQuery();
 
                     return 0;
@@ -131,7 +130,7 @@ namespace StudioReservation.ADO
             }
         }
 
-        
+
         public long UpdateTimeSlot(long Id, string Times, string UpdateBy, DateTime UpdateTime, bool Enable)
         {
             using (var conn = new SqlConnection(_connection))
@@ -148,7 +147,7 @@ namespace StudioReservation.ADO
                     cmd.Parameters.AddWithValue("@UpdateBy", UpdateBy);
                     cmd.Parameters.AddWithValue("@UpdateTime", UpdateTime);
                     cmd.Parameters.AddWithValue("@Enable", Enable);
-                    
+
                     var r = cmd.ExecuteNonQuery();
 
                     if (r > 0) return Id;
@@ -233,7 +232,7 @@ namespace StudioReservation.ADO
             }
         }
 
-        public long UpdateReservationStatus(long ReservationId, int Status, DateTime UpdateTime,string Remark)
+        public long UpdateReservationStatus(long ReservationId, int Status, DateTime UpdateTime, string Remark)
         {
             using (var conn = new SqlConnection(_connection))
             {

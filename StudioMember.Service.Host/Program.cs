@@ -27,7 +27,8 @@ namespace StudioMember.Service.Host
 
             var service = new MemberService(
                 getAll: repo.GetAll,
-                update: repo.Update
+                update: repo.Update,
+                updateDisable : null
                 );
 
             new ServiceHost<IMemberService>().Boot(url, service);
