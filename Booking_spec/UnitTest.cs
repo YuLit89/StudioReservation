@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redis;
-using StudioReservation.ADO;
 using StudioReservation.Contract;
 using StudioReservation.DataModel;
 using StudioReservation.Proxy;

@@ -343,5 +343,46 @@ namespace StudioMember.Service.Proxy
                 CloseOrAbortServiceChannel((ICommunicationObject)s);
             }
         }
+
+        public int UpdateMemberStatus(string MemberId, bool isDisable)
+        {
+            IMemberService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.UpdateMemberStatus(MemberId,isDisable);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {MemberId}");
+                return -1;
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {MemberId}");
+                return -2;
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {MemberId}");
+                return -3;
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {MemberId}");
+                return -4;
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {MemberId}");
+                return -5;
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
     }
 }

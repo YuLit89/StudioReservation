@@ -25,7 +25,7 @@ namespace StudioMember.Service
 
         public MemberService(
             Func<IEnumerable<Member>> getAll,
-            Func<string, string, string, bool,DateTime, int> update)
+            Func<string, string, string, bool,DateTime, int> update,
             Func<string,bool,int> updateDisable)
         {
             _getAll = getAll;
