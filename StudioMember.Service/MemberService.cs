@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace StudioMember.Service
     {
         Func<IEnumerable<Member>> _getAll;
         Func<string, string, string,bool,DateTime, int> _update;
-
+        Func<string, bool, int> _updateDisable;
         Dictionary<string, Member> _members = new Dictionary<string, Member>();
 
         ConcurrentDictionary<string, object> _sync = new ConcurrentDictionary<string, object>();
@@ -25,9 +26,11 @@ namespace StudioMember.Service
         public MemberService(
             Func<IEnumerable<Member>> getAll,
             Func<string, string, string, bool,DateTime, int> update)
+            Func<string,bool,int> updateDisable)
         {
             _getAll = getAll;
             _update = update;
+            _updateDisable = updateDisable;
 
             foreach (var m in _getAll())
             {
@@ -143,6 +146,28 @@ namespace StudioMember.Service
             }
 
             return -10;
+        }
+
+        public int UpdateMemberStatus(string MemberId, bool isDisable)
+        {
+            Member member;
+             if(_members.TryGetValue(MemberId,out member))
+            {
+                if (member.Role != "Admin") return -11;
+
+                var result = _updateDisable(MemberId, isDisable);
+
+                if(result == 0)
+                {
+                    member.isDisable = isDisable;
+
+                    return 0;
+                }
+
+                return -10;
+            }
+
+            return -12;
         }
     }
 }

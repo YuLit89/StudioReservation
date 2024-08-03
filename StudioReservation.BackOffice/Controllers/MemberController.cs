@@ -9,7 +9,6 @@ using StudioReservation.BackOffice.Models;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 using System.Web.UI.WebControls;
-
 namespace StudioReservation.BackOffice.Controllers
 {
     public class MemberController : Controller
