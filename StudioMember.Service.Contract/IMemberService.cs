@@ -29,6 +29,8 @@ namespace StudioMember.Service.Contract
 
         [OperationContract]
         int UpdateUser(string MemberId , string Password,bool EmailConfirmed);
+        [OperationContract]
+        int UpdateMemberStatus(string MemberId, bool isDisable);
   
 
     }

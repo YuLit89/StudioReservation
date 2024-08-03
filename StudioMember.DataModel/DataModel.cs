@@ -18,6 +18,7 @@ namespace StudioMember.DataModel
         public DateTime CreatedTime { get; set; }
         public DateTime UpdatedTime { get; set; }
         public string Role { get; set; }
+        public bool isDisable {  get; set; }
     }
 
     public class MembersViewModel
