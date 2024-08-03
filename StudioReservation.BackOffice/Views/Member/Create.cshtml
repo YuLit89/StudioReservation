@@ -14,6 +14,7 @@
             @Html.LabelFor(m => m.UserName, new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8">
                 @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -21,6 +22,7 @@
             @Html.LabelFor(m => m.Email, new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8">
                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -28,28 +30,24 @@
             @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8">
                 @Html.DropDownListFor(m => m.CountryCode, @ViewBag.CountryCode as SelectList, new { @class = "col-md-1", id = "CountryCodeId", name = "CountryCodeId" })
-                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control col-md-4", style="display:inline" })
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control col-md-11", style = "display:inline" })
+                @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="row">
             @Html.LabelFor(m => m.Password, new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8">
                 @Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="row">
             @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-8 col-form-label" })
             <div class="col-md-8">
                 @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
             </div>
         </div>
-
-
-
-
-
-
-
 
         <br />
         <div class="row">

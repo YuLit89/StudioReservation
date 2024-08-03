@@ -16,7 +16,7 @@ namespace StudioMember.Service
     public class MemberService : IMemberService
     {
         Func<IEnumerable<Member>> _getAll;
-        Func<string, string, string, int> _update;
+        Func<string, string, string,bool,DateTime, int> _update;
 
         Dictionary<string, Member> _members = new Dictionary<string, Member>();
 
@@ -24,17 +24,18 @@ namespace StudioMember.Service
 
         public MemberService(
             Func<IEnumerable<Member>> getAll,
-            Func<string, string, string, int> update)
+            Func<string, string, string, bool,DateTime, int> update)
         {
             _getAll = getAll;
             _update = update;
 
-            foreach(var m in _getAll())
+            foreach (var m in _getAll())
             {
                 _members[m.Id] = m;
             }
 
             Console.WriteLine($"{DateTime.Now} || Pump data into local storage done...");
+           
         }
 
         public void Dispose()
@@ -91,26 +92,32 @@ namespace StudioMember.Service
 
       
 
-        public int Update(string Id,string Email, string PhoneNumber)
+        public int Update(string Id,string NickName, string PhoneNumber,DateTime updateTime, bool Disable = false)
         {
-            var member = _sync.GetOrAdd(Id, new object());
+            var sync = _sync.GetOrAdd(Id, new object());
 
-            lock (member)
+            lock (sync)
             {
-                var err = _update(Id, Email, PhoneNumber);
-
-                if(err == 0)
+                Member member;
+                if(_members.TryGetValue(Id,out member))
                 {
-                    var m = _members[Id];
-                    
-                    m.Email = Email;
-                    m.PhoneNumber = PhoneNumber;
+                    var result = _update(Id, NickName, PhoneNumber,Disable,updateTime);
 
-                    return 0;
+                    if(result == 0)
+                    {
+                        member.UserName = NickName;
+                        member.PhoneNumber = PhoneNumber;
+                        member.isDisable = Disable;
+                        member.UpdatedTime = updateTime;
+
+                        return 0;
+                    }
+
+                    LogManager.GetCurrentClassLogger().Error($"Update Member fail id :{Id}");
+                    return - 10;
                 }
-
-                LogManager.GetCurrentClassLogger().Error($"Update Member fail id :{Id}");
-                return -10;
+               
+                return -11;
             }
         }
 
@@ -122,7 +129,7 @@ namespace StudioMember.Service
         }
 
 
-        public int UpdateUser(string MemberId, string Password, bool EmailConfirmed)
+        public int SyncUser(string MemberId, string Password, bool EmailConfirmed)
         {
             Member member = null;
             if(_members.TryGetValue(MemberId,out member))

@@ -22,14 +22,14 @@ namespace StudioMember.Service.Contract
         MembersViewModel GetAll();
 
         [OperationContract]
-        int Update(string Id,string Email, string PhoneNumber);
+        int Update(string Id,string NickName, string PhoneNumber,DateTime UpdateTime,bool Disable = false);
 
         [OperationContract]
         int SyncRegister(Member member);
 
         [OperationContract]
-        int UpdateUser(string MemberId , string Password,bool EmailConfirmed);
-  
+        int SyncUser(string MemberId , string Password,bool EmailConfirmed);
+
 
     }
 }

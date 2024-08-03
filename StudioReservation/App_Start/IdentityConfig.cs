@@ -119,7 +119,7 @@ namespace StudioReservation
 
             if(error.Result == IdentityResult.Success)
             {
-                var result = memberService.UpdateUser(
+                var result = memberService.SyncUser(
                     MemberId : user.Id,
                     Password : user.PasswordHash,
                     EmailConfirmed : user.EmailConfirmed);

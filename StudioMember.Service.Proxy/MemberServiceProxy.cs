@@ -156,7 +156,7 @@ namespace StudioMember.Service.Proxy
             }
         }
 
-        public int Update(string Id, string Email, string PhoneNumber)
+        public int Update(string Id, string Email, string PhoneNumber,DateTime UpdateTime , bool isDisable = false)
         {
             IMemberService s = null;
             try
@@ -165,7 +165,7 @@ namespace StudioMember.Service.Proxy
 
                 if (s != null)
                 {
-                    return s.Update(Id,Email,PhoneNumber);
+                    return s.Update(Id,Email,PhoneNumber,UpdateTime,isDisable);
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {Id},{Email},{PhoneNumber}");
@@ -303,7 +303,7 @@ namespace StudioMember.Service.Proxy
             }
         }
 
-        public int UpdateUser(string MemberId, string Password, bool EmailConfirmed)
+        public int SyncUser(string MemberId, string Password, bool EmailConfirmed)
         {
             IMemberService s = null;
             try
@@ -312,7 +312,7 @@ namespace StudioMember.Service.Proxy
 
                 if (s != null)
                 {
-                    return s.UpdateUser(MemberId,Password,EmailConfirmed);
+                    return s.SyncUser(MemberId,Password,EmailConfirmed);
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {MemberId}");
