@@ -9,6 +9,7 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -82,17 +83,28 @@ namespace StudioReservation
 
         public override Task<IdentityResult> CreateAsync(ApplicationUser user)
         {
+            var now = DateTime.Now;
+
             var error = base.CreateAsync(user);
 
             if(error.Result == IdentityResult.Success)
             {
-                var result = memberService.Register(
-                    MemberId:user.Id,
-                    Email : user.Email,
-                    EmailConfirmed : user.EmailConfirmed,
-                    Password : user.PasswordHash,
-                    PhoneNumber : user.PhoneNumber,
-                    UserName : user.UserName);
+
+                var member = new StudioMember.DataModel.Member
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    Password = user.PasswordHash,
+                    PhoneNumber =  user.PhoneNumber,
+                    UserName = user.UserName,
+                    CreatedTime = now,
+                    Ip = string.Empty,
+                    Role = "User",
+                };
+
+                var result = memberService.SyncRegister(
+                    member);
 
                 if (result != 0) NLog.LogManager.GetCurrentClassLogger().Error($"Sync Register Member Fail -> {user.Email} -> {result}");
             }

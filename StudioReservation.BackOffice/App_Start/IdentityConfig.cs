@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
@@ -10,6 +11,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using StudioMember.Service.Contract;
+using StudioMember.Service.Proxy;
 using StudioReservation.BackOffice.Models;
 
 namespace StudioReservation.BackOffice
@@ -35,10 +38,45 @@ namespace StudioReservation.BackOffice
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
+        IMemberService memberService = ServiceConnection._memberService;
+
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
         }
+
+        public override Task<IdentityResult> CreateAsync(ApplicationUser user)
+        {
+            var now = DateTime.Now;
+
+            var error = base.CreateAsync(user);
+
+            if (error.Result == IdentityResult.Success)
+            {
+
+                var member = new StudioMember.DataModel.Member
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    Password = user.PasswordHash,
+                    PhoneNumber = user.PhoneNumber,
+                    UserName = user.UserName,
+                    CreatedTime = now,
+                    Ip = string.Empty,
+                    Role = "Admin",
+                };
+
+                var result = memberService.SyncRegister(
+                    member);
+
+                if (result != 0) NLog.LogManager.GetCurrentClassLogger().Error($"Sync Register Member Fail -> {user.Email} -> {result}");
+            }
+
+            return error;
+
+        }
+
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {

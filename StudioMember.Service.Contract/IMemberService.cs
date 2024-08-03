@@ -25,7 +25,7 @@ namespace StudioMember.Service.Contract
         int Update(string Id,string Email, string PhoneNumber);
 
         [OperationContract]
-        int Register(string MemberId,string Email,bool EmailConfirmed,string Password,string PhoneNumber,string UserName);
+        int SyncRegister(Member member);
 
         [OperationContract]
         int UpdateUser(string MemberId , string Password,bool EmailConfirmed);

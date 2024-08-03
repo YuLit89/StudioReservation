@@ -114,19 +114,9 @@ namespace StudioMember.Service
             }
         }
 
-        public int Register(string MemberId, string Email, bool EmailConfirmed, string Password, string PhoneNumber, string UserName)
+        public int SyncRegister(Member member)
         {
-            var member = new Member
-            {
-                Id = MemberId,
-                Email = Email,
-                EmailConfirmed = EmailConfirmed,
-                Password = Password,
-                PhoneNumber = PhoneNumber,
-                UserName = UserName
-            };
-
-            _members.Add(MemberId, member);
+            _members.Add(member.Id, member);
 
             return 0;
         }

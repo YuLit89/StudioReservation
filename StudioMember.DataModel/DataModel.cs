@@ -17,6 +17,7 @@ namespace StudioMember.DataModel
         public string Ip { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime UpdatedTime { get; set; }
+        public string Role { get; set; }
     }
 
     public class MembersViewModel

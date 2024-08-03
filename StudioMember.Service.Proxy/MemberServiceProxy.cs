@@ -262,7 +262,7 @@ namespace StudioMember.Service.Proxy
             }
         }
 
-        public int Register(string MemberId, string Email, bool EmailConfirmed, string Password, string PhoneNumber, string UserName)
+        public int SyncRegister(Member member)
         {
             IMemberService s = null;
             try
@@ -271,30 +271,30 @@ namespace StudioMember.Service.Proxy
 
                 if (s != null)
                 {
-                    return s.Register(MemberId,Email,EmailConfirmed,Password,PhoneNumber,UserName);
+                    return s.SyncRegister(member);
                 }
 
-                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {MemberId}");
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {member.UserName}");
                 return -1;
             }
             catch (FaultException ex)
             {
-                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {MemberId}");
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {member.UserName}");
                 return -2;
             }
             catch (CommunicationException ex)
             {
-                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {MemberId}");
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {member.UserName}");
                 return -3;
             }
             catch (TimeoutException ex)
             {
-                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {MemberId}");
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {member.UserName}");
                 return -4;
             }
             catch (Exception ex)
             {
-                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {MemberId}");
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {member.UserName}");
                 return -5;
             }
             finally
