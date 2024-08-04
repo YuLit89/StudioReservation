@@ -65,7 +65,8 @@ namespace StudioMember.Service
                 EmailConfirmed = bool.Parse(reader["EmailConfirmed"].ToString()),
                 Password = reader["PasswordHash"].ToString(),
                 PhoneNumber = reader["PhoneNumber"].ToString(),
-                UserName = reader["UserName"].ToString()
+                UserName = reader["UserName"].ToString(),
+                isDisable = Convert.ToBoolean(reader["isDisable"])
             };
             return m;
 

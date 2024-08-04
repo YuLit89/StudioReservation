@@ -108,7 +108,7 @@
                             else
                             {
                                 <label class="switch">
-                                    <input type="checkbox" checked id="@item.Id" name="isDisable" onclick="PopConfirm(this)" >
+                                    <input type="checkbox" checked id="@item.Id" name="isDisable" onclick="PopConfirm(this)">
                                     <span class="slider round"></span>
                                 </label>
                             }
@@ -120,7 +120,7 @@
         </table>
     </div>
 </main>
-<!-- Modal -->
+<!-- staticBackdrop -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -132,7 +132,24 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="RetoreValue()">No</button>
-                <button type="button" class="btn btn-primary" onclick="ConfirmDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="ConfirmDisable()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal1 -->
+<div class="modal" tabindex="-1" id="modal1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alert <i class="fa-solid fa-exclamation"></i></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span id="ajaxResponse"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
@@ -143,15 +160,38 @@
     <script type="text/javascript">
         function RetoreValue() {
             var ele = document.getElementById($('#memberIdToModify').val());
-            if ($('#enableModifier').text() == "enable")
+            if (ele.checked)
                 ele.checked = false;
             else
                 ele.checked = true;
         }
 
-        function ConfirmDelete() {
+        function ConfirmDisable() {
+            $.get("/Member/UpdateMemberStatus", { memberId: $("#memberIdToModify").val(), disable: !document.getElementById($('#memberIdToModify').val()).checked },
+                    function (data) {
+                        console.log(data);
+                        $('#staticBackdrop').modal("hide");
+                        $('#ajaxResponse').text(data);
+                        $('#modal1').modal("show");
 
-            window.location.href = '@Html.Raw(@Url.Action("ConfirmDelete", "Member"))' + "?memberId=" + $('#memberIdToRemove').val();
+                    //var select = $("#typeList");
+                    //select.empty();
+                    //select.append("<option value>--Select Type--</option>");
+                    //select.append($('<option/>', {
+                    //    value: 0,
+                    //    text: "--Select Type--"
+                    //}));
+                    //$.each(data, function (index, itemData) {
+                    //    select.append($('<option/>', {
+                    //        value: itemData.Value,
+                    //        text: itemData.Text
+                    //    }));
+                    //});
+                    //select.removeAttr("disabled");
+
+                });
+
+            //window.location.href = '@Html.Raw(@Url.Action("ConfirmDelete", "Member"))' + "?memberId=" + $('#memberIdToRemove').val();
         }
 
         function CreateNew() {
@@ -159,7 +199,7 @@
         }
 
         function PopConfirm(e) {
-            console.log(e.checked)
+
             if (e.checked) {
                 $('#enableModifier').text("enable")
             }
