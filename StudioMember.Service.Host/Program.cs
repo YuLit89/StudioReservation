@@ -27,8 +27,10 @@ namespace StudioMember.Service.Host
 
             var service = new MemberService(
                 getAll: repo.GetAll,
+                getAllRole : repo.GetMemberRole,
                 update: repo.Update,
-                updateDisable : null
+                updateDisable : repo.UpdateStatus,
+                updateSubInfo : repo.UpdateRegisterTime
                 );
 
             new ServiceHost<IMemberService>().Boot(url, service);

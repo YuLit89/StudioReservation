@@ -14,7 +14,12 @@ namespace StudioMember.Service
     public interface IMemberSQL : IDisposable
     {
         IEnumerable<Member> GetAll();
+
+        IEnumerable<MemberRole> GetMemberRole();
+
         int Update(string MemberId,string NickName , string PhoneNumber,bool isDisable , DateTime UpdateTime);
+        int UpdateStatus(string MemberId, bool isDisable);
+        int UpdateRegisterTime(string Id, DateTime RegisterTime, string Ip);
     }
 
     public class MemberSQL : IMemberSQL
@@ -93,8 +98,92 @@ namespace StudioMember.Service
             }
         }
 
+        public int UpdateStatus(string MemberId,bool isDisable)
+        {
+            using (var conn = new SqlConnection(_connection))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Member_UpdateStatus";
+
+                    cmd.Parameters.AddWithValue("@id", MemberId);
+                    cmd.Parameters.AddWithValue("@isdisable", isDisable);
+             
+                    var r = cmd.ExecuteNonQuery();
+
+                    if (r > 0) return 0;
+
+                    return -1;
+                }
+            }
+        }
+
+        public IEnumerable<MemberRole> GetMemberRole()
+        {
+
+            using (var conn = new SqlConnection(_connection))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Role_GetAll";
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var members = InternalReadRole(reader);
+                            yield return members;
+                        }
+                    }
+                }
+            }
+        }
+
+        private MemberRole InternalReadRole(SqlDataReader reader)
+        {
+
+            var m = new MemberRole
+            {
+                UserId = reader["UserId"].ToString(),
+                Role = reader["Name"].ToString(),
+            };
+            return m;
+
+
+        }
+
         public void Dispose()
         {
+        }
+
+        public int UpdateRegisterTime(string Id, DateTime RegisterTime, string Ip)
+        {
+            using (var conn = new SqlConnection(_connection))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Member_UpdateRegisterTime";
+
+                    cmd.Parameters.AddWithValue("@id", Id);
+                    cmd.Parameters.AddWithValue("@CreateTime", RegisterTime);
+                    cmd.Parameters.AddWithValue("@ip", Ip);
+
+                    var r = cmd.ExecuteNonQuery();
+
+                    if (r > 0) return 0;
+
+                    return -1;
+                }
+            }
         }
     }
 }

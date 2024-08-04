@@ -53,7 +53,6 @@ namespace StudioReservation.BackOffice
 
             if (error.Result == IdentityResult.Success)
             {
-
                 var member = new StudioMember.DataModel.Member
                 {
                     Id = user.Id,

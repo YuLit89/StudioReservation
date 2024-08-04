@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FeedBackHandler.cs" />
     <Compile Include="MiscellaneousService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
