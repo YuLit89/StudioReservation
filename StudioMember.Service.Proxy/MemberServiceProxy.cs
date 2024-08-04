@@ -384,5 +384,46 @@ namespace StudioMember.Service.Proxy
                 CloseOrAbortServiceChannel((ICommunicationObject)s);
             }
         }
+
+        public int UpdateRegisterSubInfo(string Id, DateTime CreateTime, string Ip)
+        {
+            IMemberService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.UpdateRegisterSubInfo(Id,CreateTime,Ip);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1 , Request {Id}");
+                return -1;
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2 , Request {Id}");
+                return -2;
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3 , Request {Id}");
+                return -3;
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4 , Request {Id}");
+                return -4;
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5 , Request {Id}");
+                return -5;
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
     }
 }

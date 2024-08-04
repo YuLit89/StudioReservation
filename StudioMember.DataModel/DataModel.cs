@@ -51,4 +51,10 @@ namespace StudioMember.DataModel
         public Member Member { get; set; }
         public int Error { get; set; }
     }
+
+    public class MemberRole
+    {
+        public string UserId { get; set; }
+        public string Role { get; set; }
+    }
 }

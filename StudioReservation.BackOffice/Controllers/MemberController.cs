@@ -67,6 +67,10 @@ namespace StudioReservation.BackOffice.Controllers
             var user = new ApplicationUser { UserName = member.UserName, Email = member.Email, PhoneNumber = member.PhoneNumber };
             var result = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>().CreateAsync(user, member.Password);
 
+            HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>().AddToRoleAsync(user.Id, "Admin");
+
+            _memberService.UpdateRegisterSubInfo(user.Id, DateTime.Now, "");
+
             if (!result.Result.Succeeded)
             {
                 ViewBag.errorMessage = string.Join(",", result.Result.Errors);

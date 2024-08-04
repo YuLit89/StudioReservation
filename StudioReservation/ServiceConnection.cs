@@ -13,10 +13,11 @@ namespace StudioReservation
     public static class ServiceConnection
     {
         public static IReservationService ReservationService;
+        public static IMemberService MemberService;
 
         static ServiceConnection()
         {
-
+            MemberService = new MemberServiceProxy(int.Parse(ConfigurationManager.AppSettings["member-service-port"]));
             ReservationService = new ReservationServiceProxy(int.Parse(ConfigurationManager.AppSettings["reservation-service-port"]));
         }
 

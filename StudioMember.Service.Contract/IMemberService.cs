@@ -23,6 +23,8 @@ namespace StudioMember.Service.Contract
 
         [OperationContract]
         int Update(string Id,string NickName, string PhoneNumber,DateTime UpdateTime,bool Disable = false);
+        [OperationContract]
+        int UpdateRegisterSubInfo(string Id, DateTime CreateTime,string Ip);
 
         [OperationContract]
         int SyncRegister(Member member);
