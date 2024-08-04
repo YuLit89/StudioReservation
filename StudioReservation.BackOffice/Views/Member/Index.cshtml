@@ -3,6 +3,71 @@
     ViewBag.Title = "Member Management";
 }
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.2/css/dataTables.dataTables.css" />
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 45px;
+        height: 22.66px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 17px;
+            width: 17px;
+            left: 1px;
+            bottom: 3.5px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+</style>
+
+
+
+
 <main aria-labelledby="title">
     <h2 id="title">@ViewBag.Title</h2>
 
@@ -16,25 +81,36 @@
                     <th scope="col">UserName</th>
                     <th scope="col">Email</th>
                     <th scope="col">Phone Number</th>
-                    <th scope="col">IP</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.Members)
                 {
+                    //item.isDisable = true;
                     <tr>
                         <td>@item.Id</td>
                         <td>@item.UserName </td>
                         <td>@item.Email</td>
                         <td>@item.PhoneNumber</td>
-                        <td>@item.Ip </td>
                         <td>
                             @Html.ActionLink("Edit", "EditGet", new { memberId = item.Id }, new { style = "text-decoration:none;" })
-                            @if (true)
+
+                            <span>|</span>
+                            @*<btn id="@item.Id" style="color:#0d6efd" onclick="PopConfirm(this)">Remove</btn>*@
+                            @if (item.isDisable)
                             {
-                                <span>|</span> //@Html.ActionLink("Remove", "Remove", new { id = item.Id }, new {id = "RemoveTimeSlotBtn"})
-                                <btn id="@item.Id" style="color:#0d6efd" onclick="PopConfirm(this)">Remove</btn>
+                                <label class="switch">
+                                    <input type="checkbox" id="@item.Id" name="isDisable" onclick="PopConfirm(this)">
+                                    <span class="slider round"></span>
+                                </label>
+                            }
+                            else
+                            {
+                                <label class="switch">
+                                    <input type="checkbox" checked id="@item.Id" name="isDisable" onclick="PopConfirm(this)" >
+                                    <span class="slider round"></span>
+                                </label>
                             }
                         </td>
                     </tr>
@@ -52,10 +128,10 @@
                 <h5 class="modal-title" id="staticBackdropLabel">Confirmation <i class="fa-solid fa-exclamation"></i></h5>
             </div>
             <div class="modal-body">
-                Do you confirm to remove this record? ID:<input type="Text" id="memberIdToRemove" style="width:350px;" disabled />
+                Do you confirm to <span id="enableModifier"></span> this record? ID:<input type="Text" id="memberIdToModify" style="width:350px;" disabled />
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="RetoreValue()">No</button>
                 <button type="button" class="btn btn-primary" onclick="ConfirmDelete()">Yes</button>
             </div>
         </div>
@@ -65,9 +141,16 @@
 {
     <script src="https://cdn.datatables.net/2.1.2/js/dataTables.js"></script>
     <script type="text/javascript">
-
+        function RetoreValue() {
+            var ele = document.getElementById($('#memberIdToModify').val());
+            if ($('#enableModifier').text() == "enable")
+                ele.checked = false;
+            else
+                ele.checked = true;
+        }
 
         function ConfirmDelete() {
+
             window.location.href = '@Html.Raw(@Url.Action("ConfirmDelete", "Member"))' + "?memberId=" + $('#memberIdToRemove').val();
         }
 
@@ -76,8 +159,15 @@
         }
 
         function PopConfirm(e) {
-            $('#memberIdToRemove').val(e.id);
-            $('#staticBackdrop').modal('show');
+            console.log(e.checked)
+            if (e.checked) {
+                $('#enableModifier').text("enable")
+            }
+            else {
+                $('#enableModifier').text("disable")
+            }
+            $('#memberIdToModify').val(e.id);
+            $('#staticBackdrop').modal("show");
         }
 
         $(document).ready(function () {
