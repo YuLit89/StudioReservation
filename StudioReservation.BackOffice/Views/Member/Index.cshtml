@@ -81,6 +81,7 @@
                     <th scope="col">UserName</th>
                     <th scope="col">Email</th>
                     <th scope="col">Phone Number</th>
+                    <th scope="col">Role</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -93,6 +94,7 @@
                         <td>@item.UserName </td>
                         <td>@item.Email</td>
                         <td>@item.PhoneNumber</td>
+                        <td>@item.Role</td>
                         <td>
                             @Html.ActionLink("Edit", "EditGet", new { memberId = item.Id }, new { style = "text-decoration:none;" })
 
