@@ -64,6 +64,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Redis\Redis.csproj">
+      <Project>{50128942-080c-49d8-b78d-548251c22cb4}</Project>
+      <Name>Redis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StudioMember.DataModel\StudioMember.DataModel.csproj">
       <Project>{1487c04f-30b0-450f-ba53-6febec89f93a}</Project>
       <Name>StudioMember.DataModel</Name>

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6F3E19C9-53C7-4B06-81C5-93DE8B66D7C2}</ProjectGuid>
+    <ProjectGuid>{09871ABF-A8E8-4744-83B4-FE8083A9F1F5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StudioMember.Service</RootNamespace>
-    <AssemblyName>StudioMember.Service</AssemblyName>
+    <RootNamespace>StudioFeedBack.DataModel</RootNamespace>
+    <AssemblyName>StudioFeedBack.DataModel</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,17 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.5.3.2\lib\net46\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,27 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MemberService.cs" />
-    <Compile Include="MemberSQL.cs" />
+    <Compile Include="datamodel.cs" />
+    <Compile Include="FeedBackType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Redis\Redis.csproj">
-      <Project>{50128942-080c-49d8-b78d-548251c22cb4}</Project>
-      <Name>Redis</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StudioMember.DataModel\StudioMember.DataModel.csproj">
-      <Project>{1487c04f-30b0-450f-ba53-6febec89f93a}</Project>
-      <Name>StudioMember.DataModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StudioMember.Service.Contract\StudioMember.Service.Contract.csproj">
-      <Project>{1c82d02c-695f-4c80-8571-f653acd0c66b}</Project>
-      <Name>StudioMember.Service.Contract</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

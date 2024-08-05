@@ -1,5 +1,6 @@
 ﻿
 using NLog;
+using Redis;
 using StudioMember.DataModel;
 using StudioMember.Service.Contract;
 using System;
@@ -19,26 +20,48 @@ namespace StudioMember.Service
         Func<IEnumerable<Member>> _getAll;
         Func<string, string, string,bool,DateTime, int> _update;
         Func<string, bool, int> _updateDisable;
+        Func<string, DateTime, string, int> _updateSubInfo;
+
         Dictionary<string, Member> _members = new Dictionary<string, Member>();
+
+        IRedisConnection _redis;
 
         ConcurrentDictionary<string, object> _sync = new ConcurrentDictionary<string, object>();
 
         public MemberService(
             Func<IEnumerable<Member>> getAll,
+            Func<IEnumerable<MemberRole>> getAllRole,
             Func<string, string, string, bool,DateTime, int> update,
-            Func<string,bool,int> updateDisable)
+            Func<string,bool,int> updateDisable,
+            Func<string,DateTime,string,int> updateSubInfo,
+            IRedisConnection redis)
         {
             _getAll = getAll;
             _update = update;
             _updateDisable = updateDisable;
-
+            _updateSubInfo = updateSubInfo;
+            
+            _redis = redis;
+            
             foreach (var m in _getAll())
             {
                 _members[m.Id] = m;
             }
 
+            foreach(var r in getAllRole())
+            {
+                Member m;
+                if(_members.TryGetValue(r.UserId,out m))
+                {
+                    m.Role = r.Role;
+                }
+            }
+
+            Console.WriteLine($"{DateTime.Now} || init DATA Total {_members.Count()}");
             Console.WriteLine($"{DateTime.Now} || Pump data into local storage done...");
-           
+
+            _redis.Subscribe<Member>("sync-register-member", (message) => SyncRegister(message));
+
         }
 
         public void Dispose()
@@ -153,7 +176,7 @@ namespace StudioMember.Service
             Member member;
              if(_members.TryGetValue(MemberId,out member))
             {
-                if (member.Role != "Admin") return -11;
+                //if (member.Role != "Admin") return -11;
 
                 var result = _updateDisable(MemberId, isDisable);
 
@@ -168,6 +191,24 @@ namespace StudioMember.Service
             }
 
             return -12;
+        }
+
+        public int UpdateRegisterSubInfo(string Id, DateTime CreateTime,string Ip)
+        {
+            Member m;
+            if(_members.TryGetValue(Id,out m))
+            {
+                var result = _updateSubInfo(Id, CreateTime, Ip);
+                if(result == 0)
+                {
+                    m.Ip = Ip;
+                    m.CreatedTime = CreateTime;
+
+                    return 0;
+                }
+            }
+
+            return -10;
         }
     }
 }

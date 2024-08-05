@@ -173,6 +173,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\FeedBackController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MemberController.cs" />
@@ -302,6 +303,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\AdminAccount\" />
+    <Folder Include="Views\FeedBack\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -329,6 +331,14 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Redis\Redis.csproj">
+      <Project>{50128942-080c-49d8-b78d-548251c22cb4}</Project>
+      <Name>Redis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioFeedBack.DataModel\StudioFeedBack.DataModel.csproj">
+      <Project>{09871abf-a8e8-4744-83b4-fe8083a9f1f5}</Project>
+      <Name>StudioFeedBack.DataModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StudioMember.DataModel\StudioMember.DataModel.csproj">
       <Project>{1487c04f-30b0-450f-ba53-6febec89f93a}</Project>
       <Name>StudioMember.DataModel</Name>

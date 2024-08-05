@@ -13,11 +13,11 @@ namespace StudioReservation.BackOffice.Controllers
 {
     public class MemberController : Controller
     {
-        IMemberService _memberService; 
-        public MemberController() 
+        IMemberService _memberService;
+        public MemberController()
         {
             _memberService = ServiceConnection._memberService;
-                     
+
         }
 
         // GET: Member
@@ -41,9 +41,9 @@ namespace StudioReservation.BackOffice.Controllers
             {
                 new SelectListItem(){ Text="60", Value="60", Selected = true},
                 new SelectListItem(){ Text="65", Value="65"}
-            };            
+            };
             ViewBag.CountryCode = new SelectList(countryCodeList, "Value", "Text");
-            
+
             return View(model);
         }
 
@@ -66,6 +66,10 @@ namespace StudioReservation.BackOffice.Controllers
 
             var user = new ApplicationUser { UserName = member.UserName, Email = member.Email, PhoneNumber = member.PhoneNumber };
             var result = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>().CreateAsync(user, member.Password);
+
+            HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>().AddToRoleAsync(user.Id, "Admin");
+
+            _memberService.UpdateRegisterSubInfo(user.Id, DateTime.Now, "");
 
             if (!result.Result.Succeeded)
             {
@@ -108,9 +112,17 @@ namespace StudioReservation.BackOffice.Controllers
             }
 
             return RedirectToAction("Index");
-
-
         }
+        //ajax calling
+        public int UpdateMemberStatus(string memberId = "", Boolean disable = false)
+        {
+            if (string.IsNullOrEmpty(memberId))
+            {
+                return -1;
+            }
+            int result = _memberService.UpdateMemberStatus(memberId, disable);
 
+            return result;
+        }
     }
 }

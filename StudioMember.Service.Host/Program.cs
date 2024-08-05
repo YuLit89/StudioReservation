@@ -1,4 +1,5 @@
 ﻿using NLog;
+using Redis;
 using StudioMember.Service.Contract;
 using System;
 using System.Collections.Generic;
@@ -25,10 +26,18 @@ namespace StudioMember.Service.Host
 
             var repo = new MemberSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
 
+            var redisIp = ConfigurationManager.AppSettings["redis-ip"];
+            var redisPassword = ConfigurationManager.AppSettings["redis-password"];
+
+            var RedisConnection = new RedisConnection(redisIp, redisPassword);
+
             var service = new MemberService(
                 getAll: repo.GetAll,
+                getAllRole : repo.GetMemberRole,
                 update: repo.Update,
-                updateDisable : null
+                updateDisable : repo.UpdateStatus,
+                updateSubInfo : repo.UpdateRegisterTime,
+                redis : RedisConnection
                 );
 
             new ServiceHost<IMemberService>().Boot(url, service);

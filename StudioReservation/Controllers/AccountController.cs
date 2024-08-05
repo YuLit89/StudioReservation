@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using StudioMember.Service.Contract;
 using StudioReservation.Models;
 
 namespace StudioReservation.Controllers
@@ -17,15 +18,18 @@ namespace StudioReservation.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private IMemberService _memberService;
 
         public AccountController()
         {
+            _memberService = ServiceConnection.MemberService;
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            
         }
 
         public ApplicationSignInManager SignInManager
@@ -159,6 +163,8 @@ namespace StudioReservation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            var now = DateTime.Now;
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.FullName, Email = model.Email, PhoneNumber = model.ContactNumber};
@@ -173,7 +179,8 @@ namespace StudioReservation.Controllers
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Thanks you for signing up at our site. Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    await this.UserManager.AddToRoleAsync(user.Id, "User");
+                    await UserManager.AddToRoleAsync(user.Id, "User");
+                    _memberService.UpdateRegisterSubInfo(user.Id, now, string.Empty);
 
                     ViewBag.Title = "Registration Successful";
                     ViewBag.Message = "An email will be sent to you to activate your account";
