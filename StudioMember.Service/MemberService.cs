@@ -1,5 +1,6 @@
 ﻿
 using NLog;
+using Redis;
 using StudioMember.DataModel;
 using StudioMember.Service.Contract;
 using System;
@@ -23,6 +24,8 @@ namespace StudioMember.Service
 
         Dictionary<string, Member> _members = new Dictionary<string, Member>();
 
+        IRedisConnection _redis;
+
         ConcurrentDictionary<string, object> _sync = new ConcurrentDictionary<string, object>();
 
         public MemberService(
@@ -30,13 +33,15 @@ namespace StudioMember.Service
             Func<IEnumerable<MemberRole>> getAllRole,
             Func<string, string, string, bool,DateTime, int> update,
             Func<string,bool,int> updateDisable,
-            Func<string,DateTime,string,int> updateSubInfo)
+            Func<string,DateTime,string,int> updateSubInfo,
+            IRedisConnection redis)
         {
             _getAll = getAll;
             _update = update;
             _updateDisable = updateDisable;
             _updateSubInfo = updateSubInfo;
             
+            _redis = redis;
             
             foreach (var m in _getAll())
             {
@@ -54,7 +59,9 @@ namespace StudioMember.Service
 
             Console.WriteLine($"{DateTime.Now} || init DATA Total {_members.Count()}");
             Console.WriteLine($"{DateTime.Now} || Pump data into local storage done...");
-           
+
+            _redis.Subscribe<Member>("sync-register-member", (message) => SyncRegister(message));
+
         }
 
         public void Dispose()

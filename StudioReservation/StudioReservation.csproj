@@ -316,6 +316,10 @@
     <Content Include="Scripts\jquery-3.7.0.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Redis\Redis.csproj">
+      <Project>{50128942-080c-49d8-b78d-548251c22cb4}</Project>
+      <Name>Redis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StudioFeedBack.DataModel\StudioFeedBack.DataModel.csproj">
       <Project>{09871abf-a8e8-4744-83b4-fe8083a9f1f5}</Project>
       <Name>StudioFeedBack.DataModel</Name>

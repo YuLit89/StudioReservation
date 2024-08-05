@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using Redis;
+using StudioMember.DataModel;
 using StudioMember.Service.Contract;
 using StudioMember.Service.Proxy;
 using StudioReservation.BackOffice.Models;
@@ -39,6 +41,7 @@ namespace StudioReservation.BackOffice
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
         IMemberService memberService = ServiceConnection._memberService;
+        IRedisConnection redisConnection = ServiceConnection.RedisConnection;
 
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
@@ -66,10 +69,12 @@ namespace StudioReservation.BackOffice
                     Role = "Admin",
                 };
 
-                var result = memberService.SyncRegister(
-                    member);
+                //var result = memberService.SyncRegister(
+                //    member);
 
-                if (result != 0) NLog.LogManager.GetCurrentClassLogger().Error($"Sync Register Member Fail -> {user.Email} -> {result}");
+                redisConnection.Publish<Member>("sync-register-member", member);
+
+                //if (result != 0) NLog.LogManager.GetCurrentClassLogger().Error($"Sync Register Member Fail -> {user.Email} -> {result}");
             }
 
             return error;

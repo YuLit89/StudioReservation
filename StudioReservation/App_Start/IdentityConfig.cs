@@ -9,12 +9,13 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using Redis;
+using StudioMember.DataModel;
 using StudioMember.Service.Contract;
 using StudioMember.Service.Proxy;
 using StudioReservation.Models;
@@ -74,6 +75,7 @@ namespace StudioReservation
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
+        IRedisConnection redis = ServiceConnection.RedisConnection;
         IMemberService memberService = ServiceConnection.MemberService;
 
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
@@ -89,7 +91,7 @@ namespace StudioReservation
 
             if (error.Result == IdentityResult.Success)
             {
-                var member = new StudioMember.DataModel.Member
+                var member = new Member
                 {
                     Id = user.Id,
                     Email = user.Email,
@@ -102,10 +104,12 @@ namespace StudioReservation
                     Role = "User",
                 };
 
-                var result = memberService.SyncRegister(
-                    member);
+                //var result = memberService.SyncRegister(
+                //    member);
 
-                if (result != 0) NLog.LogManager.GetCurrentClassLogger().Error($"Sync Register Member Fail -> {user.Email} -> {result}");
+                redis.Publish<Member>("sync-register-member", member);
+
+                //if (result != 0) NLog.LogManager.GetCurrentClassLogger().Error($"Sync Register Member Fail -> {user.Email} -> {result}");
             }
 
             return error;
@@ -118,6 +122,8 @@ namespace StudioReservation
 
             if(error.Result == IdentityResult.Success)
             {
+
+
                 var result = memberService.SyncUser(
                     MemberId : user.Id,
                     Password : user.PasswordHash,
