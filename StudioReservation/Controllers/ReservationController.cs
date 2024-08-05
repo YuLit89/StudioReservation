@@ -1,4 +1,5 @@
-﻿using StudioReservation.Contract;
+﻿using Microsoft.AspNet.Identity;
+using StudioReservation.Contract;
 using StudioReservation.Models;
 using StudioRoomType.DataModel;
 using System;
@@ -231,6 +232,9 @@ namespace StudioReservation.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ReservationConfirm(string roomId = null, string selectedSlots = null)
         {
+
+            var userId = User.Identity.GetUserId();
+
             if (string.IsNullOrEmpty(selectedSlots))
             {
                 ViewBag.errorMessage = "You did not select any timeslot.";
