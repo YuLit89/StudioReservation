@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace StudioFeedBack.DataModel
 {
@@ -35,10 +37,22 @@ namespace StudioFeedBack.DataModel
 
     public class SubmitFeedback // user submit page use
     {
+        [Required]
+        [Display(Name = "Subject* :")]
         public string Title { get; set; }
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email* :")]
         public string UserEmail { get; set; }
+        [Required]
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Contact Number* :")]
         public string UserPhoneNumber { get; set; }
+        [Required]
+        [Display(Name = "Enquiry* :")]
         public string Message { get; set; }
+        [Required]
+        [Display(Name = "Preferred mode of communication* :")]
         public string Preference { get; set; } // email / whatapp / wechat / line / call 
     }
 

@@ -1,0 +1,19 @@
+﻿@model StudioFeedBack.DataModel.SubmitFeedbackResponse
+@{ 
+    ViewBag.Title = "Feedback Acknowledgement";
+}
+
+
+<div class="row justify-content-center">
+    <h3 class="col-md-5">@ViewBag.Title</h3><br/><br /><br/>
+    <div></div>
+    @if (Model.Error == 0)
+    {
+        <h4 class="col-md-5">Your enquiry has been recorded in our system. This is your ticket number : <span>@Model.TicketId</span>.</h4>
+
+    }
+    else
+    {
+        <h4 class="text-danger">Error Code: @Model.Error</h4>
+    }
+</div>

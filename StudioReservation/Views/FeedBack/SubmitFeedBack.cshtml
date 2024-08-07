@@ -1,0 +1,69 @@
+﻿@model StudioFeedBack.DataModel.SubmitFeedback
+@{
+    ViewBag.Title = "Feedback";
+}
+
+<main aria-labelledby="title">
+
+    @using (Html.BeginForm("SubmitFeedBack", "Feedback", FormMethod.Post, new { role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <h3 style="text-align:center">@ViewBag.Title</h3>
+        <hr />
+        <div class="row justify-content-center">
+            @Html.LabelFor(m => m.Title, new { @class = "col-md-4 col-form-label" })
+            <div></div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <div class="row justify-content-center">
+            @Html.LabelFor(m => m.Message, new { @class = "col-md-4 col-form-label" })
+            <div></div>
+            <div class="col-md-4">
+                @Html.TextAreaFor(m => m.Message, 7, 100, new { @class = "form-control", style = "min-width:100%", maxlength = "1000" })
+                @Html.ValidationMessageFor(m => m.Message, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <div class="row justify-content-center">
+            @Html.LabelFor(m => m.UserPhoneNumber, new { @class = "col-md-4 col-form-label" })
+            <div></div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.UserPhoneNumber, new { @class = "form-control", placeholder = "[CountryCode][Number]" })
+                eg: 60123456789<br/>
+                @Html.ValidationMessageFor(m => m.UserPhoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <div class="row justify-content-center">
+            @Html.LabelFor(m => m.UserEmail, new { @class = "col-md-4 col-form-label" })
+            <div></div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.UserEmail, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.UserEmail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                @Html.LabelFor(m => m.Preference, new { @class = "col-form-label" })
+                <div></div>
+                @Html.RadioButtonFor(m => m.Preference, "Email") Email &nbsp;
+                @Html.RadioButtonFor(m => m.Preference, "Call") Call &nbsp;
+                @Html.RadioButtonFor(m => m.Preference, "SMS") SMS &nbsp;
+                @Html.RadioButtonFor(m => m.Preference, "Whatsapp") Whatsapp &nbsp;
+                @Html.ValidationMessageFor(m => m.Preference, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="offset-md-7 col-md-5">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+</main>

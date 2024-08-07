@@ -283,10 +283,12 @@
     <Content Include="Views\Reservation\Index.cshtml" />
     <Content Include="Views\Reservation\Schedule.cshtml" />
     <Content Include="Views\Reservation\ReservationConfirm.cshtml" />
+    <Content Include="Views\FeedBack\SubmitFeedBack.cshtml" />
+    <Content Include="Views\FeedBack\FeedbackAck.cshtml" />
+    <Content Include="Views\FeedBack\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\FeedBack\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
