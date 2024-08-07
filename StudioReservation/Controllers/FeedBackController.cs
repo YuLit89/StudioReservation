@@ -7,24 +7,24 @@ using System.Web.Mvc;
 
 namespace StudioReservation.Controllers
 {
-    public class FeedBackController : Controller
-    {
-        // GET: FeedBack
-        public ActionResult Index()
-        {
-            return View();
-        }
+    //public class FeedBackController : Controller
+    //{
+    //    // GET: FeedBack
+    //    public ActionResult Index()
+    //    {
+    //        return View();
+    //    }
 
-        public ActionResult SubmitFeedBack(SubmitFeedBack submit)
-        {
+    //    public ActionResult SubmitFeedBack(SubmitFeedBack submit)
+    //    {
 
-            var result = new SubmitFeedBackResponse
-            {
-                Error = 0,
-                TicketId = Guid.NewGuid().ToString()
-            };
+    //        var result = new SubmitFeedBackResponse
+    //        {
+    //            Error = 0,
+    //            TicketId = Guid.NewGuid().ToString()
+    //        };
 
-            return View(result);
-        }
-    }
+    //        return View(result);
+    //    }
+    //}
 }

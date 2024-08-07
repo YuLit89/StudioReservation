@@ -59,6 +59,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioRoomType.ADO", "Studi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioFeedBack.DataModel", "StudioFeedBack.DataModel\StudioFeedBack.DataModel.csproj", "{09871ABF-A8E8-4744-83B4-FE8083A9F1F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioFeedBack.ADO", "StudioFeedBack.ADO\StudioFeedBack.ADO.csproj", "{AFAAF322-449F-4C83-AA58-171F14F2604B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{09871ABF-A8E8-4744-83B4-FE8083A9F1F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09871ABF-A8E8-4744-83B4-FE8083A9F1F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09871ABF-A8E8-4744-83B4-FE8083A9F1F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFAAF322-449F-4C83-AA58-171F14F2604B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFAAF322-449F-4C83-AA58-171F14F2604B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFAAF322-449F-4C83-AA58-171F14F2604B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFAAF322-449F-4C83-AA58-171F14F2604B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -179,6 +185,7 @@ Global
 		{E3071797-1C4C-484F-92FC-49193AE41000} = {769B01CB-3489-4249-B360-C37CAFA8EC7B}
 		{B5713C05-2423-443D-85FF-9188C01F1973} = {E3071797-1C4C-484F-92FC-49193AE41000}
 		{09871ABF-A8E8-4744-83B4-FE8083A9F1F5} = {937DB87F-B1E2-412D-8B5F-F6688BA84352}
+		{AFAAF322-449F-4C83-AA58-171F14F2604B} = {937DB87F-B1E2-412D-8B5F-F6688BA84352}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85F4920E-691F-4DAF-9EA4-4B4CB4E33CF8}

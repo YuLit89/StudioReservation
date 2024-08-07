@@ -78,7 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FeedBackHandler.cs" />
+    <Compile Include="FeedbackHandler.cs" />
     <Compile Include="MiscellaneousService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -86,6 +86,10 @@
     <ProjectReference Include="..\Redis\Redis.csproj">
       <Project>{50128942-080c-49d8-b78d-548251c22cb4}</Project>
       <Name>Redis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioFeedBack.DataModel\StudioFeedBack.DataModel.csproj">
+      <Project>{09871ABF-A8E8-4744-83B4-FE8083A9F1F5}</Project>
+      <Name>StudioFeedBack.DataModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\StudioMiscellaneous.Service.Contract\StudioMiscellaneous.Service.Contract.csproj">
       <Project>{afab8f5e-ecde-447c-8c0e-0f33dc26a68e}</Project>

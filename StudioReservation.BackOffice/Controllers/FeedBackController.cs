@@ -14,12 +14,12 @@ namespace StudioReservation.BackOffice.Controllers
         public ActionResult Index()
         {
            
-            var result = new FeedBackViewModel // only return type = 1
+            var result = new FeedbackViewModel // only return type = 1
             {
                 Error = 0 ,
-                FeedBacks = new List<FeedBack>
+                FeedBacks = new List<Feedback>
                 {
-                    new FeedBack
+                    new Feedback
                     {
                         Id = 1,
                         TicketId = Guid.NewGuid().ToString(),
@@ -32,7 +32,7 @@ namespace StudioReservation.BackOffice.Controllers
                         Preference = "Call",
                         IsCompleted = false
                     },
-                       new FeedBack
+                       new Feedback
                     {
                         Id = 2,
                         TicketId = Guid.NewGuid().ToString(),
@@ -56,12 +56,12 @@ namespace StudioReservation.BackOffice.Controllers
         public ActionResult GetDetail(long Id)
         {
             var id = Guid.NewGuid().ToString();
-            var result = new FeedBackViewModel //
+            var result = new FeedbackViewModel //
             {
                 Error = 0,
-                FeedBacks = new List<FeedBack>
+                FeedBacks = new List<Feedback>
                 {
-                    new FeedBack
+                    new Feedback
                     {
                         Id = 1,
                         TicketId = id,
@@ -74,7 +74,7 @@ namespace StudioReservation.BackOffice.Controllers
                         Preference = "Call",
                         IsCompleted = false
                     },
-                       new FeedBack
+                       new Feedback
                     {
                         Id = 2,
                         TicketId = id,
@@ -88,7 +88,7 @@ namespace StudioReservation.BackOffice.Controllers
                         IsReplyed = true,
                         IsCompleted = false,
                     },
-                            new FeedBack
+                            new Feedback
                     {
                         Id = 3,
                         TicketId = id,
@@ -102,7 +102,7 @@ namespace StudioReservation.BackOffice.Controllers
                         IsReplyed = true,
                         IsCompleted = false,
                     },
-                    new FeedBack
+                    new Feedback
                     {
                         Id = 4,
                         TicketId = id,

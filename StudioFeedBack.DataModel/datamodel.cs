@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StudioFeedBack.DataModel
 {
-    public class FeedBack //admin use
+    public class Feedback //admin use
     { 
         public long Id { get; set; }
         public string TicketId { get; set; }
@@ -21,19 +21,19 @@ namespace StudioFeedBack.DataModel
         public bool IsReplyed { get; set; }
         public bool IsCompleted { get; set; }
 
-        public FeedBack()
+        public Feedback()
         {
             //TicketId = Guid.NewGuid().ToString();
         }
     }
 
-    public class FeedBackViewModel // admin page use
+    public class FeedbackViewModel // admin page use
     {
-        public List<FeedBack> FeedBacks { get; set; }
+        public List<Feedback> FeedBacks { get; set; }
         public int Error { get; set; }
     }
 
-    public class SubmitFeedBack // user submit page use
+    public class SubmitFeedback // user submit page use
     {
         public string Title { get; set; }
         public string UserEmail { get; set; }
@@ -42,9 +42,10 @@ namespace StudioFeedBack.DataModel
         public string Preference { get; set; } // email / whatapp / wechat / line / call 
     }
 
-    public class SubmitFeedBackResponse 
+    public class SubmitFeedbackResponse 
     {
         public string TicketId { get; set; }
         public int Error { get; set; }
     }
+
 }
