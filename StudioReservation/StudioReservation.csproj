@@ -338,6 +338,14 @@
       <Project>{0e7e7ef9-bd12-4564-aea7-177adeaeac4d}</Project>
       <Name>StudioMember.Service.Proxy</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StudioMiscellaneous.Service.Contract\StudioMiscellaneous.Service.Contract.csproj">
+      <Project>{afab8f5e-ecde-447c-8c0e-0f33dc26a68e}</Project>
+      <Name>StudioMiscellaneous.Service.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioMiscellaneous.Service.Proxy\StudioMiscellaneous.Service.Proxy.csproj">
+      <Project>{559d7497-8df6-4707-a3bb-9aeca1e78f63}</Project>
+      <Name>StudioMiscellaneous.Service.Proxy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StudioReservation.Contract\StudioReservation.Contract.csproj">
       <Project>{916D47FF-22BD-4F9A-B6BF-8FAEA3E4DA5F}</Project>
       <Name>StudioReservation.Contract</Name>

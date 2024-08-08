@@ -8,7 +8,7 @@ namespace StudioFeedBack.DataModel
 {
     public enum FeedBackType
     {
-        Sender = 0,
-        Reply =1,
+        User = 1,
+        Admin =2,
     }
 }

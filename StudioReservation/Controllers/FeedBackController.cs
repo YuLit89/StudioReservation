@@ -1,4 +1,6 @@
 ﻿using StudioFeedBack.DataModel;
+using StudioMiscellaneous.Service;
+using StudioMiscellaneous.Service.Contract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,13 @@ namespace StudioReservation.Controllers
     public class FeedBackController : Controller
     {
         // GET: FeedBack
+        IStudioMiscellaneousService _miscellaneousService;
+
+        public FeedBackController()
+        {
+            _miscellaneousService = ServiceConnection.MiscellaneousService;
+        }
+
         public ActionResult Index()
         {
             SubmitFeedback model = new SubmitFeedback();
@@ -25,11 +34,13 @@ namespace StudioReservation.Controllers
                 return View(submit);
             }
 
-            var result = new SubmitFeedbackResponse()
-            {
-                TicketId = "0120012",
-                Error = 0
-            };
+            var result = _miscellaneousService.SubmitFeedback(submit, DateTime.Now);
+
+            //var result = new SubmitFeedbackResponse()
+            //{
+            //    TicketId = "0120012",
+            //    Error = 0
+            //};
 
             return RedirectToAction("FeedbackAck",result);
         }

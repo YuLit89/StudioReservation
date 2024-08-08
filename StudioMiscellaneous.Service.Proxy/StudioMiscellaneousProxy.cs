@@ -1,4 +1,5 @@
 ﻿using NLog;
+using StudioFeedBack.DataModel;
 using StudioMiscellaneous.Service.Contract;
 using StudioRoomType.DataModel;
 using System;
@@ -293,6 +294,170 @@ namespace StudioMiscellaneous.Service.Proxy
             {
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
                 return new RoomViewDetail { Error = -5 };
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
+
+        public FeedbackViewModel GetAll()
+        {
+            IStudioMiscellaneousService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.GetAll();
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
+                return new FeedbackViewModel { Error = -1 };
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
+                return new FeedbackViewModel { Error= -2 };
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
+                return new FeedbackViewModel { Error = -3 };
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
+                return new FeedbackViewModel { Error = -4 };
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
+                return new FeedbackViewModel { Error = -5 };
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
+
+        public SubmitFeedbackResponse SubmitFeedback(SubmitFeedback Feedback, DateTime SubmitTime)
+        {
+            IStudioMiscellaneousService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.SubmitFeedback(Feedback,SubmitTime);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
+                return new SubmitFeedbackResponse { Error = -1 };
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
+                return new SubmitFeedbackResponse { Error= -2 };
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
+                return new SubmitFeedbackResponse { Error = -3 };
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
+                return new SubmitFeedbackResponse { Error = -4 };
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
+                return new SubmitFeedbackResponse { Error = -5 };
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
+
+        public int ReplyFeedback(string AdminId, string TicketId, string Message, DateTime SubmitTime, bool isComplete)
+        {
+            IStudioMiscellaneousService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.ReplyFeedback(AdminId,TicketId,Message,SubmitTime,isComplete);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
+                return -1;
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
+                return -2;
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
+                return -3;
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
+                return -4;
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
+                return -5;
+            }
+            finally
+            {
+                CloseOrAbortServiceChannel((ICommunicationObject)s);
+            }
+        }
+
+        public FeedbackViewModel ViewDetail(long Id)
+        {
+            IStudioMiscellaneousService s = null;
+            try
+            {
+                s = _channelFactory.CreateChannel(_endpoint);
+
+                if (s != null)
+                {
+                    return s.ViewDetail(Id);
+                }
+
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");
+                return new FeedbackViewModel { Error = -1 };
+            }
+            catch (FaultException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -2");
+                return new FeedbackViewModel { Error = -2 };
+            }   
+            catch (CommunicationException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -3");
+                return new FeedbackViewModel { Error = -3 };
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -4");
+                return new FeedbackViewModel { Error= -4 };
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error($"Proxy Error -5");
+                return new FeedbackViewModel { Error = -5 };
             }
             finally
             {

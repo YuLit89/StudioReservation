@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Redis;
+using StudioFeedBack.DataModel;
 
 namespace StudioMiscellaneous.Service
 {
@@ -22,6 +23,11 @@ namespace StudioMiscellaneous.Service
         Func<Room, int> _updateRoomType;
         Func<int, int> _deleteRoomType;
 
+        Func<FeedbackViewModel> _getAllUserFeedback;
+        Func<SubmitFeedback, DateTime, SubmitFeedbackResponse> _submitFeedback;
+        Func<string, string, string, DateTime, bool, int> _replyFeedback;
+        Func<long, FeedbackViewModel> _findFeedbackDetail;
+
         IRedisConnection _redis;
 
         const string _syncRoomChannel = "sync-roomType";
@@ -31,7 +37,11 @@ namespace StudioMiscellaneous.Service
             Func<IEnumerable<Room>> getAllRoomType,
             Func<Room,int> createRoomType,
             Func<Room,int> updateRoomType,
-            Func<int,int> deleteRoomType
+            Func<int,int> deleteRoomType,
+            Func<FeedbackViewModel> getAllUserFeedback,
+            Func<SubmitFeedback,DateTime,SubmitFeedbackResponse> submitFeedback,
+            Func<string,string,string,DateTime,bool,int> replyFeedback,
+            Func<long,FeedbackViewModel> findFeedbackDetail
 
             ) 
         {
@@ -41,11 +51,20 @@ namespace StudioMiscellaneous.Service
             _updateRoomType = updateRoomType;
             _deleteRoomType = deleteRoomType;
 
+
+            _getAllUserFeedback = getAllUserFeedback;
+            _submitFeedback = submitFeedback;
+            _replyFeedback = replyFeedback;
+            _findFeedbackDetail = findFeedbackDetail;
+
+
             foreach(var room in getAllRoomType())
             {
                 _roomType.Add(room.Id, room);
+
             }
 
+            Console.WriteLine($"{DateTime.Now} || done pump room type {_roomType.Count()}");
         }
 
         //todo
@@ -153,6 +172,26 @@ namespace StudioMiscellaneous.Service
                 Error = 0,
                 Rooms = rooms
             };
+        }
+
+        public FeedbackViewModel GetAll()
+        {
+            return _getAllUserFeedback();
+        }
+
+        public SubmitFeedbackResponse SubmitFeedback(SubmitFeedback Feedback, DateTime SubmitTime)
+        {
+            return _submitFeedback(Feedback, SubmitTime);
+        }
+
+        public int ReplyFeedback(string AdminId, string TicketId, string Message, DateTime SubmitTime, bool isComplete)
+        {
+            return _replyFeedback(AdminId, TicketId, Message, SubmitTime, isComplete);
+        }
+
+        public FeedbackViewModel ViewDetail(long Id)
+        {
+            return _findFeedbackDetail(Id);
         }
     }
 }

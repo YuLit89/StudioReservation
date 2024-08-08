@@ -98,6 +98,14 @@
       <Project>{50128942-080c-49d8-b78d-548251c22cb4}</Project>
       <Name>Redis</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StudioFeedBack.ADO\StudioFeedBack.ADO.csproj">
+      <Project>{afaaf322-449f-4c83-aa58-171f14f2604b}</Project>
+      <Name>StudioFeedBack.ADO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudioFeedBack.DataModel\StudioFeedBack.DataModel.csproj">
+      <Project>{09871abf-a8e8-4744-83b4-fe8083a9f1f5}</Project>
+      <Name>StudioFeedBack.DataModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StudioMiscellaneous.Service.Contract\StudioMiscellaneous.Service.Contract.csproj">
       <Project>{AFAB8F5E-ECDE-447C-8C0E-0F33DC26A68E}</Project>
       <Name>StudioMiscellaneous.Service.Contract</Name>

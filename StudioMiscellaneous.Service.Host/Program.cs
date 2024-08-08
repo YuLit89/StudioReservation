@@ -13,6 +13,7 @@ using System.ServiceModel.Description;
 using System.Text;
 using System.Threading.Tasks;
 using Redis;
+using StudioFeedBack.ADO;
 
 namespace StudioMiscellaneous.Service.Host
 {
@@ -28,19 +29,27 @@ namespace StudioMiscellaneous.Service.Host
             var url = $"net.tcp://localhost:{port}/MiscellaneousService";
 
             var roomRepo = new StudioRoomTypeSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+            var feedbackRepo = new FeedbackSQL(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
 
             var redisIp = ConfigurationManager.AppSettings["redis-ip"];
             var redisPassword = ConfigurationManager.AppSettings["redis-password"];
 
             var redis = new RedisConnection(redisIp, redisPassword);
 
+            var feedbackService = new FeedbackHandler(
+                getAll : feedbackRepo.GetAll,
+                insert : feedbackRepo.Insert);
 
             var service = new MiscellaneousService(
                 redisConnection : redis,
                 getAllRoomType: roomRepo.GetAll,
                 createRoomType: roomRepo.Create,
                 updateRoomType: roomRepo.Edit,
-                deleteRoomType: roomRepo.Delete
+                deleteRoomType: roomRepo.Delete,
+                getAllUserFeedback : feedbackService.GetAll,
+                submitFeedback : feedbackService.SubmitFeedback,
+                replyFeedback : feedbackService.ReplyFeedback,
+                findFeedbackDetail : feedbackService.ViewDetail
                 );
 
             new ServiceHost<IStudioMiscellaneousService>().Boot(url, service);

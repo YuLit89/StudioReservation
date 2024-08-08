@@ -1,6 +1,8 @@
 ﻿using Redis;
 using StudioMember.Service.Contract;
 using StudioMember.Service.Proxy;
+using StudioMiscellaneous.Service.Contract;
+using StudioMiscellaneous.Service.Proxy;
 using StudioReservation.Contract;
 using StudioReservation.Proxy;
 using System;
@@ -16,6 +18,7 @@ namespace StudioReservation
         public static IReservationService ReservationService;
         public static IMemberService MemberService;
         public static IRedisConnection RedisConnection;
+        public static IStudioMiscellaneousService MiscellaneousService;
 
         static ServiceConnection()
         {
@@ -26,6 +29,7 @@ namespace StudioReservation
             RedisConnection = new RedisConnection(redisIp,redisPassword);
             MemberService = new MemberServiceProxy(int.Parse(ConfigurationManager.AppSettings["member-service-port"]));
             ReservationService = new ReservationServiceProxy(int.Parse(ConfigurationManager.AppSettings["reservation-service-port"]));
+            MiscellaneousService = new StudioMiscellaneousProxy(int.Parse(ConfigurationManager.AppSettings["miscellaneous-service-port"]));
         }
 
     }

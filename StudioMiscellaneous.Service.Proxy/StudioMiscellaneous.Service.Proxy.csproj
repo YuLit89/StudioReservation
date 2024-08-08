@@ -51,6 +51,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StudioFeedBack.DataModel\StudioFeedBack.DataModel.csproj">
+      <Project>{09871abf-a8e8-4744-83b4-fe8083a9f1f5}</Project>
+      <Name>StudioFeedBack.DataModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StudioMiscellaneous.Service.Contract\StudioMiscellaneous.Service.Contract.csproj">
       <Project>{AFAB8F5E-ECDE-447C-8C0E-0F33DC26A68E}</Project>
       <Name>StudioMiscellaneous.Service.Contract</Name>

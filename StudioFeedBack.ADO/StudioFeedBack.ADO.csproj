@@ -44,5 +44,11 @@
     <Compile Include="FeedbackSQL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StudioFeedBack.DataModel\StudioFeedBack.DataModel.csproj">
+      <Project>{09871abf-a8e8-4744-83b4-fe8083a9f1f5}</Project>
+      <Name>StudioFeedBack.DataModel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
