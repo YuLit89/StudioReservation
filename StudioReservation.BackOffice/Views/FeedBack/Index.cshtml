@@ -1,0 +1,85 @@
+﻿@model StudioFeedBack.DataModel.FeedbackViewModel
+
+@{
+    ViewBag.Title = "Customers' Feedback";
+}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.2/css/dataTables.dataTables.css" />
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title</h2>
+    <br />
+    <div class="row table-responsive">
+        <table class="table table-bordered" id="FeedbackView">
+            <thead class="table-secondary">
+                <tr>
+                    <th scope="col">Ticket</th>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Enquiry</th>
+                    <th scope="col">Submitted Date</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.FeedBacks)
+                {
+                    <tr>
+                        <td>@item.TicketId</td>
+                        <td>@item.Title</td>
+                        <td>@item.Message</td>
+                        <td>@item.SubmitTime</td>                    
+                        <td>
+                            @Html.ActionLink("Reply", "EditGet", new { Id = item.Id }, new { style = "text-decoration:none;" })
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</main>
+<!-- Modal -->
+@*<div class="modal fade modal-sm" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Confirmation <i class="fa-solid fa-exclamation"></i></h5>
+            </div>
+            <div class="modal-body">
+                Do you confirm to remove this record? ID:<input type="Text" id="roomIdToRemove" style="width:100px;" disabled />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" onclick="ConfirmDelete()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>*@
+@section scripts
+{
+    <script src="https://cdn.datatables.net/2.1.2/js/dataTables.js"></script>
+    <script type="text/javascript">
+
+
+        @*function ConfirmDelete() {
+            window.location.href = '@Html.Raw(@Url.Action("ConfirmDelete", "TimeSlot"))' + "?recordId=" + $('#roomIdToRemove').val();
+        }
+
+        function CreateNew() {
+            window.location.href = '@Html.Raw(@Url.Action("CreateGet", "TimeSlot"))';
+        }
+
+        function PopConfirm(e) {
+            $('#roomIdToRemove').val(e.id);
+            $('#staticBackdrop').modal('show');
+        }*@
+
+        $(document).ready(function () {
+            $('#FeedbackView').DataTable({
+               // order: [[0, 'asc']]
+            });
+        });
+
+    </script>
+}
+
+
+

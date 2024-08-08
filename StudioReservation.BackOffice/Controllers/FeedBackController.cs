@@ -18,11 +18,18 @@ namespace StudioReservation.BackOffice.Controllers
             _miscellaneousService = ServiceConnection.MiscellaneousSevice;
         }
         // GET: FeedBack
-        public ActionResult Index()
+        public ActionResult Index(int status = 0)
         {
 
             var result = _miscellaneousService.GetAll();
-           
+
+            if (result.Error != 0)
+            {
+                ViewBag.ErrorCode = result.Error.ToString();
+                return View("Error");
+            }
+            return View(result);
+
             //var result = new FeedbackViewModel // only return type = 1
             //{
             //    Error = 0 ,

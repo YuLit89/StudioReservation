@@ -11,4 +11,11 @@ namespace StudioFeedBack.DataModel
         User = 1,
         Admin =2,
     }
+    public enum FeedbackStatus
+    {
+        All = 0,
+        Open = 1,
+        Pending = 2,
+        Closed = 3
+    }
 }

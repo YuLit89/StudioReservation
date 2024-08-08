@@ -36,12 +36,6 @@ namespace StudioReservation.Controllers
 
             var result = _miscellaneousService.SubmitFeedback(submit, DateTime.Now);
 
-            //var result = new SubmitFeedbackResponse()
-            //{
-            //    TicketId = "0120012",
-            //    Error = 0
-            //};
-
             return RedirectToAction("FeedbackAck",result);
         }
 

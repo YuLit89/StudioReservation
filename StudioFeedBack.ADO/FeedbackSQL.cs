@@ -72,8 +72,7 @@ namespace StudioFeedBack.ADO
                 Type = int.Parse(reader["Type"].ToString()),
                 Preference = reader["Preference"].ToString(),
                 ReplyName = reader["ReplyName"].ToString(),
-                IsReplyed = Convert.ToBoolean(reader["IsReplyed"].ToString()),
-                IsCompleted = Convert.ToBoolean(reader["IsCompleted"].ToString())
+                Status =int.Parse(reader["Status"].ToString())
             };
         }
 
@@ -88,16 +87,15 @@ namespace StudioFeedBack.ADO
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = "Feedback_Insert";
                     cmd.Parameters.AddWithValue("@TicketId", Feedback.TicketId);
-                    cmd.Parameters.AddWithValue("@Title",Feedback.Title);
+                    cmd.Parameters.AddWithValue("@Title", Feedback.Title);
                     cmd.Parameters.AddWithValue("@UserEmail", Feedback.UserEmail);
                     cmd.Parameters.AddWithValue("@UserPhoneNumber", Feedback.UserPhoneNumber);
                     cmd.Parameters.AddWithValue("@Message", Feedback.Message);
-                    cmd.Parameters.AddWithValue("@SubmitTime",Feedback.SubmitTime);
+                    cmd.Parameters.AddWithValue("@SubmitTime", Feedback.SubmitTime);
                     cmd.Parameters.AddWithValue("@Type", Feedback.Type);
                     cmd.Parameters.AddWithValue("@Preference", Feedback.Preference);
                     cmd.Parameters.AddWithValue("@ReplyName", Feedback.ReplyName);
-                    cmd.Parameters.AddWithValue("@IsReplyed", Feedback.IsReplyed);
-                    cmd.Parameters.AddWithValue("@IsCompleted", Feedback.IsCompleted);
+                    cmd.Parameters.AddWithValue("@Status",Feedback.Status);
 
                     var o = new SqlParameter("@Id", SqlDbType.Int) { Direction = ParameterDirection.Output };
 

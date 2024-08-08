@@ -81,8 +81,7 @@ namespace StudioMiscellaneous.Service
                 Type = (int)FeedBackType.Admin,
                 Preference = string.Empty,
                 ReplyName = AdminId,
-                IsReplyed = true,
-                IsCompleted  = isComplete
+                Status = (int)FeedbackStatus.Pending
             };
 
             var id = _insert(reply);

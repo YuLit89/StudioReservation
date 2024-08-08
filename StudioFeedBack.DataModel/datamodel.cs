@@ -20,13 +20,7 @@ namespace StudioFeedBack.DataModel
         public int Type { get; set; } // 1 = User  , 2 = Admin
         public string Preference { get; set; } // email / whatapp / wechat / line / call 
         public string ReplyName { get; set; } // store admin name when reply feedback else will empty
-        public bool IsReplyed { get; set; }
-        public bool IsCompleted { get; set; }
-
-        public Feedback()
-        {
-            //TicketId = Guid.NewGuid().ToString();
-        }
+        public  int Status{ get; set; }
     }
 
     public class FeedbackViewModel // admin page use
