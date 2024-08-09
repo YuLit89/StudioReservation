@@ -10,7 +10,7 @@ namespace StudioMiscellaneous.Service
     public interface IFeedbackHandler : IDisposable
     {
 
-        FeedbackViewModel GetAll();
+        FeedbackViewModel GetAllByStatus(int status);
 
         SubmitFeedbackResponse SubmitFeedback(SubmitFeedback Feedback, DateTime SubmitTime);
 
@@ -56,11 +56,16 @@ namespace StudioMiscellaneous.Service
             Console.WriteLine($"{DateTime.Now} || Pump Feedback DATA Done , record {_feedbacks.Count()}");
         }
 
-        public FeedbackViewModel GetAll()
+        public FeedbackViewModel GetAllByStatus(int status)
         {
-            var userFeedbacks = _feedbacks.Where(x => x.Value.Type == 1)
+            List<Feedback> userFeedbacks;
+            if(status == (int)FeedbackStatus.All)
+                userFeedbacks = _feedbacks.Where(x => x.Value.Type == 1)
                 .Select(x1 => x1.Value).OrderBy(x2 => x2.SubmitTime).ToList();
-
+            else
+                userFeedbacks = _feedbacks.Where(x => x.Value.Type == 1 && x.Value.Status == status)
+                .Select(x1 => x1.Value).OrderBy(x2 => x2.SubmitTime).ToList();
+            
             return new FeedbackViewModel
             {
                 Error = 0,
@@ -114,6 +119,7 @@ namespace StudioMiscellaneous.Service
                 Type = (int)FeedBackType.User,
                 Preference = Feedback.Preference,
                 ReplyName = string.Empty,
+                Status = (int)FeedbackStatus.Open
             };
 
             var id = _insert(feedback);

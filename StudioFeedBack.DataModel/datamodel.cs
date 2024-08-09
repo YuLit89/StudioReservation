@@ -21,6 +21,8 @@ namespace StudioFeedBack.DataModel
         public string Preference { get; set; } // email / whatapp / wechat / line / call 
         public string ReplyName { get; set; } // store admin name when reply feedback else will empty
         public  int Status{ get; set; }
+        [Required]
+        public string Comment { get; set; }
     }
 
     public class FeedbackViewModel // admin page use

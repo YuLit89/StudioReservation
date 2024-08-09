@@ -7,6 +7,10 @@
 <main aria-labelledby="title">
     <h2 id="title">@ViewBag.Title</h2>
     <br />
+    <div class="row justify-content-end">
+        Status &nbsp;@Html.DropDownList("Status", @ViewBag.Status as SelectList, new { @class = "col-sm-1 col-md-1", id = "Status", name = "Status" })
+    </div>
+    
     <div class="row table-responsive">
         <table class="table table-bordered" id="FeedbackView">
             <thead class="table-secondary">
@@ -15,6 +19,7 @@
                     <th scope="col">Subject</th>
                     <th scope="col">Enquiry</th>
                     <th scope="col">Submitted Date</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -25,9 +30,12 @@
                         <td>@item.TicketId</td>
                         <td>@item.Title</td>
                         <td>@item.Message</td>
-                        <td>@item.SubmitTime</td>                    
+                        <td>@item.SubmitTime</td>
                         <td>
-                            @Html.ActionLink("Reply", "EditGet", new { Id = item.Id }, new { style = "text-decoration:none;" })
+                            @Enum.GetName(typeof(StudioFeedBack.DataModel.FeedbackStatus), item.Status)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Reply", "GetDetail", new { Id = item.Id }, new { style = "text-decoration:none;" })
                         </td>
                     </tr>
                 }
@@ -75,6 +83,10 @@
         $(document).ready(function () {
             $('#FeedbackView').DataTable({
                // order: [[0, 'asc']]
+            });
+
+            $('#Status').change(function () {
+                window.location.href = '@Html.Raw(@Url.Action("Index", "Feedback"))' + "?status=" + this.value;
             });
         });
 

@@ -1,0 +1,131 @@
+﻿@model List<StudioFeedBack.DataModel.Feedback>
+
+@{
+
+}
+
+<style>
+    #cornerboxRight {
+        text-align: end;
+        background-color: darkorange;
+        border-radius: 25px;
+        padding: 10px
+    }
+
+    #cornerboxLeft {
+        text-align: left;
+        background-color: #ddd;
+        border-radius: 25px;
+        padding: 10px
+    }
+</style>
+<main aria-labelledby="title">
+    <h2 id="title"><b>Ticket : </b>@Model.FirstOrDefault().TicketId</h2>
+    <br />
+    @using (Html.BeginForm("Reply", "Feedback", FormMethod.Post, new { role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.FirstOrDefault().Id)
+        @Html.HiddenFor(m => m.FirstOrDefault().TicketId)
+        @Html.HiddenFor(m => m.FirstOrDefault().Status)
+        <div class="row">
+            @Html.Label("Subject", new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBox("Title", Model.FirstOrDefault().Title, new { @class = "form-control", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.Label("User Email", new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBox("UserEmail", Model.FirstOrDefault().UserEmail, new { @class = "form-control", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.Label("User Contact", new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBox("UserPhoneNumber", Model.FirstOrDefault().UserPhoneNumber, new { @class = "form-control", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.Label("Submitted on", new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-8">
+                @Html.TextBox("SubmitTime", Model.FirstOrDefault().SubmitTime, new { @class = "form-control", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="">
+                @Html.Label("Preference", new { @class = "col-md-2 col-form-label" })
+                <div></div>
+                @Html.RadioButtonFor(m => m.FirstOrDefault().Preference, "Email", new { @disabled = "disabled" }) Email &nbsp;
+                @Html.RadioButtonFor(m => m.FirstOrDefault().Preference, "Call", new { @disabled = "disabled" }) Call &nbsp;
+                @Html.RadioButtonFor(m => m.FirstOrDefault().Preference, "SMS", new { @disabled = "disabled" }) SMS &nbsp;
+                @Html.RadioButtonFor(m => m.FirstOrDefault().Preference, "Whatsapp", new { @disabled = "disabled" }) Whatsapp &nbsp;
+            </div>
+        </div>
+        <br /><hr />
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Message : </h2>
+                @foreach (var item in Model)
+                {
+
+                    if (item.Type == 1)
+                    {
+                        <div class="col-md-5 col-sm-5" id="cornerboxLeft">@item.Message &nbsp;&nbsp;</div><br />
+                    }
+                    else
+                    {
+                        <div class="offset-md-7 offset-sm-7" id="cornerboxRight">@item.Message &nbsp;&nbsp;</div><br />
+                    }
+                }
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <h2>Comment</h2>
+            <div></div>
+            <div class="col-md-9">
+                @Html.TextAreaFor(m => m.FirstOrDefault().Comment, 10, 100, new { @class = "form-control", style = "min-width:100%", maxlength = "2000" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="offset-md-4 col-md-2">
+                <input type="submit" value="Send" class="btn btn-primary" id="submitBtn" />
+                &nbsp;&nbsp;
+                <input type="button" value="Close ticket" class="btn btn-primary" id="closeBtn" onclick="PopConfirm()" />
+            </div>
+        </div>
+
+
+    }
+</main>
+<!-- Modal -->
+<div class="modal fade modal-sm" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Confirmation <i class="fa-solid fa-exclamation"></i></h5>
+            </div>
+            <div class="modal-body">
+                Do you confirm to close this ticket?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" onclick="CloseTicket()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        function PopConfirm() {
+            $('#staticBackdrop').modal('show');
+        };
+
+        function CloseTicket() {
+            window.location.href = '@Html.Raw(@Url.Action("CloseTicket", "Feedback"))' + "?Id=" + $('#Id').val();
+        };
+    </script>
+}

@@ -23,7 +23,7 @@ namespace StudioMiscellaneous.Service
         Func<Room, int> _updateRoomType;
         Func<int, int> _deleteRoomType;
 
-        Func<FeedbackViewModel> _getAllUserFeedback;
+        Func<int,FeedbackViewModel> _getAllUserFeedback;
         Func<SubmitFeedback, DateTime, SubmitFeedbackResponse> _submitFeedback;
         Func<string, string, string, DateTime, bool, int> _replyFeedback;
         Func<long, FeedbackViewModel> _findFeedbackDetail;
@@ -38,7 +38,7 @@ namespace StudioMiscellaneous.Service
             Func<Room,int> createRoomType,
             Func<Room,int> updateRoomType,
             Func<int,int> deleteRoomType,
-            Func<FeedbackViewModel> getAllUserFeedback,
+            Func<int,FeedbackViewModel> getAllUserFeedback,
             Func<SubmitFeedback,DateTime,SubmitFeedbackResponse> submitFeedback,
             Func<string,string,string,DateTime,bool,int> replyFeedback,
             Func<long,FeedbackViewModel> findFeedbackDetail
@@ -174,9 +174,9 @@ namespace StudioMiscellaneous.Service
             };
         }
 
-        public FeedbackViewModel GetAll()
+        public FeedbackViewModel GetAllByStatus(int status)
         {
-            return _getAllUserFeedback();
+            return _getAllUserFeedback(status);
         }
 
         public SubmitFeedbackResponse SubmitFeedback(SubmitFeedback Feedback, DateTime SubmitTime)

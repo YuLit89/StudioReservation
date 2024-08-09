@@ -301,7 +301,7 @@ namespace StudioMiscellaneous.Service.Proxy
             }
         }
 
-        public FeedbackViewModel GetAll()
+        public FeedbackViewModel GetAllByStatus(int status)
         {
             IStudioMiscellaneousService s = null;
             try
@@ -310,7 +310,7 @@ namespace StudioMiscellaneous.Service.Proxy
 
                 if (s != null)
                 {
-                    return s.GetAll();
+                    return s.GetAllByStatus(status);
                 }
 
                 LogManager.GetCurrentClassLogger().Error($"Proxy Error -1");

@@ -46,7 +46,7 @@ namespace StudioMiscellaneous.Service.Host
                 createRoomType: roomRepo.Create,
                 updateRoomType: roomRepo.Edit,
                 deleteRoomType: roomRepo.Delete,
-                getAllUserFeedback : feedbackService.GetAll,
+                getAllUserFeedback : feedbackService.GetAllByStatus,
                 submitFeedback : feedbackService.SubmitFeedback,
                 replyFeedback : feedbackService.ReplyFeedback,
                 findFeedbackDetail : feedbackService.ViewDetail

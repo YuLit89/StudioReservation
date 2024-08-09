@@ -28,7 +28,7 @@ namespace StudioMiscellaneous.Service.Contract
         RoomViewDetail FindRoomDetail(int RoomId);
 
         [OperationContract]
-        FeedbackViewModel GetAll();
+        FeedbackViewModel GetAllByStatus(int status);
 
         [OperationContract]
         SubmitFeedbackResponse SubmitFeedback(SubmitFeedback Feedback, DateTime SubmitTime);

@@ -1,4 +1,5 @@
-﻿using StudioFeedBack.DataModel;
+﻿using Microsoft.AspNet.Identity;
+using StudioFeedBack.DataModel;
 using StudioMiscellaneous.Service.Contract;
 using System;
 using System.Collections.Generic;
@@ -20,133 +21,68 @@ namespace StudioReservation.BackOffice.Controllers
         // GET: FeedBack
         public ActionResult Index(int status = 0)
         {
-
-            var result = _miscellaneousService.GetAll();
+            var result = _miscellaneousService.GetAllByStatus(status);
 
             if (result.Error != 0)
             {
                 ViewBag.ErrorCode = result.Error.ToString();
                 return View("Error");
             }
+
+            List<SelectListItem> statusFilter = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text="All", Value="0", Selected = true},
+                new SelectListItem(){ Text="Open", Value="1"},
+                new SelectListItem(){ Text="Pending", Value="2"},
+                new SelectListItem(){ Text="Closed", Value="3"},
+            };
+            ViewBag.Status = new SelectList(statusFilter, "Value", "Text");
             return View(result);
-
-            //var result = new FeedbackViewModel // only return type = 1
-            //{
-            //    Error = 0 ,
-            //    FeedBacks = new List<Feedback>
-            //    {
-            //        new Feedback
-            //        {
-            //            Id = 1,
-            //            TicketId = Guid.NewGuid().ToString(),
-            //            Title = "Payment issue",
-            //            UserEmail = "",
-            //            UserPhoneNumber = "60-177272973",
-            //            Message = "payment already complete but history not found",
-            //            SubmitTime = DateTime.Now,
-            //            Type = 1,
-            //            Preference = "Call",
-            //            IsCompleted = false
-            //        },
-            //           new Feedback
-            //        {
-            //            Id = 2,
-            //            TicketId = Guid.NewGuid().ToString(),
-            //            Title = "account issue",
-            //            UserEmail = "",
-            //            UserPhoneNumber = "60-177272973",
-            //            Message = "payment already complete but history not found",
-            //            SubmitTime = DateTime.Now,
-            //            Type = 1,
-            //            Preference = "Call",
-            //            IsCompleted = false,
-            //        }
-            //    }
-
-            //};
-
-            return View();
         }
 
         [HttpGet]
         public ActionResult GetDetail(long Id)
         {
-            var id = Guid.NewGuid().ToString();
+            //var id = Guid.NewGuid().ToString();
 
             var result =_miscellaneousService.ViewDetail(Id);
-            //var result = new FeedbackViewModel //
-            //{
-            //    Error = 0,
-            //    FeedBacks = new List<Feedback>
-            //    {
-            //        new Feedback
-            //        {
-            //            Id = 1,
-            //            TicketId = id,
-            //            Title = "Payment issue",
-            //            UserEmail = "",
-            //            UserPhoneNumber = "60-177272973",
-            //            Message = "payment already complete but history not found",
-            //            SubmitTime = DateTime.Now,
-            //            Type = 1,
-            //            Preference = "Call",
-            //            IsCompleted = false
-            //        },
-            //           new Feedback
-            //        {
-            //            Id = 2,
-            //            TicketId = id,
-            //            Title = "",
-            //            UserEmail = "",
-            //            UserPhoneNumber = "",
-            //            Message = "issue have been fixed , please refresh again",
-            //            SubmitTime = DateTime.Now,
-            //            Type = 2,
-            //            Preference = "",
-            //            IsReplyed = true,
-            //            IsCompleted = false,
-            //        },
-            //                new Feedback
-            //        {
-            //            Id = 3,
-            //            TicketId = id,
-            //            Title = "",
-            //            UserEmail = "",
-            //            UserPhoneNumber = "",
-            //            Message = "OK , thank for help",
-            //            SubmitTime = DateTime.Now,
-            //            Type = 1,
-            //            Preference = "",
-            //            IsReplyed = true,
-            //            IsCompleted = false,
-            //        },
-            //        new Feedback
-            //        {
-            //            Id = 4,
-            //            TicketId = id,
-            //            Title = "",
-            //            UserEmail = "",
-            //            UserPhoneNumber = "",
-            //            Message = "Welcome , have a nice day ",
-            //            SubmitTime = DateTime.Now,
-            //            Type = 2,
-            //            Preference = "",
-            //            IsReplyed = true,
-            //            IsCompleted = true,
-            //        }
-            //    }
-            //};
 
-                return View(result);
+            if (result.Error != 0)
+            {
+                ViewBag.ErrorCode = result.Error.ToString();
+                return View("Error");
+            }
+            return View(result.FeedBacks);
             }
 
         [HttpPost]
-        public ActionResult Reply()
+        public ActionResult Reply(Feedback modal)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("Error");
+            }
+            modal.Message = modal.Comment;
+            modal.Type = (int)FeedBackType.Admin;
+            modal.ReplyName = User.Identity.GetUserName();
+            modal.Status = (int)FeedbackStatus.Pending;
 
-          //var result = _miscellaneousService.ReplyFeedback(string.Empty);
+            //var result = _miscellaneousService.ReplyFeedback()
 
-           return View();
+            return RedirectToAction("GetDetail", new { Id = modal.Id });
+        }
+
+        public ActionResult CloseTicket(String Id)
+        {
+            if (String.IsNullOrEmpty(Id))
+                return View("Error");
+            //var result = _miscellaneousService.ReplyFeedback()
+            //if (result.Error != 0)
+            //{
+            //    ViewBag.ErrorCode = result.Error.ToString();
+            //    return View("Error");
+            //
+            return RedirectToAction("Index");
         }
 
 
